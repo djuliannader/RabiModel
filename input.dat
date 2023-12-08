@@ -7,16 +7,24 @@ R (Float)
 hbar (Float)
 1.0
 delta (Float)
-1.0
+0.0
 1 for spectrum 2 for dynamics (Integer)
 2
 Minimum and maximum value of lambda (List[Float])   ---> Necessary only for spectrum
 [0.0,4.0]
 Interval for lambda (Float) ---> Necessary only for spectrum
 0.001
-Fixed value for lambda (Float) ---> Necessary only for dynamics
-0.075
-Coordinates of the coherent state [Theta0,Phi0,X0,P0] ---> Necessary only for dynamics
+1 for static Hamiltonian 2 for Floquet 3 for both (Integer) ---> Necessary only for dynamics
+3
+Fixed value of lambda (Float) ---> Necessary only for dynamics
+0.5
+Coordinates of the initial coherent state [Theta0,Phi0,X0,P0] ---> Necessary only for dynamics
 [1.0,1.5,1.0,0.0]
 Maximum time for Survival probability (Float) ---> Necessary only for dynamics
-100.0
+200.0
+Parameter of the periodically driven term (Float) ---> Necessary only for Floquet
+0.4
+Frequency of the periodically driven term (Float) ---> Necessary only for Floquet
+10
+intervals of the period (Int) ---> For trotterization
+1000

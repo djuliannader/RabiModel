@@ -2,8 +2,10 @@ push!(LOAD_PATH, pwd())
 import diagonalization
 import reading
 import dynamics
+import troterization
 
-println("\r Initiating spectrum ")
+println("\r Rabi Model ")
+println("\r Initiating ")
 
 # Reading data from input file
 #------------------------------------
@@ -33,25 +35,41 @@ open("input.dat") do f
  intl = parse(Float64, K16)
  K17=readline(f)
  K18=readline(f)
- lambda = parse(Float64, K18)
+ flag2  = parse(Int64, K18)
  K19=readline(f)
  K20=readline(f)
+ lambda = parse(Float64, K20)
  K21=readline(f)
  K22=readline(f)
- tmax = parse(Float64, K22)
+ K23=readline(f)
+ K24=readline(f)
+ tmax = parse(Float64, K24)
+ K25=readline(f)
+ K26=readline(f)
+ chi = parse(Float64, K26)
+ K27=readline(f)
+ K28=readline(f)
+ nu = parse(Float64, K28)
+ K29=readline(f)
+ K30=readline(f)
+ nn = parse(Int64, K30)
+ 
 
 #-------------
 
 
 #------ converting string to a list
  lmm  = reading.stringtofloatlist(K14)
- csc0 = reading.stringtofloatlist(K20)
+ csc0 = reading.stringtofloatlist(K22)
 
 # printing information 
 println("------------------------------------------------")
-println("Size of the Fock space N=",N)
-println("parameter omega=",om)
-println("parameter=",r)
+println("Size of the Fock space N:  ",N)
+println("bosonic frequency omega:   ",om)
+println("fermionic frequency R:     ",r)
+println("hbar:                      ",hbar)
+println("coupling parameter lambda: ",lambda)
+println("parameter delta:           ",delta)
 
 
 
@@ -75,7 +93,13 @@ if flag1==1  # Spectrum
 
 if flag1==2  # Dynamics
   cs0=dynamics.initialcoherent(csc0[3],csc0[4],csc0[1],csc0[2],hbar,N)
-  mensaje=dynamics.survivalp(cs0,tmax,hbar,N,om,r,lambda,delta)
+  if flag2==1 || flag2==3 # static Hamiltonian
+    mensaje1=dynamics.survivalp(cs0,tmax,hbar,N,om,r,lambda,delta)
+  end
+  if flag2==2 || flag2==3 # Floquet
+    floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nu)
+    mensaje2 = dynamics.survivalpt(cs0,floquet,tmax,nu)
+  end
 end
 
 

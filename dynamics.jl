@@ -57,6 +57,29 @@ function survivalp(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nm
 	 return "Done"
 	 end
 
+function survivalpt(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},tmax::Float64,om)
+ pi=acos(-1)
+ T=2*pi/om
+ nint=trunc(Int64,tmax/T)
+ psi0a=Array{Complex{Float64}}(undef,1,length(psi0)) 
+ for k in 1:length(psi0)
+     psi0a[1,k]=conj(psi0[k])
+ end
+ psi0t=psi0
+ open("survivalprobability_f.dat","w") do io
+ for i in 0:nint
+   sp=psi0a*psi0t
+   sp=abs2(sp[1])
+   println(io,T*i," ",round(sp,digits=16))
+   psi0t=fq*psi0t
+ end
+ end
+ println("-------------   Go to file survivalprobability_f.dat to see the survival probability  --------------")
+ println("             The file contains SP from 0 to ",tmax," in steps of ",T ," time units               ")
+ println("--------------------------------------------------------------------------------------------------- ")
+ return "done"
+end
+
 
 #test=initialcoherent(1.0,0.0,1.0,1.5,1.0,50)
 #mensaje=survivalp(test,50.0,1.0,50,1.0,1.0,0.05,0.0)
