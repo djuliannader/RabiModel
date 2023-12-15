@@ -81,7 +81,7 @@ if flag1==1  # Spectrum
   listaj=[lmm[1]+i*intl for i in 0:spcj]
   for j in listaj
     print(file,string(j))
-    evalvec=diagonalization.diagonalize(50,1,0.8,j,1)
+    evalvec=diagonalization.diagonalize(N,om,r,j,delta)
     for i in evalvec[1]
       print(file,"  "," ",string(i))
     end

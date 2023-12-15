@@ -1,5 +1,5 @@
 Dimension of Fock Space (Integer)
-50
+20
 Omega (Float)
 2.0
 R (Float)
@@ -9,7 +9,7 @@ hbar (Float)
 delta (Float)
 0.0
 1 for spectrum 2 for dynamics (Integer)
-2
+1
 Minimum and maximum value of lambda (List[Float])   ---> Necessary only for spectrum
 [0.0,4.0]
 Interval for lambda (Float) ---> Necessary only for spectrum
@@ -23,7 +23,7 @@ Coordinates of the initial coherent state [Theta0,Phi0,X0,P0] ---> Necessary onl
 Maximum time for Survival probability (Float) ---> Necessary only for dynamics
 200.0
 Parameter of the periodically driven term (Float) ---> Necessary only for Floquet
-0.4
+0.5
 Frequency of the periodically driven term (Float) ---> Necessary only for Floquet
 10
 intervals of the period (Int) ---> For trotterization
