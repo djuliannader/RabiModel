@@ -81,9 +81,5 @@ function survivalpt(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},
 end
 
 
-#test=initialcoherent(1.0,0.0,1.0,1.5,1.0,50)
-#mensaje=survivalp(test,50.0,1.0,50,1.0,1.0,0.05,0.0)
-#println("Prueba: ",mensaje)
-
 
 end

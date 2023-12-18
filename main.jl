@@ -3,6 +3,7 @@ import diagonalization
 import reading
 import dynamics
 import troterization
+import statistics
 
 println("\r Rabi Model ")
 println("\r Initiating ")
@@ -27,18 +28,18 @@ open("input.dat") do f
  delta = parse(Float64, K10)
  K11=readline(f)
  K12=readline(f)
- flag1 = parse(Int64, K12)
+ lambda = parse(Float64, K12)
  K13=readline(f)
- K14=readline(f)
+ K14=readline(f) 
+ flag1 = parse(Int64, K14)
  K15=readline(f)
  K16=readline(f)
- intl = parse(Float64, K16)
  K17=readline(f)
  K18=readline(f)
- flag2  = parse(Int64, K18)
+ intl = parse(Float64, K18)
  K19=readline(f)
  K20=readline(f)
- lambda = parse(Float64, K20)
+ flag2  = parse(Int64, K20)
  K21=readline(f)
  K22=readline(f)
  K23=readline(f)
@@ -59,7 +60,7 @@ open("input.dat") do f
 
 
 #------ converting string to a list
- lmm  = reading.stringtofloatlist(K14)
+ lmm  = reading.stringtofloatlist(K16)
  csc0 = reading.stringtofloatlist(K22)
 
 # printing information 
@@ -81,7 +82,7 @@ if flag1==1  # Spectrum
   listaj=[lmm[1]+i*intl for i in 0:spcj]
   for j in listaj
     print(file,string(j))
-    evalvec=diagonalization.diagonalize(N,om,r,j,delta)
+    evalvec=diagonalization.diagonalize(N,om,r,2*j,delta)
     for i in evalvec[1]
       print(file,"  "," ",string(i))
     end
@@ -89,6 +90,12 @@ if flag1==1  # Spectrum
   end
   end
   end
+
+
+if flag1==3
+   message=statistics.analysisH(N,om,r,lambda,delta,nn,nu,chi)
+   println("See file levels_output.dat")
+end
 
 
 if flag1==2  # Dynamics

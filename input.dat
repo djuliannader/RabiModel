@@ -1,30 +1,30 @@
 Dimension of Fock Space (Integer)
-20
-Omega (Float)
+40
+Omega, bosonic frequency (Float)
 2.0
-R (Float)
+R, fermionic frequency (Float)
 1.0
 hbar (Float)
 1.0
-delta (Float)
+Delta, parameter for JC or Anti JC (Float)
 0.0
-1 for spectrum 2 for dynamics (Integer)
-1
+Lambda, coupling parameter (Float) 
+0.5
+Flag, 1 for spectrum 2 for dynamics 3 for levels statistics (Integer)
+3
 Minimum and maximum value of lambda (List[Float])   ---> Necessary only for spectrum
 [0.0,4.0]
 Interval for lambda (Float) ---> Necessary only for spectrum
 0.001
-1 for static Hamiltonian 2 for Floquet 3 for both (Integer) ---> Necessary only for dynamics
+Flag, 1 for static Hamiltonian 2 for Floquet 3 for both (Integer) ---> Necessary only for dynamics
 3
-Fixed value of lambda (Float) ---> Necessary only for dynamics
-0.5
 Coordinates of the initial coherent state [Theta0,Phi0,X0,P0] ---> Necessary only for dynamics
 [1.0,1.5,1.0,0.0]
 Maximum time for Survival probability (Float) ---> Necessary only for dynamics
 200.0
-Parameter of the periodically driven term (Float) ---> Necessary only for Floquet
-0.5
-Frequency of the periodically driven term (Float) ---> Necessary only for Floquet
-10
-intervals of the period (Int) ---> For trotterization
+Chi, Parameter of the periodically driven term (Float) ---> Necessary only for Floquet operator
+0.1
+Nu, Frequency of the periodically driven term (Float) ---> Necessary only for Floquet operator
+2.0
+Intervals of the period (Int) ---> For Trotterization
 1000
