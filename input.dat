@@ -22,7 +22,7 @@ Coordinates of the initial coherent state [Theta0,Phi0,X0,P0] ---> Necessary onl
 [1.0,1.5,1.0,0.0]
 Maximum time for Survival Probability (Float) ---> Necessary only for dynamics
 200.0
-Chi, Parameter of the periodically driven term (Float) ---> Necessary only for Floquet operator
+Chi, Strength of the periodically driven term (Float) ---> Necessary only for Floquet operator
 0.01
 Nu, Frequency of the periodically driven term (Float) ---> Necessary only for Floquet operator
 1.8

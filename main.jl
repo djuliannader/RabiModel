@@ -65,12 +65,14 @@ open("input.dat") do f
 
 # printing information 
 println("------------------------------------------------")
-println("Size of the Fock space N:  ",N)
-println("bosonic frequency omega:   ",om)
-println("fermionic frequency R:     ",r)
-println("hbar:                      ",hbar)
-println("coupling parameter lambda: ",lambda)
-println("parameter delta:           ",delta)
+println("Size of the Fock space N:     ",N)
+println("bosonic frequency omega:      ",om)
+println("fermionic frequency R:        ",r)
+println("hbar:                         ",hbar)
+println("coupling parameter lambda:    ",lambda)
+println("parameter delta:              ",delta)
+println("frequency of the driven term: ",nu)
+println("strength of the driven term : ",chi)
 
 
 
