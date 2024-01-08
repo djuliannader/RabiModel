@@ -94,6 +94,8 @@ if flag1==1  # Spectrum
 
 if flag1==3
    message=statistics.analysisH(N,om,r,lambda,delta,nn,nu,chi)
+   r=statistics.parameter_r(N,om,r,lambda,delta,nn,nu,chi)
+   println("parameter <r> :",r)
    println("See file levels_output.dat")
 end
 

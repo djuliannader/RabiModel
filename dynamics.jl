@@ -52,6 +52,7 @@ function survivalp(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nm
  	    end
  	 end
 	 println("-------------   Go to file survivalprobability.dat to see the survival probability  ----------------")
+	 println("----------- Dynamics governed by the time evolution operator for the time independent Hamiltonian       -----")
 	 println("             The file contains SP from 0 to ",tmax," in steps of ",tint," time units               ")
 	 println("--------------------------------------------------------------------------------------------------- ")
 	 return "Done"
@@ -75,6 +76,7 @@ function survivalpt(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},
  end
  end
  println("-------------   Go to file survivalprobability_f.dat to see the survival probability  --------------")
+ println("----------- Dynamics governed by the Floquet operator for the time dependent Hamiltonian       -----")
  println("             The file contains SP from 0 to ",tmax," in steps of ",T ," time units               ")
  println("--------------------------------------------------------------------------------------------------- ")
  return "done"
