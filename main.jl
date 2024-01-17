@@ -84,7 +84,7 @@ if flag1==1  # Spectrum
   listaj=[lmm[1]+i*intl for i in 0:spcj]
   for j in listaj
     print(file,string(j))
-    evalvec=diagonalization.diagonalize(N,om,r,2*j,delta)
+    evalvec=diagonalization.diagonalize(N,om,r,j,delta)
     for i in evalvec[1]
       print(file,"  "," ",string(i))
     end
@@ -96,8 +96,10 @@ if flag1==1  # Spectrum
 
 if flag1==3
    message=statistics.analysisH(N,om,r,lambda,delta,nn,nu,chi)
-   r=statistics.parameter_r(N,om,r,lambda,delta,nn,nu,chi)
-   println("parameter <r> :",r)
+   rpar=statistics.parameter_r(N,om,r,lambda,delta,nn,nu,chi)
+   evalst=diagonalization.diagonalize(N,om,r,lambda,delta)
+   println("Ground state energy of the time independent Hamiltonian :",evalst[1][1])
+   println("parameter <r> of the Floquet operator :",rpar)
    println("See file levels_output.dat")
 end
 

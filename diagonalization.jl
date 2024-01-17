@@ -18,6 +18,7 @@ function diagonalize(n,om,r,lambda,delta)
      HMatrix[2i-1,2+2i]=lambda*((1-delta)/2)*(i)^(1/2)   # Anti Jaynes-Cummings
  end
  evals=eigvals(HMatrix)
+ #println(evals)
  evecs=eigvecs(HMatrix)
  return [evals,HMatrix]
 end

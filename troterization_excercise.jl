@@ -33,9 +33,15 @@ println("--- Excercise for the Trotterization of a periodically driven Hamiltoni
 println("see manual for details and constants")
 println("Period divided in: ",nn ," intervals ")
 println("Eigenvalues of the FLoquet operator ",res)
-f1=atan(imag(res[1])/real(res[1]))
-f2=atan(imag(res[2])/real(res[2]))
-println("phases: ",[pi-f1,pi-f2])
+#f1=atan(imag(res[1])/real(res[1]))
+#f2=atan(imag(res[2])/real(res[2]))
+f1p=mod(real(log(res[1])/(-im)),2pi)
+f2p=mod(real(log(res[2])/(-im)),2pi)
+# checar fases
+println("phases [0,2pi] : ",[f1p,f2p])
+println("phases [-pi,pi]: ",[f1p,-pi+(f2p-pi)])
+
+
 
 
 end

@@ -3,8 +3,7 @@ push!(LOAD_PATH, pwd())
 using LinearAlgebra
 import diagonalization
 import troterization
-#import potential
-#import norm
+using Plots
 
 
 function analysisH(N,om,r,lambda,delta,nn,nu,chi)
@@ -41,16 +40,21 @@ end
 function parameter_r(N,om,r,lambda,delta,nn,nu,chi)
    floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nu)
    eigvalsf=eigvals(floquet)
-   quasienergies=zeros(0)
+   qs=zeros(0)
    for i in 1:length(eigvalsf)
-      fase=atan(imag(eigvalsf[i])/real(eigvalsf[i]))
-      append!(quasienergies, pi-fase )
+      fase=mod(real(log(eigvalsf[i])/(-im)),2*pi)
+      append!(qs,fase)
    end
-   quasienergies=sort(quasienergies)
-   #println(quasienergies)
-   sn=[quasienergies[n+1]-quasienergies[n] for n in 1:(length(quasienergies)-1)]
-   #sn=[quasienergies[2*n+1]-quasienergies[2*n] for n in 1:trunc(Int64,length(quasienergies)/2-1)]
+   qs=sort(qs)
+   #println(qs)
+   sn=[qs[n+1]-qs[n] for n in 1:(length(qs)-1)]
+   #sn=[qs[2*n+1]-qs[2*n-1] for n in 1:trunc(Int64,length(qs)/2-1)]
+   #
+   fac=sum(sn)/length(sn)
+   sn=(1/fac)*(sn)
+   #println(sn)
    rn=zeros(0)
+   open("quasienergies_spacing.dat","w") do io
    for n in 1:length(sn)-1
        if sn[n]>sn[n+1]
          append!(rn, sn[n+1]/sn[n])
@@ -58,9 +62,11 @@ function parameter_r(N,om,r,lambda,delta,nn,nu,chi)
        if sn[n]<sn[n+1]
          append!(rn, sn[n]/sn[n+1])
        end
+     println(io," ",sn[n]) 
    end
-   r=sum(rn)/length(rn)
-   return r
+   end
+   rpar=sum(rn)/length(rn)
+   return rpar
    end
 
 

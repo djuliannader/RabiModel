@@ -23,7 +23,8 @@ function initialcoherent(xi::Float64,pii::Float64,ti::Float64,fi::Float64,hbar::
 
 
 function survivalp(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64)
-         tint=0.05
+         tint=2*pi/1.8
+	 #tint=0.05
 	 nt=trunc(Int,tmax/tint)
 	 t=0.0
 	 # diagonal matrix elements
