@@ -1,5 +1,5 @@
 Dimension of Fock Space (Integer)
-150
+220
 Omega, bosonic frequency (Float)
 2.0
 R, fermionic frequency (Float)
@@ -9,7 +9,7 @@ hbar (Float)
 Delta, parameter for JC or Anti JC (Float)
 0.0
 Lambda, coupling parameter (Float) 
-0.28
+0.25
 Flag, 1 for spectrum 2 for dynamics 3 for levels statistics (Integer)
 3
 Minimum and maximum value of lambda (List[Float])   ---> Necessary only for spectrum
