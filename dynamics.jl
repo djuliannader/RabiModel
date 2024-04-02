@@ -1,6 +1,7 @@
 module dynamics
 push!(LOAD_PATH, pwd())
 using LinearAlgebra
+import diagonalization
 export initialcoherent
 export survivalp
 
@@ -22,22 +23,13 @@ function initialcoherent(xi::Float64,pii::Float64,ti::Float64,fi::Float64,hbar::
 
 
 
-function survivalp(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64)
-         tint=2*pi/1.8
-	 #tint=0.05
+function survivalp(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi)
+         #tint=2*pi/1.8
+	 tint=0.05
 	 nt=trunc(Int,tmax/tint)
 	 t=0.0
-	 # diagonal matrix elements
-         vdiag=[(i)*om+r*(1/2)*(-1)^j for i in 0:Nmax for j in -1:0]
-         #println(vdiag)
-         HMatrix=Array(Diagonal(vdiag))
-         # non diagonal matrix elements
-         for i in 1:Nmax
-            HMatrix[2i+1,2i]=lambda*((delta+1)/2)*(i)^(1/2)   # Jaynes-Cummings
-            HMatrix[2i,2i+1]=lambda*((delta+1)/2)*(i)^(1/2)   # Jaynes-Cummings
-            HMatrix[2+2i,2i-1]=lambda*((1-delta)/2)*(i)^(1/2)   # Anti Jaynes-Cummings
-            HMatrix[2i-1,2+2i]=lambda*((1-delta)/2)*(i)^(1/2)   # Anti Jaynes-Cummings
-         end
+	 # building Hamiltonian
+         HMatrix= diagonalization.hamiltonian(Nmax,om,r,lambda,delta,eta,psi)
 	 psi0a=Array{Complex{Float64}}(undef,1,length(psi0)) 
 	 for k in 1:length(psi0)
 	     psi0a[1,k]=conj(psi0[k])

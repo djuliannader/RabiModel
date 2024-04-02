@@ -1,16 +1,20 @@
 Dimension of Fock Space (Integer)
-220
+50
 Omega, bosonic frequency (Float)
-2.0
-R, fermionic frequency (Float)
 1.0
+R, fermionic frequency (Float)
+50.0
 hbar (Float)
 1.0
-Delta, parameter for JC or Anti JC (Float)
+Delta, parameter (1) for JC or (-1) for Anti JC (Float)
 0.0
-Lambda, coupling parameter (Float) 
-0.25
-Flag, 1 for spectrum 2 for dynamics 3 for levels statistics (Integer)
+Omega_0, frequency of carrier parameter (Float) 
+0.0
+eta, coupling parameter (Float) 
+5.0
+psi, phase parameter (Float) 
+0.0
+Flag, 1 for spectrum 2 for dynamics 3 for statistics of energy levels (Integer)
 3
 Minimum and maximum value of lambda (List[Float])   ---> Necessary only for spectrum
 [0.0,4.0]
@@ -19,14 +23,22 @@ Interval for lambda (Float) ---> Necessary only for spectrum
 Flag, 1 for static Hamiltonian 2 for Floquet 3 for both (Integer) ---> Necessary only for dynamics
 3
 Coordinates of the initial coherent state [Theta0,Phi0,X0,P0] ---> Necessary only for dynamics
-[2.24593,0.982794,0.0,1.5]
+[0.0,0.0,0.0,0.0]
 Maximum time for Survival Probability (Float) ---> Necessary only for dynamics
-200.0
-Chi, Strength of the periodically driven term (Float) ---> Necessary only for Floquet operator
-0.01
+10.0
+Xi, Strength of the periodically driven term (Float) ---> Necessary only for Floquet operator
+40.0
 Nu, Frequency of the periodically driven term (Float) ---> Necessary only for Floquet operator
-6.283185307179586
-Intervals of the period (Int) ---> For Trotterization
-100
+1.0
+Intervals of the period (Int) ---> Necessary only for Floquet operator
+500
+k-eigenstate (integer) ---> Necessary for Wigner function of the stationary states 
+1
+L for defininf the phase space [-L,L]  ---> Necessary for Wigner function of the stationary states 
+10
 
 
+nu para eta>critical
+0.65
+nu para eta<critical
+0.68

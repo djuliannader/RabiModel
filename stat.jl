@@ -1,22 +1,16 @@
-module statistics
+module stat
 push!(LOAD_PATH, pwd())
 using LinearAlgebra
 import diagonalization
 import troterization
-using Plots
 
-
-function analysisH(N,om,r,lambda,delta,nn,nu,chi)
-   eigvs=diagonalization.diagonalize(N,om,r,lambda,delta)
-   open("DensityOfStates_output.dat","w") do ioa
-   for i in 1:trunc(Int64,length(eigvs[1])/2-1)
-      println(ioa,(eigvs[1][2*i+1]+eigvs[1][2*i])/2," ",1.0/(eigvs[1][2*i+1]-eigvs[1][2*i]))
-   end
-   end
+function analysisH(N,om,r,lambda,delta,nn,nu,chi,eta,psi)
+   eigvs=diagonalization.diagonalize(N,om,r,lambda,delta,eta,psi)
+   #println("flag",eigvs[1][1],eigvs[1][2])
    println("See file DensityOfStates_output.dat for Density of states (DOS) ")
-   floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nu)
+   floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nu,eta,psi)
    eigvecsf=eigvecs(floquet)
-   ham=diagonalization.hamiltonian(N,om,r,lambda,delta)
+   ham=diagonalization.hamiltonian(N,om,r,lambda,delta,eta,psi)
    evfvec = zeros(0)
    open("levels_output.dat","w") do io
    for i in 1:2*(N+1)
@@ -32,13 +26,18 @@ function analysisH(N,om,r,lambda,delta,nn,nu,chi)
    for i in 1:length(evfvec)
      println(io,i," ",eigvs[1][i]," ",evfvecs[i])
    end
+   open("DensityOfStates_output.dat","w") do ioa
+   for i in 1:trunc(Int64,length(eigvs[1])/2-1)
+      println(ioa,(eigvs[1][2*i+1]+eigvs[1][2*i])/2," ",1.0/(eigvs[1][2*i+1]-eigvs[1][2*i])," ",(evfvecs[2*i+1]+evfvecs[2*i])/2," ",1.0/(evfvecs[2*i+1]-evfvecs[2*i]))
+   end
+   end
    end
    return "Done"
 end
 
 
-function parameter_r(N,om,r,lambda,delta,nn,nu,chi)
-   floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nu)
+function parameter_r(N,om,r,lambda,delta,nn,nu,chi,eta,psi)
+   floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nu,eta,psi)
    eigvalsf=eigvals(floquet)
    qs=zeros(0)
    for i in 1:length(eigvalsf)
@@ -70,7 +69,22 @@ function parameter_r(N,om,r,lambda,delta,nn,nu,chi)
    return rpar
    end
 
-
-
+ function orderinfvec(N,om,r,lambda,delta,nn,nu,chi,eta,psi)
+   floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nu,eta,psi)
+   ham=diagonalization.hamiltonian(N,om,r,lambda,delta,eta,psi)
+   eigvecsf=eigvecs(floquet)
+   evfvec = zeros(0)
+   for i in 1:2*(N+1)
+     eigvecf=[eigvecsf[j,i] for j in 1:2*(N+1)]
+     eigvecf_t=Array{Complex{Float64}}(undef,1,length(eigvecf)) 
+     for k in 1:length(eigvecf)
+       eigvecf_t[1,k]=conj(eigvecf[k])
+     end
+     evf=eigvecf_t*ham*eigvecf
+     append!(evfvec, real(evf) )
+   end
+   evford=sortperm(evfvec)
+   return evford
+  end
 
 end
