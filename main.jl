@@ -5,9 +5,18 @@ import dynamics
 import troterization
 import stat
 import wigner_eig
+using LinearAlgebra
+
+
 
 println("\r Rabi Model ")
 println("\r Initiating ")
+
+
+
+
+
+
 
 # Reading data from input file
 #------------------------------------
@@ -69,10 +78,10 @@ open("input.dat") do f
  L = parse(Int64, K38)
  
 
-#-------------
-
-
-#------ converting string to a list
+##-------------
+#
+#
+##------ converting string to a list
  lmm  = reading.stringtofloatlist(K20)
  csc0 = reading.stringtofloatlist(K26)
 
@@ -110,6 +119,19 @@ if flag1==1  # Spectrum
   println(file," ")
   end
   end
+  nup=1.0  # initial frequency
+  nuint=0.02
+  open("spectrum_quasienergies_output.dat","w") do file
+  for i in 1:50
+  print(file,string(nup))
+  qs = stat.quasienergies(N,om,r,lambda,delta,nn,nup,chi,eta,psi)
+  for i in qs
+      print(file,"  "," ",string(i))
+    end
+    println(file," ")
+  nup=nup+nuint
+  end
+  end
   end
 
 
@@ -119,10 +141,12 @@ if flag1==3
    evalst=diagonalization.diagonalize(N,om,r,lambda,delta,eta,psi)
    mswigeig = wigner_eig.wigner_eigenstate(N,om,r,lambda,delta,eta,psi,kk,L)
    mswflo   = wigner_eig.wigner_driven(N,om,r,lambda,delta,eta,psi,nu,chi,nn,kk,L)
+   # mswflod  = wigner_eig.wigner_drivenqs(N,om,r,lambda,delta,eta,psi,nu,chi,nn,kk,L)
    println("Ground state energy of the time independent Hamiltonian :",evalst[1][1])
    println("parameter <r> of the Floquet operator :",rpar)
    println("See file levels_output.dat")
-end
+   # --------------------------------------
+  end
 
 
 if flag1==2  # Dynamics
@@ -135,6 +159,7 @@ if flag1==2  # Dynamics
     mensaje2 = dynamics.survivalpt(cs0,floquet,tmax,nu)
   end
 end
+
 
 
 end

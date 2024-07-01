@@ -39,7 +39,7 @@ function survivalp(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nm
  	     evol=exp(-im*HMatrix*t/hbar)
 	     psi0t=evol*psi0
  	     sp=psi0a*psi0t
- 	     sp=abs2(sp[1])
+ 	     sp=abs(sp[1])
  	     println(io,t," ",round(sp,digits=16))
  	     t=t+tint
  	    end
@@ -63,7 +63,7 @@ function survivalpt(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},
  open("survivalprobability_f.dat","w") do io
  for i in 0:nint
    sp=psi0a*psi0t
-   sp=abs2(sp[1])
+   sp=abs(sp[1])
    println(io,T*i," ",round(sp,digits=16))
    psi0t=fq*psi0t
  end
@@ -74,6 +74,7 @@ function survivalpt(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},
  println("--------------------------------------------------------------------------------------------------- ")
  return "done"
 end
+
 
 
 
