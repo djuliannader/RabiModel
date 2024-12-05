@@ -25,12 +25,12 @@ println("\r Initiating ")
  r = 50.0
  hbar = 1.0
  omega = 1.0 
- eta = 18.0
- gamma =1.0
- psi = -1.5
+ eta = 15.0
+ gamma = 0.5
+ psi = -pi/2
  tmax = 10.0
  nn = 1000
- kk = 24
+ kk = 9
  L = 10
  
 
@@ -52,22 +52,37 @@ println("------------------------------------------------")
 
 
 # calcula funcion de wigner de estados estacionarios
-println("not done yet")
+println("Calculating Wigner function of the ",kk," stationary state")
 mswflo = wigner_eig.wigner_driven2(N,om,r,omega,gamma,eta,psi,nn,kk,L)
+#mswflo = wigner_eig.wigner_driven3(N,om,r,omega,gamma,eta,psi,nn,kk,L,8)
 println("done")
 
+# calcula paridad y entropia de entrelazamiento
+println("Calculating purity of the stationary state")
+plist = stat.purity_rmp(N,om,r,omega,gamma,eta,psi,nn)
+#lambda=0.01
+#delta=0
+#eta=12.0
+#psi=0.0
+#plist = stat.purity(N,om,100,lambda,delta,eta,psi)
+#println(plist[1])
+println(plist[1])
+println(plist[2])
 
-ics=[0.0,0.0,2.0,0.0]
+
+ics=[0.0,0.0,4.0,0.0]
 tmax=100.0
 
 
 # calcula probabilidad de supervivencia
 floquet=troterization.troter2(N,nn,r,om,gamma,omega,eta,psi)
+floquet2=troterization.troter3(N,nn,r,om,gamma,omega,eta,psi,4)
 cs0=dynamics.initialcoherent(ics[3],ics[4],ics[1],ics[2],hbar,N)
 mensaje2 = dynamics.survivalpt(cs0,floquet,tmax,gamma)
+mensaje3 = dynamics.survivalpt2(cs0,floquet2,tmax,gamma)
 
 
 # calcula densidad de estados 
-#msj = stat.dos_rmp(N,om,r,gamma,omega,eta,psi,nn)
+msj = stat.dos_rmp(N,om,r,gamma,omega,eta,psi,nn)
 
 

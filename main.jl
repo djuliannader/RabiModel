@@ -75,7 +75,7 @@ open("input.dat") do f
  kk = parse(Int64, K36)
  K37=readline(f)
  K38=readline(f)
- L = parse(Int64, K38)
+ L = parse(Float64, K38)
  
 
 ##-------------
@@ -98,6 +98,7 @@ println("coupling parameter eta:       ",eta)
 println("phase parameter psi:          ",psi)
 println("frequency of the driven term: ",nu)
 println("strength of the driven term : ",chi)
+println("State of interest           : ",kk)
 println("number of subperiods of the driving : ",nn)
 println("------------------------------------------------")
 
@@ -110,19 +111,21 @@ if flag1==1  # Spectrum
   open("spectrum_output.dat","w") do file
   spcj=trunc(Int,(lmm[2]-lmm[1])/intl)
   listaj=[lmm[1]+i*intl for i in 0:spcj]
+  #println(listaj)
   for j in listaj
     print(file,string(j))
-    evalvec=diagonalization.diagonalize(N,om,r,j,delta,eta,psi)
+    evalvec=diagonalization.diagonalize(N,om,r,lambda,delta,j,psi)
+    #println(j," ",evalvec[1][1])
     for i in evalvec[1]
       print(file,"  "," ",string(i))
     end
   println(file," ")
   end
   end
-  nup=1.0  # initial frequency
-  nuint=0.02
+  nup=0.5  # initial frequency
+  nuint=0.01
   open("spectrum_quasienergies_output.dat","w") do file
-  for i in 1:50
+  for i in 1:250
   print(file,string(nup))
   qs = stat.quasienergies(N,om,r,lambda,delta,nn,nup,chi,eta,psi)
   for i in qs
@@ -132,6 +135,28 @@ if flag1==1  # Spectrum
   nup=nup+nuint
   end
   end
+  println("See output file spectrum_quasienergies_output.dat")
+  nup=0.5  # initial frequency
+  nuint=0.01
+  h0=diagonalization.hamiltonian(N,om,r,lambda,delta,eta,psi)
+  eigvecsh0 = eigvecs(h0)
+  open("spectrum_contributions_output.dat","w") do io
+  for i in 1:400
+    floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nup,eta,psi)
+    vecordered = stat.orderinfvec(N,om,r,lambda,delta,nn,nup,chi,eta,psi)
+    evsf=eigvecs(floquet)
+    listfstatek = [evsf[i,vecordered[kk]] for i in 1:2*N]
+    psifk = wigner_eig.buildingstate(listfstatek,N)
+    for kh0 in 1:10
+      listh0statek = [eigvecsh0[i,kh0] for i in 1:2*N]
+      lhk = transpose(listh0statek)
+      ov = abs2(lhk*listfstatek)
+      println(io,2*pi/nup,"  ",kh0-1," ",ov)
+    end
+    nup=nup+nuint
+  end
+  end
+  println("See output file spectrum_contributions_output.dat")
   end
 
 

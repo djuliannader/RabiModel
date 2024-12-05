@@ -53,7 +53,7 @@ function survivalp(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nm
 
 function survivalpt(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},tmax::Float64,om)
  pi=acos(-1)
- T=2*pi/om
+ T=(2*pi/om)/1
  nint=trunc(Int64,tmax/T)
  psi0a=Array{Complex{Float64}}(undef,1,length(psi0)) 
  for k in 1:length(psi0)
@@ -65,10 +65,34 @@ function survivalpt(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},
    sp=psi0a*psi0t
    sp=abs(sp[1])
    println(io,T*i," ",round(sp,digits=16))
-   psi0t=fq*psi0t
+   psi0t=(fq^(1))*psi0t
  end
  end
  println("-------------   Go to file survivalprobability_f.dat to see the survival probability  --------------")
+ println("----------- Dynamics governed by the Floquet operator for the time dependent Hamiltonian       -----")
+ println("             The file contains SP from 0 to ",tmax," in steps of ",T ," time units               ")
+ println("--------------------------------------------------------------------------------------------------- ")
+ return "done"
+end
+
+function survivalpt2(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},tmax::Float64,om)
+ pi=acos(-1)
+ T=2*pi/om
+ nint=trunc(Int64,tmax/T)
+ psi0a=Array{Complex{Float64}}(undef,1,length(psi0)) 
+ for k in 1:length(psi0)
+     psi0a[1,k]=conj(psi0[k])
+ end
+ psi0t=psi0
+ open("survivalprobability_f2.dat","w") do io
+ for i in 0:nint
+   sp=psi0a*psi0t
+   sp=abs(sp[1])
+   println(io,T*i," ",round(sp,digits=16))
+   psi0t=fq*psi0t
+ end
+ end
+ println("-------------   Go to file survivalprobability_f2.dat to see the survival probability  --------------")
  println("----------- Dynamics governed by the Floquet operator for the time dependent Hamiltonian       -----")
  println("             The file contains SP from 0 to ",tmax," in steps of ",T ," time units               ")
  println("--------------------------------------------------------------------------------------------------- ")

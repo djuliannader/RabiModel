@@ -3,6 +3,8 @@ push!(LOAD_PATH, pwd())
 using LinearAlgebra
 import diagonalization
 import troterization
+import wigner_eig
+using QuantumOptics
 
 function analysisH(N,om,r,lambda,delta,nn,nu,chi,eta,psi)
    eigvs=diagonalization.diagonalize(N,om,r,lambda,delta,eta,psi)
@@ -114,6 +116,35 @@ function orderinfvec2(Nmax,om,r,gamma,omega,eta,psi,nn)
    return evford
   end
 
+function orderinfvec3(Nmax,om,r,gamma,omega,eta,psi,nn,no)
+   floquet=troterization.troter3(Nmax,nn,r,om,gamma,omega,eta,psi,no)
+   hampart=diagonalization.hamiltonian_rmp2(Nmax,r,om,gamma,omega,eta,psi)
+   ham=hampart[1]
+   CCp=hampart[4]
+   CCm=hampart[5]
+   a = hampart[2]
+   ad= hampart[3]
+   #for j in 1:no
+     j=1
+     ham = ham  + (1/factorial(j))*((im*eta)^j*(CCp*(1.0*a*1+1.0*ad*1)^j)+(-im*eta)^j*(CCm*(1.0*ad*1.0+1.0*a*1.0)^j))
+   #end
+   eigvecsf=eigvecs(floquet)
+   evfvec = zeros(0)
+   for i in 1:2*(Nmax+1)
+     eigvecf=[eigvecsf[j,i] for j in 1:2*(Nmax+1)]
+     eigvecf_t=Array{Complex{Float64}}(undef,1,length(eigvecf)) 
+     for k in 1:length(eigvecf)
+       eigvecf_t[1,k]=conj(eigvecf[k])
+     end
+     evf=eigvecf_t*ham*eigvecf
+     append!(evfvec, real(evf) )
+   end
+   evford=sortperm(evfvec)
+   #println(evford[1])   #  descomentar para ver como se ordenan las quasienergias
+   #println("flaaag 2 lala", evfvec[evford[1]])   #  descomentar para ver como se ordenan las quasienergias
+   return evford
+  end
+
 function dos_rmp(Nmax,om,r,gamma,omega,eta,psi,nn)
    floquet=troterization.troter2(Nmax,nn,r,om,gamma,omega,eta,psi)
    hampart=diagonalization.hamiltonian_rmp(Nmax,r,om,gamma,omega,eta,psi)
@@ -185,5 +216,50 @@ function dos_rmp(Nmax,om,r,gamma,omega,eta,psi,nn)
    evfsorted=sortperm(qs)
    return evfsorted
   end
+
+function purity_rmp(Nmax,om,r,omega,gamma,eta,psi,Nf)
+   bc=FockBasis(Nmax)
+   ba=SpinBasis(1//2)
+   floquet=troterization.troter2(Nmax,Nf,r,om,gamma,omega,eta,psi)
+   vecordered = orderinfvec2(Nmax,om,r,gamma,omega,eta,psi,Nf)
+   evs=eigvecs(floquet)
+   println("Purity of stationary states")
+   purity=[]
+   entropy=[]
+   for k in 1:50
+     listvec=[evs[i,vecordered[k]] for i in 1:2*Nmax]
+     phi = wigner_eig.buildingstate(listvec,Nmax)
+     rho = dm(phi)
+     rhoqp = ptrace(rho,2)
+     pur = tr(rhoqp*rhoqp)
+     ent = entropy_vn(rhoqp)
+     append!(purity,pur)
+     append!(entropy,ent)
+    end
+   return [purity,entropy] 
+ end
+
+
+function purity(Nmax,om,r,lambda,delta,eta,psi)
+   bc=FockBasis(Nmax)
+   ba=SpinBasis(1//2)
+   ham=diagonalization.hamiltonian(Nmax,om,r,lambda,delta,eta,psi)
+   evs=eigvecs(ham)
+   println("Purity of stationary states")
+   purity=[]
+   entropy=[]
+   for k in 1:50
+     listvec=[evs[i,k] for i in 1:2*Nmax]
+     phi = wigner_eig.buildingstate(listvec,Nmax)
+     rho = dm(phi)
+     rhoqp = ptrace(rho,2)
+     pur = tr(rhoqp*rhoqp)
+     ent = entropy_vn(rhoqp)
+     append!(purity,pur)
+     append!(entropy,ent)
+    end
+    evv=eigvals(ham)
+   return [purity,entropy,evv] 
+ end
 
 end
