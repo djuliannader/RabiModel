@@ -5,7 +5,7 @@ clone as:
 
 
 ```bash
-https://github.com/djuliannader/RabiModel.git
+git clone https://github.com/djuliannader/RabiModel.git
 ```
 
 run as:
