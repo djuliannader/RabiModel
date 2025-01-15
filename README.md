@@ -1,5 +1,5 @@
 # RabiModel
-Numerical diagonalization of the Rabi model for the study of quantum dynamics of initial coherent states
+Static and dynamical properties of states in the Quantum Rabi Model and variations
 
 clone as:
 
@@ -9,4 +9,4 @@ run as:
 
 julia main.jl
 
-control parameters at the input file input.dat
+Manipulate parameters from the input file input.dat
