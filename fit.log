@@ -3258,3 +3258,2330 @@ fitted parameters initialized with current variable values
 iter      chisq       delta/lim  lambda   a             b             c             d            
    0 3.0149382065e-01   0.00e+00  1.26e+01    3.562326e-01   2.185175e+03   1.438655e+00  -2.515508e+01
 BREAK: Singular matrix in Invert_RtR
+
+*******************************************************************************
+Wed Jan  8 13:52:55 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 6.9594229029e+01   0.00e+00  5.58e-01    1.000000e+00   1.000000e+00   5.000000e-01  -5.000000e-01
+   5 5.0957492763e-04  -2.38e-01  5.58e-04    2.552142e-01   1.070781e+00   4.930615e-01  -7.558723e-01
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 0.000509575
+rel. change during last iteration : -2.38253e-06
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00277864
+variance of residuals (reduced chisquare) = WSSR/ndf   : 7.72083e-06
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.255214         +/- 44.21        (1.732e+04%)
+b               = 1.07078          +/- 186.6        (1.743e+04%)
+c               = 0.493061         +/- 0.0107       (2.17%)
+d               = -0.755872        +/- 44.21        (5849%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b              -1.000  1.000 
+c              -0.163  0.162  1.000 
+d              -1.000  1.000  0.163  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 13:55:51 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 5.0957492763e-04   0.00e+00  3.99e-01    2.552142e-01   1.070781e+00   4.930615e-01  -7.558723e-01
+   1 5.0957492744e-04  -3.72e-05  3.99e-02    2.552142e-01   1.070781e+00   4.930615e-01  -7.558723e-01
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 0.000509575
+rel. change during last iteration : -3.72069e-10
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00277864
+variance of residuals (reduced chisquare) = WSSR/ndf   : 7.72083e-06
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.255214         +/- 44.21        (1.732e+04%)
+b               = 1.07078          +/- 186.6        (1.743e+04%)
+c               = 0.493061         +/- 0.0107       (2.17%)
+d               = -0.755872        +/- 44.21        (5849%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b              -1.000  1.000 
+c              -0.163  0.162  1.000 
+d              -1.000  1.000  0.163  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 13:56:30 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 5.2702341493e-04   0.00e+00  2.59e-01    1.000000e-02   2.070000e+04   5.000000e-01  -5.000000e-01
+   7 5.7893971650e-06  -2.71e-02  2.59e-08    1.464732e-02   1.492795e+04   4.974282e-01  -5.027453e-01
+
+After 7 iterations the fit converged.
+final sum of squares of residuals : 5.7894e-06
+rel. change during last iteration : -2.70953e-07
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000296172
+variance of residuals (reduced chisquare) = WSSR/ndf   : 8.77181e-08
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0146473        +/- 0.0002126    (1.452%)
+b               = 14928            +/- 508          (3.403%)
+c               = 0.497428         +/- 9.631e-05    (0.01936%)
+d               = -0.502745        +/- 3.789e-05    (0.007537%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.533  1.000 
+c               0.049  0.019  1.000 
+d              -0.126  0.215 -0.000  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 14:08:57 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 4.8660575274e-05   0.00e+00  2.68e-01    1.464732e-02   1.492795e+04   4.974282e-01  -5.027453e-01
+   8 2.0627298463e-05  -2.24e-01  2.68e-09    1.309463e-02   2.057279e+04   4.980721e-01  -5.027571e-01
+
+After 8 iterations the fit converged.
+final sum of squares of residuals : 2.06273e-05
+rel. change during last iteration : -2.24463e-06
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000559048
+variance of residuals (reduced chisquare) = WSSR/ndf   : 3.12535e-07
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0130946        +/- 0.0004351    (3.323%)
+b               = 20572.8          +/- 1598         (7.768%)
+c               = 0.498072         +/- 0.0001881    (0.03776%)
+d               = -0.502757        +/- 7.075e-05    (0.01407%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.540  1.000 
+c               0.058  0.030  1.000 
+d              -0.115  0.197 -0.000  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 14:26:00 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 1.6727414701e-05   0.00e+00  2.67e-01    1.309463e-02   2.057279e+04   4.980721e-01  -5.027571e-01
+   6 9.7801475152e-06  -6.78e-02  2.67e-07    1.367216e-02   1.695625e+04   4.976948e-01  -5.027542e-01
+
+After 6 iterations the fit converged.
+final sum of squares of residuals : 9.78015e-06
+rel. change during last iteration : -6.78153e-07
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000384947
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.48184e-07
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0136722        +/- 0.0002854    (2.087%)
+b               = 16956.2          +/- 828.7        (4.887%)
+c               = 0.497695         +/- 0.00013      (0.02612%)
+d               = -0.502754        +/- 4.902e-05    (0.009751%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.536  1.000 
+c               0.052  0.023  1.000 
+d              -0.121  0.208 -0.000  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 14:31:08 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 6.1692410691e-05   0.00e+00  2.66e-01    1.367216e-02   1.695625e+04   4.976948e-01  -5.027542e-01
+  12 3.5478100079e-05  -5.03e-01  2.66e-13    1.332298e-02   2.968421e+04   4.986333e-01  -5.027405e-01
+
+After 12 iterations the fit converged.
+final sum of squares of residuals : 3.54781e-05
+rel. change during last iteration : -5.03359e-06
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000733176
+variance of residuals (reduced chisquare) = WSSR/ndf   : 5.37547e-07
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.013323         +/- 0.0006258    (4.697%)
+b               = 29684.2          +/- 3252         (10.95%)
+c               = 0.498633         +/- 0.0002217    (0.04445%)
+d               = -0.50274         +/- 9.185e-05    (0.01827%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.548  1.000 
+c               0.070  0.043  1.000 
+d              -0.104  0.178 -0.000  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 14:42:13 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 4.3891004417e-05   0.00e+00  2.70e-01    1.332298e-02   2.968421e+04   4.986333e-01  -5.027405e-01
+  27 3.3648153391e-05  -7.34e-01  2.70e-21    1.478402e-02   7.084267e+04   4.993546e-01  -5.026838e-01
+
+After 27 iterations the fit converged.
+final sum of squares of residuals : 3.36482e-05
+rel. change during last iteration : -7.33832e-06
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000714017
+variance of residuals (reduced chisquare) = WSSR/ndf   : 5.09821e-07
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.014784         +/- 0.0007346    (4.969%)
+b               = 70842.7          +/- 7973         (11.25%)
+c               = 0.499355         +/- 0.0001614    (0.03232%)
+d               = -0.502684        +/- 8.789e-05    (0.01748%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.522  1.000 
+c               0.032 -0.037  1.000 
+d              -0.093  0.139 -0.014  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 14:57:00 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 2.9984412342e-05   0.00e+00  2.84e-01    1.478402e-02   7.084267e+04   4.993546e-01  -5.026838e-01
+  10 2.1337998590e-05  -8.53e-01  2.84e-11    1.307343e-02   8.773015e+04   4.994125e-01  -5.027123e-01
+
+After 10 iterations the fit converged.
+final sum of squares of residuals : 2.1338e-05
+rel. change during last iteration : -8.52676e-06
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000568597
+variance of residuals (reduced chisquare) = WSSR/ndf   : 3.23303e-07
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0130734        +/- 0.0005969    (4.566%)
+b               = 87730.1          +/- 8989         (10.25%)
+c               = 0.499412         +/- 0.0001452    (0.02908%)
+d               = -0.502712        +/- 6.978e-05    (0.01388%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.482  1.000 
+c              -0.029 -0.136  1.000 
+d              -0.097  0.133 -0.023  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 15:06:38 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 3.7290476668e-04   0.00e+00  2.78e-01    1.307343e-02   8.773015e+04   4.994125e-01  -5.027123e-01
+
+Current data point
+=========================
+#               = 70 out of 70
+x               = 0.0142659      
+z               = -0.502827      
+
+Current set of parameters
+=========================
+a               = 0.0142659      
+b               = -51516.7       
+c               = 0.497253       
+d               = -0.502412      
+
+BREAK: Undefined value during function evaluation
+
+*******************************************************************************
+Wed Jan  8 15:07:00 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+
+Current data point
+=========================
+#               = 70 out of 70
+x               = 0.0142659      
+z               = -0.502827      
+
+Current set of parameters
+=========================
+a               = 0.0142659      
+b               = -51516.7       
+c               = 0.497253       
+d               = -0.502412      
+
+BREAK: Undefined value during function evaluation
+
+*******************************************************************************
+Wed Jan  8 15:07:39 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+
+Current data point
+=========================
+#               = 68 out of 70
+x               = 0.001          
+z               = -0.502826      
+
+Current set of parameters
+=========================
+a               = 0.001          
+b               = -51516.7       
+c               = 0.5            
+d               = -0.5           
+
+BREAK: Undefined value during function evaluation
+
+*******************************************************************************
+Wed Jan  8 15:08:33 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 8.7539943715e-04   0.00e+00  2.50e-01    1.000000e-03   2.070000e+04   5.000000e-01  -5.000000e-01
+  77 6.4660833901e-04  -9.66e-01  2.50e-01    1.001525e-03   2.068981e+04   4.974212e-01  -5.017854e-01
+
+After 77 iterations the fit converged.
+final sum of squares of residuals : 0.000646608
+rel. change during last iteration : -9.65674e-06
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00313003
+variance of residuals (reduced chisquare) = WSSR/ndf   : 9.7971e-06
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.00100152       +/- 0.002436     (243.3%)
+b               = 20689.8          +/- 1.177e+05    (568.7%)
+c               = 0.497421         +/- 0.01373      (2.76%)
+d               = -0.501785        +/- 0.0003961    (0.07894%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.540  1.000 
+c               0.058  0.030  1.000 
+d              -0.115  0.197 -0.000  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 15:08:58 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 6.4660833901e-04   0.00e+00  2.51e-01    1.001525e-03   2.068981e+04   4.974212e-01  -5.017854e-01
+   1 6.4660265869e-04  -8.78e-01  2.51e-01    1.001531e-03   2.068977e+04   4.974072e-01  -5.017854e-01
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 0.000646603
+rel. change during last iteration : -8.78486e-06
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00313002
+variance of residuals (reduced chisquare) = WSSR/ndf   : 9.79701e-06
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.00100153       +/- 0.002436     (243.2%)
+b               = 20689.8          +/- 1.177e+05    (568.7%)
+c               = 0.497407         +/- 0.01373      (2.76%)
+d               = -0.501785        +/- 0.0003961    (0.07894%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.540  1.000 
+c               0.058  0.030  1.000 
+d              -0.115  0.197 -0.000  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 15:09:46 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 6.4660265869e-04   0.00e+00  2.51e-01    1.001531e-03   2.068977e+04   4.974072e-01  -5.017854e-01
+   1 6.4659740557e-04  -8.12e-01  2.51e-01    1.001537e-03   2.068974e+04   4.973935e-01  -5.017854e-01
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 0.000646597
+rel. change during last iteration : -8.12425e-06
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00313
+variance of residuals (reduced chisquare) = WSSR/ndf   : 9.79693e-06
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.00100154       +/- 0.002436     (243.2%)
+b               = 20689.7          +/- 1.176e+05    (568.6%)
+c               = 0.497394         +/- 0.01373      (2.76%)
+d               = -0.501785        +/- 0.0003961    (0.07894%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.540  1.000 
+c               0.058  0.030  1.000 
+d              -0.115  0.197 -0.000  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 15:10:02 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 1.7783338507e-02   0.00e+00  7.23e-01    1.000000e-01   2.068974e+04   4.973935e-01  -5.017854e-01
+   7 9.6255025343e-06  -3.81e-02  7.23e-08    1.589398e-02   1.359290e+04   4.972438e-01  -5.027331e-01
+
+After 7 iterations the fit converged.
+final sum of squares of residuals : 9.6255e-06
+rel. change during last iteration : -3.80552e-07
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000381891
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.45841e-07
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.015894         +/- 0.0002678    (1.685%)
+b               = 13592.9          +/- 537.4        (3.953%)
+c               = 0.497244         +/- 0.0001171    (0.02355%)
+d               = -0.502733        +/- 4.903e-05    (0.009753%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.530  1.000 
+c               0.047  0.016  1.000 
+d              -0.129  0.221 -0.000  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 15:17:19 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 3.2375799579e-05   0.00e+00  2.69e-01    1.589398e-02   1.359290e+04   4.972438e-01  -5.027331e-01
+   5 2.1335352871e-05  -2.23e-02  2.69e-06    1.735094e-02   1.260777e+04   4.971180e-01  -5.027188e-01
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 2.13354e-05
+rel. change during last iteration : -2.23114e-07
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000568562
+variance of residuals (reduced chisquare) = WSSR/ndf   : 3.23263e-07
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0173509        +/- 0.0003913    (2.255%)
+b               = 12607.8          +/- 667.6        (5.295%)
+c               = 0.497118         +/- 0.0001627    (0.03272%)
+d               = -0.502719        +/- 7.322e-05    (0.01456%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.528  1.000 
+c               0.045  0.014  1.000 
+d              -0.132  0.226 -0.000  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 15:45:10 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 5.3462569216e-05   0.00e+00  2.72e-01    1.735094e-02   1.260777e+04   4.971180e-01  -5.027188e-01
+   5 4.0229657532e-05  -2.32e-02  2.72e-06    1.898514e-02   1.181969e+04   4.970313e-01  -5.027032e-01
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 4.02297e-05
+rel. change during last iteration : -2.31857e-07
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000780731
+variance of residuals (reduced chisquare) = WSSR/ndf   : 6.0954e-07
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0189851        +/- 0.0005288    (2.785%)
+b               = 11819.7          +/- 773.5        (6.544%)
+c               = 0.497031         +/- 0.0002074    (0.04173%)
+d               = -0.502703        +/- 0.0001008    (0.02005%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.526  1.000 
+c               0.044  0.012  1.000 
+d              -0.135  0.230 -0.000  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 15:59:26 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 4.0229657532e-05   0.00e+00  2.75e-01    1.898514e-02   1.181969e+04   4.970313e-01  -5.027032e-01
+   1 4.0229657532e-05  -8.93e-10  2.75e+03    1.898514e-02   1.181969e+04   4.970313e-01  -5.027032e-01
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 4.02297e-05
+rel. change during last iteration : -8.92729e-15
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000780731
+variance of residuals (reduced chisquare) = WSSR/ndf   : 6.0954e-07
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0189851        +/- 0.0005288    (2.785%)
+b               = 11819.7          +/- 773.5        (6.544%)
+c               = 0.497031         +/- 0.0002074    (0.04173%)
+d               = -0.502703        +/- 0.0001008    (0.02005%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.526  1.000 
+c               0.044  0.012  1.000 
+d              -0.135  0.230 -0.000  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 16:57:25 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 8.0678040404e-05   0.00e+00  2.75e-01    1.898514e-02   1.181969e+04   4.970313e-01  -5.027032e-01
+   5 6.4963490312e-05  -2.29e-02  2.75e-06    2.077824e-02   1.115431e+04   4.969678e-01  -5.026867e-01
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 6.49635e-05
+rel. change during last iteration : -2.286e-07
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000992117
+variance of residuals (reduced chisquare) = WSSR/ndf   : 9.84295e-07
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0207782        +/- 0.0006624    (3.188%)
+b               = 11154.3          +/- 835.9        (7.494%)
+c               = 0.496968         +/- 0.0002443    (0.04915%)
+d               = -0.502687        +/- 0.0001284    (0.02555%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.524  1.000 
+c               0.042  0.010  1.000 
+d              -0.137  0.234  0.000  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 17:13:01 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 6.4963490312e-05   0.00e+00  2.79e-01    2.077824e-02   1.115431e+04   4.969678e-01  -5.026867e-01
+   1 6.4963490312e-05   0.00e+00  2.79e+04    2.077824e-02   1.115431e+04   4.969678e-01  -5.026867e-01
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 6.49635e-05
+rel. change during last iteration : 0
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000992117
+variance of residuals (reduced chisquare) = WSSR/ndf   : 9.84295e-07
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0207782        +/- 0.0006624    (3.188%)
+b               = 11154.3          +/- 835.9        (7.494%)
+c               = 0.496968         +/- 0.0002443    (0.04915%)
+d               = -0.502687        +/- 0.0001284    (0.02555%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.524  1.000 
+c               0.042  0.010  1.000 
+d              -0.137  0.234  0.000  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 17:22:29 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 1.1222072445e-04   0.00e+00  2.79e-01    2.077824e-02   1.115431e+04   4.969678e-01  -5.026867e-01
+   5 9.3713280648e-05  -2.20e-02  2.79e-06    2.271946e-02   1.057008e+04   4.969150e-01  -5.026695e-01
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 9.37133e-05
+rel. change during last iteration : -2.19659e-07
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00119159
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.4199e-06
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0227195        +/- 0.0007851    (3.455%)
+b               = 10570.1          +/- 859.1        (8.128%)
+c               = 0.496915         +/- 0.0002719    (0.05472%)
+d               = -0.502669        +/- 0.0001546    (0.03076%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.522  1.000 
+c               0.041  0.008  1.000 
+d              -0.139  0.237  0.000  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 17:31:19 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 1.4611874840e-04   0.00e+00  2.83e-01    2.271946e-02   1.057008e+04   4.969150e-01  -5.026695e-01
+   5 1.2444929559e-04  -2.16e-02  2.83e-06    2.480129e-02   1.003958e+04   4.968634e-01  -5.026516e-01
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 0.000124449
+rel. change during last iteration : -2.16233e-07
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00137317
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.8856e-06
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0248013        +/- 0.0008933    (3.602%)
+b               = 10039.6          +/- 851          (8.477%)
+c               = 0.496863         +/- 0.0002907    (0.05851%)
+d               = -0.502652        +/- 0.0001786    (0.03553%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.521  1.000 
+c               0.040  0.007  1.000 
+d              -0.141  0.241  0.000  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 17:46:50 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 9.7407696694e-05   0.00e+00  2.88e-01    2.480129e-02   1.003958e+04   4.968634e-01  -5.026516e-01
+   5 8.7988828140e-05  -3.86e-01  2.88e-06    2.504464e-02   8.912931e+03   4.966398e-01  -5.026457e-01
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 8.79888e-05
+rel. change during last iteration : -3.85571e-06
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00115463
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.33316e-06
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0250446        +/- 0.0007292    (2.912%)
+b               = 8912.93          +/- 611.6        (6.862%)
+c               = 0.49664          +/- 0.0002492    (0.05019%)
+d               = -0.502646        +/- 0.000151     (0.03005%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.517  1.000 
+c               0.038  0.003  1.000 
+d              -0.146  0.249  0.000  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 17:58:08 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 7.7037195218e-05   0.00e+00  2.87e-01    2.504464e-02   8.912931e+03   4.966398e-01  -5.026457e-01
+   5 6.5967586879e-05  -8.04e-01  2.87e-06    2.561184e-02   8.117698e+03   4.963385e-01  -5.026329e-01
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 6.59676e-05
+rel. change during last iteration : -8.03644e-06
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000999754
+variance of residuals (reduced chisquare) = WSSR/ndf   : 9.99509e-07
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0256118        +/- 0.0006168    (2.408%)
+b               = 8117.7           +/- 461.3        (5.683%)
+c               = 0.496339         +/- 0.0002159    (0.04349%)
+d               = -0.502633        +/- 0.0001314    (0.02615%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.513  1.000 
+c               0.036 -0.000  1.000 
+d              -0.151  0.256  0.000  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 18:08:00 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 1.0110459153e-02   0.00e+00  2.86e-01    2.561184e-02   8.117698e+03   4.963385e-01  -5.026329e-01
+   9 3.0559071790e-03  -3.39e-01  2.86e-10    5.034925e-02   4.307633e+03   4.895028e-01  -5.023980e-01
+
+After 9 iterations the fit converged.
+final sum of squares of residuals : 0.00305591
+rel. change during last iteration : -3.39423e-06
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00680453
+variance of residuals (reduced chisquare) = WSSR/ndf   : 4.63016e-05
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0503492        +/- 0.003553     (7.058%)
+b               = 4307.63          +/- 725.7        (16.85%)
+c               = 0.489503         +/- 0.0008634    (0.1764%)
+d               = -0.502398        +/- 0.0009361    (0.1863%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.480  1.000 
+c               0.026 -0.020  1.000 
+d              -0.186  0.313 -0.000  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 18:08:13 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 3.0559071790e-03   0.00e+00  3.41e-01    5.034925e-02   4.307633e+03   4.895028e-01  -5.023980e-01
+   1 3.0559043912e-03  -9.12e-02  3.41e-02    5.034907e-02   4.307548e+03   4.894978e-01  -5.023982e-01
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 0.0030559
+rel. change during last iteration : -9.12259e-07
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00680453
+variance of residuals (reduced chisquare) = WSSR/ndf   : 4.63016e-05
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0503491        +/- 0.003553     (7.058%)
+b               = 4307.55          +/- 725.6        (16.85%)
+c               = 0.489498         +/- 0.0008634    (0.1764%)
+d               = -0.502398        +/- 0.0009361    (0.1863%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.480  1.000 
+c               0.026 -0.020  1.000 
+d              -0.186  0.313 -0.000  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 18:08:35 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 3.0559043912e-03   0.00e+00  3.41e-01    5.034907e-02   4.307548e+03   4.894978e-01  -5.023982e-01
+   1 3.0559043408e-03  -1.65e-03  3.41e-02    5.034893e-02   4.307492e+03   4.894977e-01  -5.023982e-01
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 0.0030559
+rel. change during last iteration : -1.65026e-08
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00680453
+variance of residuals (reduced chisquare) = WSSR/ndf   : 4.63016e-05
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0503489        +/- 0.003553     (7.058%)
+b               = 4307.49          +/- 725.6        (16.85%)
+c               = 0.489498         +/- 0.0008634    (0.1764%)
+d               = -0.502398        +/- 0.0009361    (0.1863%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.480  1.000 
+c               0.026 -0.020  1.000 
+d              -0.186  0.313 -0.000  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 18:10:04 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 69
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 3.0385529103e-03   0.00e+00  3.32e-01    5.034893e-02   4.307492e+03   4.894977e-01  -5.023982e-01
+   8 3.0279003272e-03  -8.35e-01  3.32e-09    5.046087e-02   4.683772e+03   4.889739e-01  -5.022810e-01
+
+After 8 iterations the fit converged.
+final sum of squares of residuals : 0.0030279
+rel. change during last iteration : -8.34502e-06
+
+degrees of freedom    (FIT_NDF)                        : 65
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00682518
+variance of residuals (reduced chisquare) = WSSR/ndf   : 4.65831e-05
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0504609        +/- 0.003652     (7.237%)
+b               = 4683.77          +/- 830.9        (17.74%)
+c               = 0.488974         +/- 0.000924     (0.189%)
+d               = -0.502281        +/- 0.0009342    (0.186%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.440  1.000 
+c               0.065 -0.118  1.000 
+d              -0.185  0.308 -0.020  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 18:25:15 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 70
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 1.1457631010e-02   0.00e+00  3.45e-01    5.046087e-02   4.683772e+03   4.889739e-01  -5.022810e-01
+  10 2.0627302026e-05  -3.18e-01  3.45e-11    1.309450e-02   2.057179e+04   4.980720e-01  -5.027571e-01
+
+After 10 iterations the fit converged.
+final sum of squares of residuals : 2.06273e-05
+rel. change during last iteration : -3.17795e-06
+
+degrees of freedom    (FIT_NDF)                        : 66
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000559048
+variance of residuals (reduced chisquare) = WSSR/ndf   : 3.12535e-07
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0130945        +/- 0.0004351    (3.323%)
+b               = 20571.8          +/- 1598         (7.768%)
+c               = 0.498072         +/- 0.0001881    (0.03776%)
+d               = -0.502757        +/- 7.075e-05    (0.01407%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.540  1.000 
+c               0.058  0.030  1.000 
+d              -0.115  0.197 -0.000  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 18:27:00 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 69
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 1.1503787483e-05   0.00e+00  2.66e-01    1.309450e-02   2.057179e+04   4.980720e-01  -5.027571e-01
+   6 1.1193833112e-06  -1.43e-02  2.66e-07    1.028000e-02   1.579754e+04   4.971474e-01  -5.027775e-01
+
+After 6 iterations the fit converged.
+final sum of squares of residuals : 1.11938e-06
+rel. change during last iteration : -1.42916e-07
+
+degrees of freedom    (FIT_NDF)                        : 65
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00013123
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.72213e-08
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.01028          +/- 0.0001177    (1.145%)
+b               = 15797.5          +/- 354          (2.241%)
+c               = 0.497147         +/- 6.703e-05    (0.01348%)
+d               = -0.502778        +/- 1.676e-05    (0.003333%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.560  1.000 
+c               0.299  0.125  1.000 
+d              -0.095  0.208  0.004  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 18:39:54 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 69
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 1.1414681160e-05   0.00e+00  2.59e-01    1.028000e-02   1.579754e+04   4.971474e-01  -5.027775e-01
+   5 2.5394973087e-06  -3.37e-01  2.59e-06    1.213328e-02   1.501186e+04   4.972140e-01  -5.027641e-01
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 2.5395e-06
+rel. change during last iteration : -3.36736e-06
+
+degrees of freedom    (FIT_NDF)                        : 65
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000197659
+variance of residuals (reduced chisquare) = WSSR/ndf   : 3.90692e-08
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0121333        +/- 0.0001755    (1.447%)
+b               = 15011.9          +/- 426.2        (2.839%)
+c               = 0.497214         +/- 8.571e-05    (0.01724%)
+d               = -0.502764        +/- 2.529e-05    (0.005029%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.567  1.000 
+c               0.288  0.127  1.000 
+d              -0.094  0.211  0.006  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 18:49:19 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 69
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 1.5706362936e-05   0.00e+00  2.62e-01    1.213328e-02   1.501186e+04   4.972140e-01  -5.027641e-01
+   5 5.0517466705e-06  -1.47e-01  2.62e-06    1.418491e-02   1.445821e+04   4.972956e-01  -5.027482e-01
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 5.05175e-06
+rel. change during last iteration : -1.47295e-06
+
+degrees of freedom    (FIT_NDF)                        : 65
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000278782
+variance of residuals (reduced chisquare) = WSSR/ndf   : 7.77192e-08
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0141849        +/- 0.0002463    (1.737%)
+b               = 14458.2          +/- 493.3        (3.412%)
+c               = 0.497296         +/- 0.0001035    (0.0208%)
+d               = -0.502748        +/- 3.571e-05    (0.007104%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.574  1.000 
+c               0.279  0.128  1.000 
+d              -0.093  0.213  0.007  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 19:06:04 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 69
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 2.1152837862e-05   0.00e+00  2.65e-01    1.418491e-02   1.445821e+04   4.972956e-01  -5.027482e-01
+   5 8.5814257193e-06  -1.24e-01  2.65e-06    1.642471e-02   1.404679e+04   4.973809e-01  -5.027296e-01
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 8.58143e-06
+rel. change during last iteration : -1.24237e-06
+
+degrees of freedom    (FIT_NDF)                        : 65
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000363348
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.32022e-07
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0164247        +/- 0.0003202    (1.949%)
+b               = 14046.8          +/- 538.5        (3.833%)
+c               = 0.497381         +/- 0.0001164    (0.02341%)
+d               = -0.50273         +/- 4.66e-05     (0.009269%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.580  1.000 
+c               0.271  0.129  1.000 
+d              -0.092  0.215  0.007  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 19:33:35 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 69
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 2.7460409953e-05   0.00e+00  2.70e-01    1.642471e-02   1.404679e+04   4.973809e-01  -5.027296e-01
+   5 1.2862187090e-05  -1.18e-01  2.70e-06    1.882970e-02   1.370030e+04   4.974593e-01  -5.027087e-01
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 1.28622e-05
+rel. change during last iteration : -1.18406e-06
+
+degrees of freedom    (FIT_NDF)                        : 65
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000444837
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.9788e-07
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0188297        +/- 0.0003911    (2.077%)
+b               = 13700.3          +/- 560          (4.087%)
+c               = 0.497459         +/- 0.0001243    (0.02499%)
+d               = -0.502709        +/- 5.71e-05     (0.01136%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.586  1.000 
+c               0.264  0.130  1.000 
+d              -0.091  0.216  0.008  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 19:44:05 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 69
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 3.4166072778e-05   0.00e+00  2.75e-01    1.882970e-02   1.370030e+04   4.974593e-01  -5.027087e-01
+   5 1.7450225957e-05  -8.30e-02  2.75e-06    2.136657e-02   1.335770e+04   4.975220e-01  -5.026859e-01
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 1.74502e-05
+rel. change during last iteration : -8.29717e-07
+
+degrees of freedom    (FIT_NDF)                        : 65
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000518136
+variance of residuals (reduced chisquare) = WSSR/ndf   : 2.68465e-07
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0213666        +/- 0.0004537    (2.123%)
+b               = 13357.7          +/- 559          (4.185%)
+c               = 0.497522         +/- 0.0001277    (0.02567%)
+d               = -0.502686        +/- 6.658e-05    (0.01324%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.590  1.000 
+c               0.256  0.129  1.000 
+d              -0.090  0.218  0.008  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 19:52:47 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 69
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 4.0680346764e-05   0.00e+00  2.81e-01    2.136657e-02   1.335770e+04   4.975220e-01  -5.026859e-01
+   5 2.1748233179e-05  -2.71e-02  2.81e-06    2.399663e-02   1.297669e+04   4.975631e-01  -5.026620e-01
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 2.17482e-05
+rel. change during last iteration : -2.70773e-07
+
+degrees of freedom    (FIT_NDF)                        : 65
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000578436
+variance of residuals (reduced chisquare) = WSSR/ndf   : 3.34588e-07
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0239966        +/- 0.000503     (2.096%)
+b               = 12976.7          +/- 537.3        (4.141%)
+c               = 0.497563         +/- 0.0001273    (0.02558%)
+d               = -0.502662        +/- 7.441e-05    (0.0148%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.592  1.000 
+c               0.249  0.127  1.000 
+d              -0.090  0.220  0.009  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 20:06:13 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 49
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 4.6144971894e-05   0.00e+00  3.02e-01    2.399663e-02   1.297669e+04   4.975631e-01  -5.026620e-01
+   5 2.4564279264e-05  -1.65e-02  3.02e-06    2.665391e-02   1.264116e+04   4.975825e-01  -5.025719e-01
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 2.45643e-05
+rel. change during last iteration : -1.64629e-07
+
+degrees of freedom    (FIT_NDF)                        : 45
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000738832
+variance of residuals (reduced chisquare) = WSSR/ndf   : 5.45873e-07
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0266539        +/- 0.000639     (2.397%)
+b               = 12641.2          +/- 606.1        (4.795%)
+c               = 0.497583         +/- 0.0001468    (0.02951%)
+d               = -0.502572        +/- 0.0001164    (0.02316%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.575  1.000 
+c               0.242  0.124  1.000 
+d              -0.110  0.267  0.011  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 20:16:01 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 34
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 4.9649705142e-05   0.00e+00  3.35e-01    2.665391e-02   1.264116e+04   4.975825e-01  -5.025719e-01
+   5 2.5075767202e-05  -1.01e-02  3.35e-06    2.929699e-02   1.232781e+04   4.975781e-01  -5.023995e-01
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 2.50758e-05
+rel. change during last iteration : -1.00609e-07
+
+degrees of freedom    (FIT_NDF)                        : 30
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000914253
+variance of residuals (reduced chisquare) = WSSR/ndf   : 8.35859e-07
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.029297         +/- 0.0007868    (2.686%)
+b               = 12327.8          +/- 675.7        (5.481%)
+c               = 0.497578         +/- 0.000166     (0.03335%)
+d               = -0.5024          +/- 0.0001822    (0.03627%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.542  1.000 
+c               0.236  0.120  1.000 
+d              -0.140  0.333  0.014  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 20:22:52 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 39
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 2.2079735159e-05   0.00e+00  3.38e-01    2.929699e-02   1.232781e+04   4.975781e-01  -5.023995e-01
+   5 9.0785158813e-06  -8.19e-01  3.38e-06    2.852944e-02   1.032753e+04   4.972548e-01  -5.024601e-01
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 9.07852e-06
+rel. change during last iteration : -8.18571e-06
+
+degrees of freedom    (FIT_NDF)                        : 35
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.0005093
+variance of residuals (reduced chisquare) = WSSR/ndf   : 2.59386e-07
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0285294        +/- 0.0004064    (1.425%)
+b               = 10327.5          +/- 305.2        (2.955%)
+c               = 0.497255         +/- 9.866e-05    (0.01984%)
+d               = -0.50246         +/- 9.416e-05    (0.01874%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.533  1.000 
+c               0.216  0.101  1.000 
+d              -0.145  0.325  0.011  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 20:31:37 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 39
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 1.2875567837e-03   0.00e+00  3.28e-01    2.852944e-02   1.032753e+04   4.972548e-01  -5.024601e-01
+   7 5.8247516678e-07  -1.65e-01  3.28e-08    8.590125e-03   1.715906e+04   4.971036e-01  -5.027441e-01
+
+After 7 iterations the fit converged.
+final sum of squares of residuals : 5.82475e-07
+rel. change during last iteration : -1.65319e-06
+
+degrees of freedom    (FIT_NDF)                        : 35
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000129004
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.66421e-08
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.00859012       +/- 0.0001185    (1.379%)
+b               = 17159.1          +/- 467.8        (2.726%)
+c               = 0.497104         +/- 7.849e-05    (0.01579%)
+d               = -0.502744        +/- 2.292e-05    (0.004558%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.520  1.000 
+c               0.313  0.121  1.000 
+d              -0.132  0.279  0.004  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 20:40:18 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 39
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 6.3330625336e-06   0.00e+00  2.61e-01    8.590125e-03   1.715906e+04   4.971036e-01  -5.027441e-01
+   6 4.9875747538e-07  -4.92e-01  2.61e-07    7.122394e-03   1.869333e+04   4.970918e-01  -5.027668e-01
+
+After 6 iterations the fit converged.
+final sum of squares of residuals : 4.98757e-07
+rel. change during last iteration : -4.91998e-06
+
+degrees of freedom    (FIT_NDF)                        : 35
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000119374
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.42502e-08
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.00712239       +/- 0.0001121    (1.574%)
+b               = 18693.3          +/- 577.4        (3.089%)
+c               = 0.497092         +/- 8.718e-05    (0.01754%)
+d               = -0.502767        +/- 2.109e-05    (0.004195%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.513  1.000 
+c               0.330  0.118  1.000 
+d              -0.131  0.272  0.002  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 20:47:08 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 39
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 5.0827481795e-06   0.00e+00  2.58e-01    7.122394e-03   1.869333e+04   4.970918e-01  -5.027668e-01
+   7 4.8050728673e-07  -4.91e-02  2.58e-08    5.811695e-03   2.083228e+04   4.971225e-01  -5.027816e-01
+
+After 7 iterations the fit converged.
+final sum of squares of residuals : 4.80507e-07
+rel. change during last iteration : -4.9084e-07
+
+degrees of freedom    (FIT_NDF)                        : 35
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00011717
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.37288e-08
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0058117        +/- 0.0001137    (1.957%)
+b               = 20832.3          +/- 790.5        (3.795%)
+c               = 0.497122         +/- 0.0001042    (0.02097%)
+d               = -0.502782        +/- 2.057e-05    (0.00409%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.506  1.000 
+c               0.352  0.117  1.000 
+d              -0.129  0.264 -0.001  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 20:52:55 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 39
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 3.8872018992e-06   0.00e+00  2.56e-01    5.811695e-03   2.083228e+04   4.971225e-01  -5.027816e-01
+   7 2.9968329072e-07  -1.44e-01  2.56e-08    4.651458e-03   2.384723e+04   4.972181e-01  -5.027948e-01
+
+After 7 iterations the fit converged.
+final sum of squares of residuals : 2.99683e-07
+rel. change during last iteration : -1.44029e-06
+
+degrees of freedom    (FIT_NDF)                        : 35
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 9.25331e-05
+variance of residuals (reduced chisquare) = WSSR/ndf   : 8.56238e-09
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.00465146       +/- 9.423e-05    (2.026%)
+b               = 23847.2          +/- 919.4        (3.855%)
+c               = 0.497218         +/- 0.0001022    (0.02055%)
+d               = -0.502795        +/- 1.612e-05    (0.003206%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.500  1.000 
+c               0.382  0.119  1.000 
+d              -0.124  0.254 -0.003  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 21:01:15 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 39
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 2.8536768113e-06   0.00e+00  2.54e-01    4.651458e-03   2.384723e+04   4.972181e-01  -5.027948e-01
+   7 1.1875598030e-07  -4.23e-01  2.54e-08    3.646243e-03   2.855466e+04   4.974039e-01  -5.028062e-01
+
+After 7 iterations the fit converged.
+final sum of squares of residuals : 1.18756e-07
+rel. change during last iteration : -4.22959e-06
+
+degrees of freedom    (FIT_NDF)                        : 35
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 5.82497e-05
+variance of residuals (reduced chisquare) = WSSR/ndf   : 3.39303e-09
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.00364624       +/- 6.411e-05    (1.758%)
+b               = 28554.7          +/- 922.7        (3.231%)
+c               = 0.497404         +/- 8.154e-05    (0.01639%)
+d               = -0.502806        +/- 1.005e-05    (0.002%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.499  1.000 
+c               0.429  0.131  1.000 
+d              -0.116  0.240 -0.005  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 21:12:27 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        x range restricted to [0.350000 : 0.600000]
+        #datapoints = 39
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 2.0499120313e-06   0.00e+00  2.53e-01    3.646243e-03   2.855466e+04   4.974039e-01  -5.028062e-01
+   8 5.2271938384e-08  -1.40e-02  2.53e-09    2.796518e-03   3.677583e+04   4.976795e-01  -5.028161e-01
+
+After 8 iterations the fit converged.
+final sum of squares of residuals : 5.22719e-08
+rel. change during last iteration : -1.39962e-07
+
+degrees of freedom    (FIT_NDF)                        : 35
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 3.86456e-05
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.49348e-09
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.00279652       +/- 4.865e-05    (1.74%)
+b               = 36775.8          +/- 1098         (2.987%)
+c               = 0.49768          +/- 7.106e-05    (0.01428%)
+d               = -0.502816        +/- 6.596e-06    (0.001312%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.503  1.000 
+c               0.509  0.163  1.000 
+d              -0.103  0.222 -0.007  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 21:47:33 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 49
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+fitted parameters initialized with current variable values
+
+
+
+*******************************************************************************
+Wed Jan  8 21:48:34 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 49
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 4.9002766880e+01   0.00e+00  5.60e-01    1.000000e+00   1.000000e+00   2.500000e-01  -5.028000e-01
+   8 2.8138105674e-09  -9.30e-03  5.60e-08    2.584284e-01   1.066591e+00   2.477457e-01  -7.612668e-01
+
+After 8 iterations the fit converged.
+final sum of squares of residuals : 2.81381e-09
+rel. change during last iteration : -9.29888e-08
+
+degrees of freedom    (FIT_NDF)                        : 45
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 7.90754e-06
+variance of residuals (reduced chisquare) = WSSR/ndf   : 6.25291e-11
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.258428         +/- 2.484e+04    (9.612e+06%)
+b               = 1.06659          +/- 1.025e+05    (9.612e+06%)
+c               = 0.247746         +/- 0.0007337    (0.2961%)
+d               = -0.761267        +/- 2.484e+04    (3.263e+06%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b              -1.000  1.000 
+c               0.328 -0.328  1.000 
+d              -1.000  1.000 -0.328  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 21:49:26 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 49
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 3.6354643582e-05   0.00e+00  2.52e-01    1.000000e-03   2.000000e+04   2.500000e-01  -5.028000e-01
+  74 4.1666702658e-11  -1.95e-09  2.52e+02    6.261340e-05   1.043528e+07   2.471597e-01  -5.028433e-01
+
+After 74 iterations the fit converged.
+final sum of squares of residuals : 4.16667e-11
+rel. change during last iteration : -1.95421e-14
+
+degrees of freedom    (FIT_NDF)                        : 45
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 9.62251e-07
+variance of residuals (reduced chisquare) = WSSR/ndf   : 9.25927e-13
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 6.26134e-05      +/- 2.209e-06    (3.528%)
+b               = 1.04353e+07      +/- 5.866e+05    (5.621%)
+c               = 0.24716          +/- 4.906e-06    (0.001985%)
+d               = -0.502843        +/- 1.447e-07    (2.877e-05%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.867  1.000 
+c               0.526  0.522  1.000 
+d               0.022  0.172  0.007  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 22:02:43 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 50
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 2.8129612231e-06   0.00e+00  2.51e-01    6.261340e-05   1.043528e+07   2.471597e-01  -5.028433e-01
+   3 2.6275393700e-06   0.00e+00  2.51e+04    6.261362e-05   1.043527e+07   2.471470e-01  -5.027816e-01
+
+After 3 iterations the fit converged.
+final sum of squares of residuals : 2.62754e-06
+rel. change during last iteration : 0
+
+degrees of freedom    (FIT_NDF)                        : 46
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000238999
+variance of residuals (reduced chisquare) = WSSR/ndf   : 5.71204e-08
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 6.26136e-05      +/- 0.0002643    (422.1%)
+b               = 1.04353e+07      +/- 9.629e+07    (922.7%)
+c               = 0.247147         +/- 0.00116      (0.4695%)
+d               = -0.502782        +/- 3.581e-05    (0.007123%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.656  1.000 
+c               0.562  0.466  1.000 
+d              -0.107  0.166 -0.020  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 22:31:59 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 50
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 3.2498971930e-06   0.00e+00  2.51e-01    6.261362e-05   1.043527e+07   2.471470e-01  -5.027816e-01
+   2 3.1991267469e-06   0.00e+00  2.51e+04    6.261373e-05   1.043526e+07   2.472424e-01  -5.027717e-01
+
+After 2 iterations the fit converged.
+final sum of squares of residuals : 3.19913e-06
+rel. change during last iteration : 0
+
+degrees of freedom    (FIT_NDF)                        : 46
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000263716
+variance of residuals (reduced chisquare) = WSSR/ndf   : 6.95462e-08
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 6.26137e-05      +/- 0.0002919    (466.3%)
+b               = 1.04353e+07      +/- 1.064e+08    (1020%)
+c               = 0.247242         +/- 0.001281     (0.5182%)
+d               = -0.502772        +/- 3.952e-05    (0.007859%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.657  1.000 
+c               0.563  0.466  1.000 
+d              -0.107  0.166 -0.019  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 22:32:47 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 50
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 4.9995557937e+01   0.00e+00  5.60e-01    1.000000e+00   1.000000e+00   2.500000e-01  -5.028000e-01
+  48 3.2390760943e-06  -9.51e-04  5.60e-07    1.815799e+00   4.163522e+00   2.478477e-01  -2.318494e+00
+
+After 48 iterations the fit converged.
+final sum of squares of residuals : 3.23908e-06
+rel. change during last iteration : -9.50786e-09
+
+degrees of freedom    (FIT_NDF)                        : 46
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000265358
+variance of residuals (reduced chisquare) = WSSR/ndf   : 7.04147e-08
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 1.8158           +/- 5.804e+04    (3.196e+06%)
+b               = 4.16352          +/- 1.331e+05    (3.197e+06%)
+c               = 0.247848         +/- 0.0008712    (0.3515%)
+d               = -2.31849         +/- 5.804e+04    (2.503e+06%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b              -1.000  1.000 
+c               0.303 -0.303  1.000 
+d              -1.000  1.000 -0.303  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 22:33:08 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 50
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 7.7015226228e+00   0.00e+00  2.03e+01    1.815799e+00   2.000000e+04   2.478477e-01  -2.318494e+00
+   9 3.2390377406e-06  -2.03e-01  2.03e-05    2.962537e-01   2.552620e+01   2.478475e-01  -7.989482e-01
+
+After 9 iterations the fit converged.
+final sum of squares of residuals : 3.23904e-06
+rel. change during last iteration : -2.02799e-06
+
+degrees of freedom    (FIT_NDF)                        : 46
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.000265356
+variance of residuals (reduced chisquare) = WSSR/ndf   : 7.04139e-08
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.296254         +/- 1544         (5.212e+05%)
+b               = 25.5262          +/- 1.331e+05    (5.214e+05%)
+c               = 0.247848         +/- 0.0008713    (0.3515%)
+d               = -0.798948        +/- 1544         (1.933e+05%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b              -1.000  1.000 
+c               0.303 -0.303  1.000 
+d              -1.000  1.000 -0.303  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 22:33:31 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 50
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 4.3614283257e+00   0.00e+00  4.00e-01    1.000000e-03   2.000000e+04   2.478475e-01  -7.989482e-01
+  46 1.1628157371e-08  -4.47e-01  4.00e-06    1.806359e-03   2.636031e+07   2.473215e-01  -5.028268e-01
+
+After 46 iterations the fit converged.
+final sum of squares of residuals : 1.16282e-08
+rel. change during last iteration : -4.47369e-06
+
+degrees of freedom    (FIT_NDF)                        : 46
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 1.58992e-05
+variance of residuals (reduced chisquare) = WSSR/ndf   : 2.52786e-10
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.00180636       +/- 3.237e-05    (1.792%)
+b               = 2.63603e+07      +/- 1.036e+06    (3.929%)
+c               = 0.247321         +/- 2.72e-06     (0.0011%)
+d               = -0.502827        +/- 2.341e-06    (0.0004656%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.828  1.000 
+c               0.686  0.528  1.000 
+d              -0.038  0.123 -0.046  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 22:52:20 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 50
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 5.5081138193e-07   0.00e+00  2.88e-01    1.806359e-03   2.636031e+07   2.473215e-01  -5.028268e-01
+  14 2.5371572485e-08   0.00e+00  2.88e+03    1.766087e-03   3.418386e+07   2.472695e-01  -5.028283e-01
+
+After 14 iterations the fit converged.
+final sum of squares of residuals : 2.53716e-08
+rel. change during last iteration : 0
+
+degrees of freedom    (FIT_NDF)                        : 46
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 2.34852e-05
+variance of residuals (reduced chisquare) = WSSR/ndf   : 5.51556e-10
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.00176609       +/- 6.467e-05    (3.662%)
+b               = 3.41839e+07      +/- 2.479e+06    (7.253%)
+c               = 0.24727          +/- 4.968e-06    (0.002009%)
+d               = -0.502828        +/- 3.436e-06    (0.0006834%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.886  1.000 
+c               0.771  0.643  1.000 
+d              -0.050  0.072 -0.060  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 23:44:49 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 50
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 1.3015661036e-04   0.00e+00  2.51e-01    1.000000e-03   2.000000e+04   2.500000e-01  -5.020000e-01
+  30 1.8639820274e-08   0.00e+00  2.51e+04    2.392114e-03   5.536492e+07   2.472429e-01  -5.028301e-01
+
+After 30 iterations the fit converged.
+final sum of squares of residuals : 1.86398e-08
+rel. change during last iteration : 0
+
+degrees of freedom    (FIT_NDF)                        : 46
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 2.01299e-05
+variance of residuals (reduced chisquare) = WSSR/ndf   : 4.05213e-10
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.00239211       +/- 6.76e-05     (2.826%)
+b               = 5.53649e+07      +/- 2.755e+06    (4.975%)
+c               = 0.247243         +/- 4.948e-06    (0.002001%)
+d               = -0.50283         +/- 2.93e-06     (0.0005828%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.882  1.000 
+c               0.914  0.827  1.000 
+d              -0.111  0.001 -0.090  1.000 
+
+
+*******************************************************************************
+Wed Jan  8 23:59:53 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 50
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 2.8553479259e-04   0.00e+00  2.51e-01    1.000000e-03   2.000000e+04   2.500000e-01  -5.020000e-01
+  56 5.1119179483e-08  -7.02e-01  2.51e-21    1.433150e-02   7.212158e+07   2.474022e-01  -5.028121e-01
+
+After 56 iterations the fit converged.
+final sum of squares of residuals : 5.11192e-08
+rel. change during last iteration : -7.01554e-06
+
+degrees of freedom    (FIT_NDF)                        : 46
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 3.3336e-05
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.11129e-09
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0143315        +/- 5.734e-05    (0.4001%)
+b               = 7.21216e+07      +/- 1.295e+06    (1.795%)
+c               = 0.247402         +/- 8.058e-07    (0.0003257%)
+d               = -0.502812        +/- 4.865e-06    (0.0009675%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.530  1.000 
+c               0.809  0.640  1.000 
+d              -0.111  0.128 -0.033  1.000 
+
+
+*******************************************************************************
+Thu Jan  9 00:08:02 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 50
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 1.2925057691e-04   0.00e+00  2.51e-01    1.000000e-03   2.000000e+04   2.500000e-01  -5.020000e-01
+  26 2.7815787931e-08  -3.40e-01  2.51e-18    3.243120e-03   4.185430e+07   2.473674e-01  -5.028216e-01
+
+After 26 iterations the fit converged.
+final sum of squares of residuals : 2.78158e-08
+rel. change during last iteration : -3.40215e-06
+
+degrees of freedom    (FIT_NDF)                        : 46
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 2.45905e-05
+variance of residuals (reduced chisquare) = WSSR/ndf   : 6.04691e-10
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.00324312       +/- 3.853e-05    (1.188%)
+b               = 4.18543e+07      +/- 9.586e+05    (2.29%)
+c               = 0.247367         +/- 2.094e-06    (0.0008466%)
+d               = -0.502822        +/- 3.595e-06    (0.0007149%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.543  1.000 
+c               0.697  0.416  1.000 
+d              -0.140  0.101 -0.088  1.000 
+
+
+*******************************************************************************
+Thu Jan  9 00:09:59 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 49
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 2.7815659692e-08   0.00e+00  3.38e-01    3.243120e-03   4.185430e+07   2.473674e-01  -5.028216e-01
+   1 2.7815659692e-08   0.00e+00  3.38e+04    3.243120e-03   4.185430e+07   2.473674e-01  -5.028216e-01
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 2.78157e-08
+rel. change during last iteration : 0
+
+degrees of freedom    (FIT_NDF)                        : 45
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 2.48621e-05
+variance of residuals (reduced chisquare) = WSSR/ndf   : 6.18126e-10
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.00324312       +/- 0.002349     (72.42%)
+b               = 4.18543e+07      +/- 2.181e+07    (52.11%)
+c               = 0.247367         +/- 1.225e-05    (0.00495%)
+d               = -0.502822        +/- 3.635e-06    (0.000723%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.999  1.000 
+c               0.987  0.987  1.000 
+d              -0.024 -0.017 -0.037  1.000 
+
+
+*******************************************************************************
+Thu Jan  9 00:10:20 2025
+
+
+FIT:    data read from 'spectrum_quasienergies_output.dat' u ((2*3.1416/(2*4.393835879146564))/$1):($2/50.0)
+        format = x:z
+        #datapoints = 49
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*exp(-b*(x - c)**2) + d
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c             d            
+   0 1.2740731570e-04   0.00e+00  2.51e-01    1.000000e-03   2.000000e+04   2.500000e-01  -5.020000e-01
+  53 8.8911594458e-09  -3.73e-01  2.51e+00    1.227842e-03   1.875963e+07   2.473231e-01  -5.028248e-01
+
+After 53 iterations the fit converged.
+final sum of squares of residuals : 8.89116e-09
+rel. change during last iteration : -3.72608e-06
+
+degrees of freedom    (FIT_NDF)                        : 45
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 1.40564e-05
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.97581e-10
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.00122784       +/- 4.518e-05    (3.68%)
+b               = 1.87596e+07      +/- 1.039e+06    (5.536%)
+c               = 0.247323         +/- 4.526e-06    (0.00183%)
+d               = -0.502825        +/- 2.08e-06     (0.0004137%)
+
+correlation matrix of the fit parameters:
+                a      b      c      d      
+a               1.000 
+b               0.884  1.000 
+c               0.796  0.745  1.000 
+d              -0.009  0.113 -0.006  1.000 

@@ -340,14 +340,14 @@ function PositionsZeros(psi0::Vector{Complex{Float64}},tcirc::Vector{Complex{Flo
 end
 
 
-n=75
+n=140
 om=1.0
-r=10.0
+r=50.0
 lambda0=0.0
 delta0=0.0
-eta0=2.0*r^(1/2)
+eta0=2.0
 psi0=0.0
-eta1=0.66*r^(1/2)
+eta1=1.4
 lambda1=0.0
 delta1=0.0
 psi1=0.0
@@ -360,9 +360,9 @@ alpha=1.0
 ph=0.0
 
 tmax=10.0
-tcirc=[0.0-0.5*im,0.0+0.5*im,10.0+0.5*im,10.0-0.5*im]
-tcircr=[0.0-0.0*im,0.0+0.5*im,10.0+0.5*im,10.0-0.0*im]
-tcircl=[0.0-0.5*im,0.0+0.0*im,10.0+0.0*im,10.0-0.5*im]
+tcirc=[0.0-0.2*im,0.0+0.2*im,10.0+0.2*im,10.0-0.2*im]
+tcircr=[0.0-0.0*im,0.0+0.2*im,10.0+0.2*im,10.0-0.0*im]
+tcircl=[0.0-0.2*im,0.0+0.0*im,10.0+0.0*im,10.0-0.2*im]
 
 istate = initialstatequench(n,om,r,lambda0,delta0,eta0,psi0)
 
@@ -377,8 +377,9 @@ amplitudint = amplitud(phi0,tmax,1.0,n,om,r,lambda1,delta1,eta1,psi1)
 
 
 
-#computingjz = Jz(phi0,tmax,1.0,n,om,r,lambda1,delta1,eta1,psi1)
+computingjz = Jz(phi0,tmax,1.0,n,om,r,lambda1,delta1,eta1,psi1)
 ovl = overlapdqpt(phi0,hamf)
+println("Overlap Done")
 rr = Nzeros(phi0,tcirc,1.0,n,om,r,lambda1,delta1,eta1,psi1,nsubint)
 rrr = Nzeros(phi0,tcircr,1.0,n,om,r,lambda1,delta1,eta1,psi1,nsubint)
 rrl = Nzeros(phi0,tcircl,1.0,n,om,r,lambda1,delta1,eta1,psi1,nsubint)
@@ -389,10 +390,10 @@ println("---------------------------------------------------------")
 println("")
 println("")
 
-println("-Calculating the position of the zeros in the complex plane-")
-pos = PositionsZeros(phi0,tcirc,1.0,n,om,r,lambda1,delta1,eta1,psi1,nsubint2,nsubint3)
+#println("-Calculating the position of the zeros in the complex plane-")
+#pos = PositionsZeros(phi0,tcirc,1.0,n,om,r,lambda1,delta1,eta1,psi1,nsubint2,nsubint3)
 
-println("Number of zeros found in the contour rectangle: ",pos)
-println("Their positions in the complex plane can be found in file position_zeros.dat")
+#println("Number of zeros found in the contour rectangle: ",pos)
+#println("Their positions in the complex plane can be found in file position_zeros.dat")
 
 end

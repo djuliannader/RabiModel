@@ -12,12 +12,12 @@ function diagonalize(n,om,r,lambda,delta,eta,psi)
  HMatrix=Array(Diagonal(vdiag))
  # non diagonal matrix elements
   for i in 1:n
-     HMatrix[2*i+1,2*i]=1.0*(2/2)*eta*((delta+1)/2)*(i)^(1/2)*exp(-im*psi)   # Jaynes-Cummings
-     HMatrix[2*i,2*i+1]=1.0*(2/2)*eta*((delta+1)/2)*(i)^(1/2)*exp(im*psi)   # Jaynes-Cummings
-     HMatrix[2+2*i,2*i-1]=1.0*(2/2)*eta*((1-delta)/2)*(i)^(1/2)*exp(im*psi)   # Anti Jaynes-Cummings
-     HMatrix[2*i-1,2+2*i]=1.0*(2/2)*eta*((1-delta)/2)*(i)^(1/2)*exp(-im*psi)   # Anti Jaynes-Cummings
-     HMatrix[2*i,2*i-1]=1.0*(lambda/2.0)*exp(im*psi)   # carrier
-     HMatrix[2*i-1,2*i]=1.0*(lambda/2.0)*exp(-im*psi)   # carrier
+     HMatrix[2*i+1,2*i]=1.0*(2/2)*eta*r^(1/2)*((delta+1)/2)*(i)^(1/2)*exp(-im*psi)   # Jaynes-Cummings
+     HMatrix[2*i,2*i+1]=1.0*(2/2)*eta*r^(1/2)*((delta+1)/2)*(i)^(1/2)*exp(im*psi)   # Jaynes-Cummings
+     HMatrix[2+2*i,2*i-1]=1.0*(2/2)*eta*r^(1/2)*((1-delta)/2)*(i)^(1/2)*exp(im*psi)   # Anti Jaynes-Cummings
+     HMatrix[2*i-1,2+2*i]=1.0*(2/2)*eta*r^(1/2)*((1-delta)/2)*(i)^(1/2)*exp(-im*psi)   # Anti Jaynes-Cummings
+     HMatrix[2*i,2*i-1]=1.0*r*(lambda/2.0)*exp(im*psi)   # carrier
+     HMatrix[2*i-1,2*i]=1.0*r*(lambda/2.0)*exp(-im*psi)   # carrier
  end
  evals=eigvals(HMatrix)
  evecs=eigvecs(HMatrix)
@@ -31,12 +31,12 @@ function hamiltonian(n,om,r,lambda,delta,eta,psi)
  HMatrix=Array(Diagonal(vdiag))
  # non diagonal matrix elements
  for i in 1:n
-     HMatrix[2*i+1,2*i]=1.0*(2/2)*eta*((delta+1)/2)*(i)^(1/2)*exp(-im*psi)   # Jaynes-Cummings
-     HMatrix[2*i,2*i+1]=1.0*(2/2)*eta*((delta+1)/2)*(i)^(1/2)*exp(im*psi)   # Jaynes-Cummings
-     HMatrix[2+2*i,2*i-1]=1.0*(2/2)*eta*((1-delta)/2)*(i)^(1/2)*exp(im*psi)   # Anti Jaynes-Cummings
-     HMatrix[2*i-1,2+2*i]=1.0*(2/2)*eta*((1-delta)/2)*(i)^(1/2)*exp(-im*psi)   # Anti Jaynes-Cummings
-     HMatrix[2*i,2*i-1]=1.0*(lambda/2.0)*exp(im*psi)   # carrier
-     HMatrix[2*i-1,2*i]=1.0*(lambda/2.0)*exp(-im*psi)   # carrier
+     HMatrix[2*i+1,2*i]=1.0*(2/2)*eta*r^(1/2)*((delta+1)/2)*(i)^(1/2)*exp(-im*psi)   # Jaynes-Cummings
+     HMatrix[2*i,2*i+1]=1.0*(2/2)*eta*r^(1/2)*((delta+1)/2)*(i)^(1/2)*exp(im*psi)   # Jaynes-Cummings
+     HMatrix[2+2*i,2*i-1]=1.0*(2/2)*eta*r^(1/2)*((1-delta)/2)*(i)^(1/2)*exp(im*psi)   # Anti Jaynes-Cummings
+     HMatrix[2*i-1,2+2*i]=1.0*(2/2)*eta*r^(1/2)*((1-delta)/2)*(i)^(1/2)*exp(-im*psi)   # Anti Jaynes-Cummings
+     HMatrix[2*i,2*i-1]=1.0*r*(lambda/2.0)*exp(im*psi)   # carrier
+     HMatrix[2*i-1,2*i]=1.0*r*(lambda/2.0)*exp(-im*psi)   # carrier
  end
  return HMatrix
 end

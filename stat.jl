@@ -38,6 +38,11 @@ function analysisH(N,om,r,lambda,delta,nn,nu,chi,eta,psi)
        println(ioa,(eigvs[1][2*i+1]+eigvs[1][2*i-1])/2," ",1.0/(eigvs[1][2*i+1]-eigvs[1][2*i-1])," ",(evfvecs[2*i+1]+evfvecs[2*i-1])/2," ",1.0/(evfvecs[2*i+1]-evfvecs[2*i-1]))
      end
    end
+   #open("DensityOfStates_output2.dat","w") do ioa
+   # for i in 1:trunc(Int64,length(eigvs[1]))
+   #   println(ioa,eigvs[1][i]/r)
+   # end
+   #end
    end
    end
    return "Done"

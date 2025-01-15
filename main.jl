@@ -15,9 +15,6 @@ println("\r Initiating ")
 
 
 
-
-
-
 # Reading data from input file
 #------------------------------------
 open("input.dat") do f
@@ -78,6 +75,7 @@ open("input.dat") do f
  L = parse(Float64, K38)
  
 
+
 ##-------------
 #
 #
@@ -94,19 +92,18 @@ println("fermionic frequency R:        ",r)
 println("hbar:                         ",hbar)
 println("parameter delta:              ",delta)
 println("carrier  parameter lambda:    ",lambda)
-println("coupling parameter eta:       ",eta)
+println("coupling parameter g  :       ",eta)
 println("phase parameter psi:          ",psi)
 println("frequency of the driven term: ",nu)
 println("strength of the driven term : ",chi)
 println("State of interest           : ",kk)
-println("number of subperiods of the driving : ",nn)
+println("number of subperiods of the drive : ",nn)
 println("------------------------------------------------")
 
 
 println("------------------------------------------------")
 println("            Output                              ")
 if flag1==1  # Spectrum
-  println("See output file spectrum_output.dat")
   println("------------------------------------------------")
   open("spectrum_output.dat","w") do file
   spcj=trunc(Int,(lmm[2]-lmm[1])/intl)
@@ -114,7 +111,11 @@ if flag1==1  # Spectrum
   #println(listaj)
   for j in listaj
     print(file,string(j))
-    evalvec=diagonalization.diagonalize(N,om,r,lambda,delta,j,psi)
+    #if abs(lambda)<0.01
+      evalvec=diagonalization.diagonalize(N,om,r,lambda,delta,j,psi)
+    #else
+    #  evalvec=diagonalization.diagonalize(N,om,r,j,delta,eta,psi)
+    #end
     #println(j," ",evalvec[1][1])
     for i in evalvec[1]
       print(file,"  "," ",string(i))
@@ -122,10 +123,11 @@ if flag1==1  # Spectrum
   println(file," ")
   end
   end
+  println("See output file spectrum_output.dat")
   nup=0.5  # initial frequency
   nuint=0.01
   open("spectrum_quasienergies_output.dat","w") do file
-  for i in 1:250
+  for i in 1:200
   print(file,string(nup))
   qs = stat.quasienergies(N,om,r,lambda,delta,nn,nup,chi,eta,psi)
   for i in qs
@@ -141,18 +143,20 @@ if flag1==1  # Spectrum
   h0=diagonalization.hamiltonian(N,om,r,lambda,delta,eta,psi)
   eigvecsh0 = eigvecs(h0)
   open("spectrum_contributions_output.dat","w") do io
-  for i in 1:400
+  ovlist=[0.0,0.0,0.0,0.0,0.0]
+  for i in 1:10
     floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nup,eta,psi)
     vecordered = stat.orderinfvec(N,om,r,lambda,delta,nn,nup,chi,eta,psi)
     evsf=eigvecs(floquet)
-    listfstatek = [evsf[i,vecordered[kk]] for i in 1:2*N]
+    listfstatek = [evsf[j,vecordered[kk]] for j in 1:2*N]
     psifk = wigner_eig.buildingstate(listfstatek,N)
-    for kh0 in 1:10
+    for kh0 in 1:5
       listh0statek = [eigvecsh0[i,kh0] for i in 1:2*N]
       lhk = transpose(listh0statek)
       ov = abs2(lhk*listfstatek)
-      println(io,2*pi/nup,"  ",kh0-1," ",ov)
+      ovlist[kh0]=ov
     end
+    println(io,nup,"  ",ovlist[1]," ",ovlist[2]," ",ovlist[3]," ", ovlist[4]," ",ovlist[5])
     nup=nup+nuint
   end
   end
@@ -161,15 +165,22 @@ if flag1==1  # Spectrum
 
 
 if flag1==3
-   message=stat.analysisH(N,om,r,lambda,delta,nn,nu,chi,eta,psi)
+   println("------ Results of the time-independent AQRM   --------------")
+   message = stat.analysisH(N,om,r,lambda,delta,nn,nu,chi,eta,psi)
+   evalst  = diagonalization.diagonalize(N,om,r,lambda,delta,eta,psi)
+   wigeig  = wigner_eig.wigner_eigenstate(N,om,r,lambda,delta,eta,psi,kk,L)
+   println("Ground state energy of the AQRM :",evalst[1][1])
+   println("Energy of the ",kk," state of the AQRM :",evalst[1][kk])
+   println("Negativity of the ",kk," state of the AQRM :",real(wigeig[1]))
+   println("------ Results of the modulated AQRM-------------------------")
+   wfloquet   = wigner_eig.wigner_driven(N,om,r,lambda,delta,eta,psi,nu,chi,nn,kk,L)
    rpar=stat.parameter_r(N,om,r,lambda,delta,nn,nu,chi,eta,psi)
-   evalst=diagonalization.diagonalize(N,om,r,lambda,delta,eta,psi)
-   mswigeig = wigner_eig.wigner_eigenstate(N,om,r,lambda,delta,eta,psi,kk,L)
-   mswflo   = wigner_eig.wigner_driven(N,om,r,lambda,delta,eta,psi,nu,chi,nn,kk,L)
    # mswflod  = wigner_eig.wigner_drivenqs(N,om,r,lambda,delta,eta,psi,nu,chi,nn,kk,L)
-   println("Ground state energy of the time independent Hamiltonian :",evalst[1][1])
-   println("parameter <r> of the Floquet operator :",rpar)
+   println("parameter <r> of the Floquet operator : ",rpar)
+   println("expectation value of the AQRM Hamiltonian in the Floquet ",kk,"-th stationary state: ",real(wfloquet[1]))
+   println("Negativity of the ",kk,"-th stationary state: ",real(wfloquet[2]))
    println("See file levels_output.dat")
+   println("-------------------------------------------------------------")
    # --------------------------------------
   end
 
