@@ -8,10 +8,20 @@ clone as:
 git clone https://github.com/djuliannader/RabiModel.git
 ```
 
-run as:
+For stationary states, manipulate parameters from input.dat and run as:
 
 ```bash
 julia main.jl
 ```
 
-Manipulate parameters from the input file input.dat
+For the survival amplitude of quench dynamics, manipulate parameters from main_dqpts.jl and run as :
+
+```bash
+julia main_dqpts.jl
+```
+
+For the survival amplitude of quench dynamics, with initial thermal state, manipulate parameters from main_dqpts.jl and run as :
+
+```bash
+julia main_dqpts_thermal.jl
+```

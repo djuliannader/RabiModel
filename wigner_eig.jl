@@ -7,9 +7,11 @@ using PyPlot
 import stat
 import diagonalization
 import troterization
+import Fisher
 
 
 Qexabs(v) = Qexabs(v...)  # denominator accepts a vector
+QWehrl(v) = QWehrl(v...)  # denominator accepts a vector
 
 function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   bc=FockBasis(Nmax)
@@ -22,6 +24,7 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   phi = buildingstate(listvec,Nmax)
   rho = dm(phi)
   rhopt = ptrace(rho,2)
+  pur=tr(rhopt^2)
   QQ = wigner(rhopt, x, x)
   QQs = transpose(QQ)
   tick_params(labelsize=20)
@@ -53,6 +56,8 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   println("p 4 moment : ",p4m-4*p3m*p1m+6*p2m*p1m^2-4*p1m^4+p1m^4)
   un = (x2m-x1m^2)^(1/2)*(p2m-p1m^2)^(1/2)
   println("Uncertainity : ",un)
+  qfi = Fisher.fisherp(rhopt,Nmax)
+  println("QFI[rho,p] : ", qfi)
   xy=xycircle(0.18,20)
   #scatter(xy[1],xy[2],s=2,color="black")
   global rhopti=rhopt
@@ -60,6 +65,61 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   tight_layout()
   savefig("wigner_eigenstate.png")
   println("See wigner_eigenstate.png for the Wigner function of the ",k,"-eigenstate of the QRM")
+  return [real(den[1]-1.0),pur]
+end
+
+function wigner_evolt(Nmax,om,r,lambda,delta,eta,psi,L,phi0,t)
+  bc=FockBasis(Nmax)
+  ba=SpinBasis(1//2)
+  x = [-L:0.1:L;]
+  xm = x/r^(1/2)
+  ham=diagonalization.hamiltonian(Nmax,om,r,lambda,delta,eta,psi)
+  U = exp(-im*t*ham)
+  phit=U*phi0
+  listvec=[phit[i] for i in 1:2*Nmax]
+  phi = buildingstate(listvec,Nmax)
+  rho = dm(phi)
+  rhopt = ptrace(rho,2)
+  QQ = wigner(rhopt, x, x)
+  QQs = transpose(QQ)
+  tick_params(labelsize=20)
+  xticks([-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5])
+  yticks([-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5])
+  pcolormesh(xm, xm, QQs, cmap=:bwr,vmin=-0.1,vmax=0.1)
+  #colorbar()
+  bc=FockBasis(Nmax)
+  adop=create(bc)
+  aop = destroy(bc)
+  xop=(1/(2)^(1/2))*(aop+adop)
+  pop=(im/(2)^(1/2))*(adop-aop)
+  x1m=expect(xop,rhopt)
+  x2m=expect(xop^2,rhopt)
+  x3m=expect(xop^3,rhopt)
+  x4m=expect(xop^4,rhopt)
+  p1m=expect(pop,rhopt)
+  p2m=expect(pop^2,rhopt)
+  p3m=expect(pop^3,rhopt)
+  p4m=expect(pop^4,rhopt)
+  println("central moments of the state at time ",t)
+  println("x 1 moment (normalized): ",x1m/r^(1/2))
+  println("p 1 moment (normalized): ",p1m/r^(1/2))
+  println("x 2 moment : ",x2m-x1m^2)
+  println("p 2 moment : ",p2m-p1m^2)
+  println("x 3 moment : ",x3m-3*x2m*x1m+3*x1m^3-x1m^3)
+  println("p 3 moment : ",p3m-3*p2m*p1m+3*p1m^3-p1m^3)
+  println("x 4 moment : ",x4m-4*x3m*x1m+6*x2m*x1m^2-4*x1m^4+x1m^4)
+  println("p 4 moment : ",p4m-4*p3m*p1m+6*p2m*p1m^2-4*p1m^4+p1m^4)
+  un = (x2m-x1m^2)^(1/2)*(p2m-p1m^2)^(1/2)
+  fotoc = (x2m-x1m^2)^(1/2) + (p2m-p1m^2)^(1/2)
+  println("Uncertainity : ",un)
+  println("Fotoc : ",real(fotoc))
+  xy=xycircle(0.18,20)
+  #scatter(xy[1],xy[2],s=2,color="black")
+  global rhopti=rhopt
+  den=hcubature(Qexabs,(-L,-L),(L,L))
+  tight_layout()
+  savefig("wigner_psit.png")
+  println("See wigner_psit.png for the Wigner function of the state at time= ", t, " evolving under the time-independent AQRM")
   return [real(den[1]-1.0)]
 end
 
@@ -75,11 +135,13 @@ end
    phi = buildingstate(listvec,Nmax)
    rho = dm(phi)
    rhopt = ptrace(rho,2)
+   pur=tr(rhopt^2)
    QQ = wigner(rhopt, x, x)
    QQs=transpose(QQ)
    pcolormesh(xm, xm, QQs, cmap=:bwr,vmin=-0.1,vmax=0.1)
    global rhopti=rhopt
    den=hcubature(Qexabs,(-L,-L),(L,L))
+   #wentropy=hcubature(QWehrl,(-L,-L),(L,L))
    bc=FockBasis(Nmax)
    adop=create(bc)
    aop = destroy(bc)
@@ -103,7 +165,8 @@ end
    println("x 4 moment : ",x4m-4*x3m*x1m+6*x2m*x1m^2-4*x1m^4+x1m^4)
    println("p 4 moment : ",p4m-4*p3m*p1m+6*p2m*p1m^2-4*p1m^4+p1m^4)
    un = (x2m-x1m^2)^(1/2)*(p2m-p1m^2)^(1/2)
-  println("Uncertainity : ",un)
+   println("Uncertainity : ",un)
+   #callqfi = Fisher.fishervsphi(rhopt,Nmax)
    tight_layout()
    savefig("wigner_driven.png")
    println("See wigner_driven.png for the Wigner function of the ",k,"-eigenstate of the Floquet operator")
@@ -111,8 +174,76 @@ end
    eigvecf0=[evs[j,vecordered[k]] for j in 1:2*(Nmax+1)]
    eigvecf0_t = transpose(eigvecf0)
    exp_val = eigvecf0_t*ham0*eigvecf0
-   return [exp_val,real(den[1]-1.0)] 
+   eigvecsH0 = eigvecs(ham0)
+   fid = 0.0
+   #nk = k
+   #for ik in 1:40
+   #  statekH0 = [eigvecsH0[j,nk] for j in 1:2*(Nmax+1)]
+   #  fidinst = abs2(eigvecf0_t*statekH0)
+   #  if fidinst > fid 
+   #    fid = fidinst
+   #    nk = ik
+   #  end
+   #end
+   return [exp_val,real(den[1]-1.0),pur] 
  end
+
+function wigner_evolt_driven(Nmax,om,r,lambda,delta,eta,psi,nu,chi,Nf,L,phi0,pf)
+  bc=FockBasis(Nmax)
+  ba=SpinBasis(1//2)
+  x = [-L:0.1:L;]
+  xm = x/r^(1/2)
+  floquet=troterization.troter(Nmax,Nf,r,om,lambda,delta,chi,nu,eta,psi)
+  phit=phi0
+  for i in 1:pf
+   phit = floquet*phit
+  end
+  listvec=[phit[i] for i in 1:2*Nmax]
+  phi = buildingstate(listvec,Nmax)
+  rho = dm(phi)
+  rhopt = ptrace(rho,2)
+  QQ = wigner(rhopt, x, x)
+  QQs = transpose(QQ)
+  tick_params(labelsize=20)
+  xticks([-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5])
+  yticks([-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5])
+  pcolormesh(xm, xm, QQs, cmap=:bwr,vmin=-0.1,vmax=0.1)
+  #colorbar()
+  bc=FockBasis(Nmax)
+  adop=create(bc)
+  aop = destroy(bc)
+  xop=(1/(2)^(1/2))*(aop+adop)
+  pop=(im/(2)^(1/2))*(adop-aop)
+  x1m=expect(xop,rhopt)
+  x2m=expect(xop^2,rhopt)
+  x3m=expect(xop^3,rhopt)
+  x4m=expect(xop^4,rhopt)
+  p1m=expect(pop,rhopt)
+  p2m=expect(pop^2,rhopt)
+  p3m=expect(pop^3,rhopt)
+  p4m=expect(pop^4,rhopt)
+  println("central moments of the state at time ",pf*(2*pi)/nu)
+  println("x 1 moment (normalized): ",x1m/r^(1/2))
+  println("p 1 moment (normalized): ",p1m/r^(1/2))
+  println("x 2 moment : ",x2m-x1m^2)
+  println("p 2 moment : ",p2m-p1m^2)
+  println("x 3 moment : ",x3m-3*x2m*x1m+3*x1m^3-x1m^3)
+  println("p 3 moment : ",p3m-3*p2m*p1m+3*p1m^3-p1m^3)
+  println("x 4 moment : ",x4m-4*x3m*x1m+6*x2m*x1m^2-4*x1m^4+x1m^4)
+  println("p 4 moment : ",p4m-4*p3m*p1m+6*p2m*p1m^2-4*p1m^4+p1m^4)
+  un = (x2m-x1m^2)^(1/2)*(p2m-p1m^2)^(1/2)
+  fotoc = (x2m-x1m^2)^(1/2) + (p2m-p1m^2)^(1/2)
+  println("Uncertainity : ",un)
+  println("Fotoc :",real(fotoc))
+  xy=xycircle(0.18,20)
+  #scatter(xy[1],xy[2],s=2,color="black")
+  global rhopti=rhopt
+  den=hcubature(Qexabs,(-L,-L),(L,L))
+  tight_layout()
+  savefig("wigner_psit_driven.png")
+  println("See wigner_psit_driven.png for the Wigner function of the state at time=", pf*(2*pi)/nu," evolving under the Floquet operator of the AQRM")
+  return [real(den[1]-1.0)]
+end
 
 
 function wigner_driven2(Nmax,om,r,omega,gamma,eta,psi,Nf,k,L)
@@ -209,7 +340,14 @@ end
 
 function Qexabs(x,y)
    return abs(wigner(rhopti, x, y))
+   #return wigner(rhopti, x, y)
    end
+
+function QWehrl(x,y)
+   return qfunc(rhopti, x, y)*log(qfunc(rhopti,x,y))
+   #return wigner(rhopti, x, y)
+   end
+
 
 end
 

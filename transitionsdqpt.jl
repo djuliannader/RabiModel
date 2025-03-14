@@ -1,9 +1,8 @@
-module DQPT
 push!(LOAD_PATH, pwd())
 using LinearAlgebra
 import diagonalization
-export amplitud
-export initialstatequench
+
+
 export overlapdqpt
 export Nzeros
 export PositionsZeros
@@ -21,12 +20,12 @@ function initialstatequench(n,om,r,lambda,delta,eta,psi)
 end
 
 
-function overlapdqpt(psi0,Hamf,nmax)
+function overlapdqpt(psi0,Hamf)
    eners =eigvals(Hamf) 
    states=eigvecs(Hamf)
    open("overlap_dqpt.dat","w") do io
    for i in 1:length(eners)
-     istate=[states[j,i] for j in 1:2*(nmax+1)]
+     istate=[states[j,i] for j in 1:2*(n+1)]
      psi0t = transpose(conj(psi0))
      overlap2 = abs2(psi0t*istate)
      println(io,eners[i]," ",overlap2)
@@ -34,11 +33,11 @@ function overlapdqpt(psi0,Hamf,nmax)
    end
 end
 
-function overlapdqptlist(psi0,Hamf,nmax)
+function overlapdqptlist(psi0,Hamf)
    listovlp=[]
    states=eigvecs(Hamf)
-   for i in 1:length(psi0)
-     istate=[states[j,i] for j in 1:2*(nmax+1)]
+   for i in 1:length(eners)
+     istate=[states[j,i] for j in 1:2*(n+1)]
      psi0t = transpose(conj(psi0))
      overlap2 = abs2(psi0t*istate)
      append!(listovlp,overlap2)
@@ -336,7 +335,7 @@ function PositionsZeros(psi0::Vector{Complex{Float64}},tcirc::Vector{Complex{Flo
 	 open(name,"w") do io
 	 for i in 1:(nsubint)
 	   for j in 1:(nsubint)
-	      zero = Nzeros2(psi0,tcircint,1.0,Nmax,om,r,lambda,delta,eta,psi,nsubint2)
+	      zero = Nzeros2(phi0,tcircint,1.0,n,om,r,lambda,delta,eta,psi,nsubint2)
 	      if round(Int64, zero)>0
 	       counter = counter + 1
 	       println(counter," ",(imag(tcircint[1])+imag(tcircint[2]))/2.0," ",(real(tcircint[1])+real(tcircint[3]))/2.0)
@@ -357,39 +356,39 @@ function PositionsZeros(psi0::Vector{Complex{Float64}},tcirc::Vector{Complex{Flo
 end
 
 
-#n=110
-#om=1.0
-#r=20.0
-#lambda0=0.0
-#delta0=0.0
-#eta0=3/2
-#psi0=0.0
-#eta1=3/2
-#lambda1=1/5
-#delta1=0.0
-#psi1=0.0
-#nn=500
-#nsubint=1000
-#nsubint2=400
-#nsubint3=30
+n=110
+om=1.0
+r=20.0
+lambda0=0.0
+delta0=0.0
+eta0=3/2
+psi0=0.0
+eta1=3/2
+lambda1=1/5
+delta1=0.0
+psi1=0.0
+nn=500
+nsubint=1000
+nsubint2=400
+nsubint3=30
 
-#name = "position_zeros.dat"
+name = "position_zeros.dat"
 
-#alpha=1.0
-#ph=0.0
+alpha=1.0
+ph=0.0
 
-#tmax=10.0
-#tcirc=[0.0-0.5*im,0.0+0.5*im,10.0+0.5*im,10.0-0.5*im]
-#tcircr=[0.0-0.0*im,0.0+0.5*im,10.0+0.5*im,10.0-0.0*im]
-#tcircl=[0.0-0.5*im,0.0+0.0*im,10.0+0.0*im,10.0-0.5*im]
+tmax=10.0
+tcirc=[0.0-0.5*im,0.0+0.5*im,10.0+0.5*im,10.0-0.5*im]
+tcircr=[0.0-0.0*im,0.0+0.5*im,10.0+0.5*im,10.0-0.0*im]
+tcircl=[0.0-0.5*im,0.0+0.0*im,10.0+0.0*im,10.0-0.5*im]
 
-#istate = initialstatequench(n,om,r,lambda0,delta0,eta0,psi0)
+istate = initialstatequench(n,om,r,lambda0,delta0,eta0,psi0)
 
-#phi0 = alpha^(1/2)*istate[1] + (1-alpha)^(1/2)*exp(im*ph)*istate[2]
+phi0 = alpha^(1/2)*istate[1] + (1-alpha)^(1/2)*exp(im*ph)*istate[2]
 
-#hamf = diagonalization.hamiltonian(n,om,r,lambda1,delta1,eta1,psi1)
+hamf = diagonalization.hamiltonian(n,om,r,lambda1,delta1,eta1,psi1)
 
-#amplitudint = amplitud(phi0,tmax,1.0,n,om,r,lambda1,delta1,eta1,psi1)
+amplitudint = amplitud(phi0,tmax,1.0,n,om,r,lambda1,delta1,eta1,psi1)
 
 
 
@@ -397,15 +396,17 @@ end
 
 
 #computingjz = Jz(phi0,tmax,1.0,n,om,r,lambda1,delta1,eta1,psi1)
-#ovl = overlapdqpt(phi0,hamf)
-#println("Overlap Done")
-#rr = Nzeros(phi0,tcirc,1.0,n,om,r,lambda1,delta1,eta1,psi1,nsubint)
-#rrr = Nzeros(phi0,tcircr,1.0,n,om,r,lambda1,delta1,eta1,psi1,nsubint)
-#rrl = Nzeros(phi0,tcircl,1.0,n,om,r,lambda1,delta1,eta1,psi1,nsubint)
-#println("Number of zeros within the full circuit: ",rr)
-#println("Number of zeros on the right of the real axis: ",rrr)
-#println("Number of zeros on the left  of the real axis: ",rrl)
-#println("---------------------------------------------------------")
+ovl = overlapdqpt(phi0,hamf)
+println("Overlap Done")
+rr = Nzeros(phi0,tcirc,1.0,n,om,r,lambda1,delta1,eta1,psi1,nsubint)
+rrr = Nzeros(phi0,tcircr,1.0,n,om,r,lambda1,delta1,eta1,psi1,nsubint)
+rrl = Nzeros(phi0,tcircl,1.0,n,om,r,lambda1,delta1,eta1,psi1,nsubint)
+println("Number of zeros within the full circuit: ",rr)
+println("Number of zeros on the right of the real axis: ",rrr)
+println("Number of zeros on the left  of the real axis: ",rrl)
+println("---------------------------------------------------------")
+println("")
+println("")
 
 #println("-Calculating the position of the zeros in the complex plane-")
 #pos = PositionsZeros(phi0,tcirc,1.0,n,om,r,lambda1,delta1,eta1,psi1,nsubint2,nsubint3,name)

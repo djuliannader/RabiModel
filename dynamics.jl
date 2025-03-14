@@ -1,9 +1,41 @@
 module dynamics
 push!(LOAD_PATH, pwd())
 using LinearAlgebra
+using QuantumOptics
 import diagonalization
+import wigner_eig
 export initialcoherent
 export survivalp
+
+
+function initialcat(xi::Float64,pii::Float64,ti::Float64,fi::Float64,hbar::Float64,Nmax::Int64)
+         cat1=initialcoherent(xi,pii,ti,fi,hbar,Nmax)
+         cat2=initialcoherent(-xi,pii,ti,fi,hbar,Nmax)
+         catnm=cat1+cat2
+	 catnmt=transpose(catnm)
+	 nfac=catnmt*catnm
+	 cat=(1/nfac^(1/2))*catnm
+	 return cat
+	 end
+
+function initialsqueezed(xi::Float64,pii::Float64,ti::Float64,fi::Float64,hbar::Float64,Nmax::Int64,r::Float64,theta::Float64)
+         cs = initialcoherent(xi,pii,ti,fi,hbar,Nmax)
+	 aop=zeros(ComplexF64,2*(Nmax+1), 2*(Nmax+1))
+	 for i in 1:Nmax
+	    aop[(2*i-1),(2i+1)]=sqrt(i)
+	    aop[2*i,2i+2]=sqrt(i)
+	 end
+	 adop=transpose(aop)
+	 expsq = (r/2)*((cos(2*theta)-im*sin(2*theta))*aop^2-(cos(2*theta)+im*sin(2*theta))*adop^2) 
+	 sqzop = exp(expsq)
+	 sqzstate = sqzop*cs
+	 #println(sqzstate)
+	 sqzstatet=transpose(sqzstate)
+	 nfac= sqrt(sqzstatet*sqzstate)
+	 nsqzstate = (1/nfac)*sqzstate
+	 #fock1=adop*cs
+	 return nsqzstate
+	 end
 
 
 function initialcoherent(xi::Float64,pii::Float64,ti::Float64,fi::Float64,hbar::Float64,Nmax::Int64)
@@ -68,7 +100,79 @@ function survivalpt(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},
    psi0t=(fq^(1))*psi0t
  end
  end
+ println("--------------------------------------------------------------------------------------------------- ")
  println("-------------   Go to file survivalprobability_f.dat to see the survival probability  --------------")
+ println("----------- Dynamics governed by the Floquet operator for the time dependent Hamiltonian       -----")
+ println("             The file contains SP from 0 to ",tmax," in steps of ",T ," time units               ")
+ println("--------------------------------------------------------------------------------------------------- ")
+ return "done"
+end
+
+function fotoc(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi)
+ tint=0.05
+ t=0
+ nt=trunc(Int,tmax/tint)
+ HMatrix= diagonalization.hamiltonian(Nmax,om,r,lambda,delta,eta,psi)
+ bc=FockBasis(Nmax)
+ adop=create(bc)
+ aop = destroy(bc)
+ xop=(1/(2)^(1/2))*(aop+adop)
+ pop=(im/(2)^(1/2))*(adop-aop)
+ pi=acos(-1)
+ T=(2*pi/om)/1
+ nint=trunc(Int64,tmax/T)
+ psi0t=psi0
+ open("fotoc.dat","w") do io
+ for i in 1:nt+1
+   phi = wigner_eig.buildingstate(psi0t,Nmax)
+   rho = dm(phi)
+   rhopt = ptrace(rho,2)
+   x1m=expect(xop,rhopt)
+   x2m=expect(xop^2,rhopt)
+   p1m=expect(pop,rhopt)
+   p2m=expect(pop^2,rhopt)
+   fotoc = (x2m-x1m^2)^(1/2) + (p2m-p1m^2)^(1/2)
+   println(io,t," ",round(real(fotoc),digits=16))
+   psi0t=exp(-im*HMatrix*t)*psi0t
+   t=t+tint
+ end
+ end
+ println("--------------------------------------------------------------------------------------------------- ")
+ println("-------------   Go to file fotoc.dat to see the fotoc                                 --------------")
+ println("----------- Dynamics governed by the time independent Hamiltonian                              -----")
+ println("             The file contains SP from 0 to ",tmax," in steps of ",tint," time units                ")
+ println("--------------------------------------------------------------------------------------------------- ")
+ return "done"
+end
+
+
+
+function fotoct(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},tmax::Float64,om::Float64,Nmax)
+ bc=FockBasis(Nmax)
+ adop=create(bc)
+ aop = destroy(bc)
+ xop=(1/(2)^(1/2))*(aop+adop)
+ pop=(im/(2)^(1/2))*(adop-aop)
+ pi=acos(-1)
+ T=(2*pi/om)/1
+ nint=trunc(Int64,tmax/T)
+ psi0t=psi0
+ open("fotoc_f.dat","w") do io
+ for i in 0:nint
+   phi = wigner_eig.buildingstate(psi0t,Nmax)
+   rho = dm(phi)
+   rhopt = ptrace(rho,2)
+   x1m=expect(xop,rhopt)
+   x2m=expect(xop^2,rhopt)
+   p1m=expect(pop,rhopt)
+   p2m=expect(pop^2,rhopt)
+   fotoc = (x2m-x1m^2)^(1/2) + (p2m-p1m^2)^(1/2)
+   println(io,T*i," ",round(real(fotoc),digits=16))
+   psi0t=(fq^(1))*psi0t
+ end
+ end
+ println("--------------------------------------------------------------------------------------------------- ")
+ println("-------------   Go to file fotoc_f.dat to see the fotoc                               --------------")
  println("----------- Dynamics governed by the Floquet operator for the time dependent Hamiltonian       -----")
  println("             The file contains SP from 0 to ",tmax," in steps of ",T ," time units               ")
  println("--------------------------------------------------------------------------------------------------- ")
@@ -92,6 +196,7 @@ function survivalpt2(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}}
    psi0t=fq*psi0t
  end
  end
+ println("--------------------------------------------------------------------------------------------------- ")
  println("-------------   Go to file survivalprobability_f2.dat to see the survival probability  --------------")
  println("----------- Dynamics governed by the Floquet operator for the time dependent Hamiltonian       -----")
  println("             The file contains SP from 0 to ",tmax," in steps of ",T ," time units               ")

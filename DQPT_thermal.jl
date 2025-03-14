@@ -1,4 +1,4 @@
-module DQPT
+module DQPT_thermal
 push!(LOAD_PATH, pwd())
 using LinearAlgebra
 using DifferentialEquations
@@ -83,14 +83,14 @@ om=1.0
 r=20.0
 lambda0=0.0
 delta0=0.0
-eta0=2.0
+eta0=3/2
 psi0=0.0
-eta1=1.125
-lambda1=6.0
+eta1=3/2
+lambda1=4/5
 delta1=0.0
 psi1=0.0
 
-beta=10.0
+beta=200000.0
 tmax=10.0
 
 
@@ -100,8 +100,8 @@ println("Size of the Fock basis: ",n)
 println("Beta:                   ",beta)
 sp = survivalprobabilityt(rhoistate,tmax,n,om,r,lambda1,delta1,eta1,psi1)
 println(sp)
-sp_c = survivalprobabilityt_ct(rhoistate,[tmax,0.5],n,om,r,lambda1,delta1,eta1,psi1)
-println(sp_c)
+#sp_c = survivalprobabilityt_ct(rhoistate,[tmax,0.5],n,om,r,lambda1,delta1,eta1,psi1)
+#println(sp_c)
 println("Real-time survival amplitud data in file Loschmidt_amplitud_thermal.dat")
 
 #ftest = (tr((rhoistate^(1/2)*rhoistate*rhoistate^(1/2))^(1/2)))^2
