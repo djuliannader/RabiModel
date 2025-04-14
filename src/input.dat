@@ -7,9 +7,9 @@ R, fermionic frequency (Float)
 delta, parameter (1) for JC or (-1) for Anti JC (Float)
 0.0
 lambda, carrier parameter (Float) 
-0.06
+0.0
 g, coupling parameter (Float)
-1.4142135623730951
+1.414213562373095
 psi, phase parameter (Float) 
 0.0
 Flag, 1 for spectrum 2 for dynamics 3 for stationary states (Integer)
@@ -31,7 +31,7 @@ omega, Modulation frequency (Float) ---> Necessary only for Floquet operator
 Intervals of the period (Int) ---> Necessary only for Floquet operator
 1000
 k-eigenstate (Int) 
-14
+1
 L size of the phase space (Float) [-L,L]  
 12.5
 For time-dependent term proportional to Jz (1) or Jx (2) (Int)
