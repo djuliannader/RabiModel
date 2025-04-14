@@ -13,11 +13,11 @@ git clone https://github.com/djuliannader/RabiModel.git
 This repository provides data and codes for the paper Quantum non-Gaussian criticality in the quantum a Rabi model with a small modulation of the
 qubit frequency, by D. J. Nader, P. Stransky, J. Chavez, P. Cejnar and R. Filip.
 The paper is available on arXiv.
-The repository is currently being developed; please await its completion. Some data for the figures can be found in directory data1
+The repository is currently being developed; please await its completion. Some data for the figures can be found in directory /data1
 
 ## Usage
 
-For running codes go to the directory src and go to the following files:
+For running codes go to the directory /src and go to the following files accordingly
 
 For stationary states, manipulate parameters from input.dat and run as
 

@@ -123,13 +123,13 @@ function wigner_evolt(Nmax,om,r,lambda,delta,eta,psi,L,phi0,t)
   return [real(den[1]-1.0)]
 end
 
- function wigner_driven(Nmax,om,r,lambda,delta,eta,psi,nu,chi,Nf,k,L)
+ function wigner_driven(Nmax,om,r,lambda,delta,eta,psi,nu,chi,Nf,k,L,flagt)
    bc=FockBasis(Nmax)
    ba=SpinBasis(1//2)
    x = [-L:0.1:L;]
    xm = x/r^(1/2)
-   floquet=troterization.troter(Nmax,Nf,r,om,lambda,delta,chi,nu,eta,psi)
-   vecordered = stat.orderinfvec(Nmax,om,r,lambda,delta,Nf,nu,chi,eta,psi)
+   floquet=troterization.troter(Nmax,Nf,r,om,lambda,delta,chi,nu,eta,psi,flagt)
+   vecordered = stat.orderinfvec(Nmax,om,r,lambda,delta,Nf,nu,chi,eta,psi,flagt)
    evs=eigvecs(floquet)
    listvec=[evs[i,vecordered[k]] for i in 1:2*Nmax]
    phi = buildingstate(listvec,Nmax)
@@ -166,7 +166,8 @@ end
    println("p 4 moment : ",p4m-4*p3m*p1m+6*p2m*p1m^2-4*p1m^4+p1m^4)
    un = (x2m-x1m^2)^(1/2)*(p2m-p1m^2)^(1/2)
    println("Uncertainity : ",un)
-   #callqfi = Fisher.fishervsphi(rhopt,Nmax)
+   qfi = Fisher.fishern2(rhopt,Nmax)
+   println("QFI[rho,n]/(4n) : ", qfi)
    tight_layout()
    savefig("wigner_driven.png")
    println("See wigner_driven.png for the Wigner function of the ",k,"-eigenstate of the Floquet operator")
@@ -188,12 +189,12 @@ end
    return [exp_val,real(den[1]-1.0),pur] 
  end
 
-function wigner_evolt_driven(Nmax,om,r,lambda,delta,eta,psi,nu,chi,Nf,L,phi0,pf)
+function wigner_evolt_driven(Nmax,om,r,lambda,delta,eta,psi,nu,chi,Nf,L,phi0,pf,flagt)
   bc=FockBasis(Nmax)
   ba=SpinBasis(1//2)
   x = [-L:0.1:L;]
   xm = x/r^(1/2)
-  floquet=troterization.troter(Nmax,Nf,r,om,lambda,delta,chi,nu,eta,psi)
+  floquet=troterization.troter(Nmax,Nf,r,om,lambda,delta,chi,nu,eta,psi,flagt)
   phit=phi0
   for i in 1:pf
    phit = floquet*phit

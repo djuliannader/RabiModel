@@ -7,7 +7,7 @@ import diagonalization
 
 
 
-function troter(Nmax::Int64,nn::Int64,r,om,lambda,delta,b,nu,eta,psi)
+function troter(Nmax::Int64,nn::Int64,r,om,lambda,delta,b,nu,eta,psi,flagt::Int64)
  pi=acos(-1)
  T=2*pi/nu
 # b=nu*b
@@ -19,9 +19,20 @@ function troter(Nmax::Int64,nn::Int64,r,om,lambda,delta,b,nu,eta,psi)
  U0=exp(-im*H1*dt/2)
 #--- builiding the time dependent Hamiltonian
  ddiag=[1 for i in 0:Nmax for j in -1:0]
- utdiag=[b*(1/2)*(-1)^j for i in 0:Nmax for j in -1:0]
- Ut=Diagonal(utdiag)
  U=Diagonal(ddiag)
+ if flagt==1
+   utdiag=[b*(1/2)*(-1)^j for i in 0:Nmax for j in -1:0]
+   Ut=Diagonal(utdiag)
+ end
+#
+ if flagt==2
+ vdiag=[0.0 for i in 0:Nmax for j in -1:0]
+ Ut=Array(Diagonal(vdiag))
+ for i in 1:Nmax
+   Ut[2*i,2*i-1]=1.0*(b/2.0)*exp(im*psi)    # carrier
+   Ut[2*i-1,2*i]=1.0*(b/2.0)*exp(-im*psi)   # carrier
+ end
+ end
 #---- Troterization ----------------- 
  for i in 1:nn
   facu1=(im/nu)*(-sin(i*nu*dt)+sin((i-1)*nu*dt))

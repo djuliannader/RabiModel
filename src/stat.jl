@@ -6,11 +6,11 @@ import troterization
 import wigner_eig
 using QuantumOptics
 
-function analysisH(N,om,r,lambda,delta,nn,nu,chi,eta,psi)
+function analysisH(N,om,r,lambda,delta,nn,nu,chi,eta,psi,flagt)
    eigvs=diagonalization.diagonalize(N,om,r,lambda,delta,eta,psi)
    #println("flag",eigvs[1][1],eigvs[1][2])
    println("See file DensityOfStates_output.dat for Density of states (DOS) ")
-   floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nu,eta,psi)
+   floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nu,eta,psi,flagt)
    eigvecsf=eigvecs(floquet)
    ham=diagonalization.hamiltonian(N,om,r,lambda,delta,eta,psi)
    evfvec = zeros(0)
@@ -49,8 +49,8 @@ function analysisH(N,om,r,lambda,delta,nn,nu,chi,eta,psi)
 end
 
 
-function parameter_r(N,om,r,lambda,delta,nn,nu,chi,eta,psi)
-   floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nu,eta,psi)
+function parameter_r(N,om,r,lambda,delta,nn,nu,chi,eta,psi,flagt)
+   floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nu,eta,psi,flagt)
    eigvalsf=eigvals(floquet)
    qs=zeros(0)
    for i in 1:length(eigvalsf)
@@ -82,8 +82,8 @@ function parameter_r(N,om,r,lambda,delta,nn,nu,chi,eta,psi)
    return rpar
    end
 
- function orderinfvec(N,om,r,lambda,delta,nn,nu,chi,eta,psi)
-   floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nu,eta,psi)
+ function orderinfvec(N,om,r,lambda,delta,nn,nu,chi,eta,psi,flagt)
+   floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nu,eta,psi,flagt)
    ham=diagonalization.hamiltonian(N,om,r,lambda,delta,eta,psi)
    eigvecsf=eigvecs(floquet)
    evfvec = zeros(0)
@@ -171,8 +171,8 @@ function dos_rmp(Nmax,om,r,gamma,omega,eta,psi,nn)
    return "done"
   end
 
-  function quasienergies(N,om,r,lambda,delta,nn,nu,chi,eta,psi)
-   floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nu,eta,psi)
+  function quasienergies(N,om,r,lambda,delta,nn,nu,chi,eta,psi,flagt)
+   floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nu,eta,psi,flagt)
    #eigvalsf=eigvals(floquet)
    #qs=zeros(0)
    #for i in 1:length(eigvalsf)

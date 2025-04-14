@@ -7,15 +7,15 @@ R, fermionic frequency (Float)
 delta, parameter (1) for JC or (-1) for Anti JC (Float)
 0.0
 lambda, carrier parameter (Float) 
-0.0
-g, coupling parameter (Float) 
-0.7071067811865475
+0.06
+g, coupling parameter (Float)
+1.4142135623730951
 psi, phase parameter (Float) 
 0.0
 Flag, 1 for spectrum 2 for dynamics 3 for stationary states (Integer)
 3
 Minimum and maximum value of g (List[Float])   ---> Necessary only for spectrum
-[3.38,3.41]
+[0.0,0.5]
 Spacing of the parameter (Float) ---> Necessary only for spectrum
 0.01
 Flag, 1 for static Hamiltonian 2 for Floquet 3 for both (Integer) ---> Necessary only for dynamics
@@ -23,7 +23,7 @@ Flag, 1 for static Hamiltonian 2 for Floquet 3 for both (Integer) ---> Necessary
 Coordinates of the initial coherent state (List[Float]) [Theta0,Phi0,X0,P0] ---> Necessary only for dynamics
 [0.0,0.0,0.0,0.0]
 Maximum time for Survival Probability (Float) ---> Necessary only for dynamics
-200.0
+250.0
 Xi, Modulation amplitude (Float) ---> Necessary only for Floquet operator
 0.05
 omega, Modulation frequency (Float) ---> Necessary only for Floquet operator
@@ -31,8 +31,11 @@ omega, Modulation frequency (Float) ---> Necessary only for Floquet operator
 Intervals of the period (Int) ---> Necessary only for Floquet operator
 1000
 k-eigenstate (Int) 
-1
+14
 L size of the phase space (Float) [-L,L]  
-7.5
+12.5
+For time-dependent term proportional to Jz (1) or Jx (2) (Int)
+1
+
 
 
