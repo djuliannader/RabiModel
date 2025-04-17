@@ -18,7 +18,7 @@ The repository is currently being developed; please await its completion. Some d
 
 ## Usage
 
-For using the code go to the directory move to the folder /src and go to the corresponding file
+For using the code move to the folder /src and go to the corresponding file
 
 For stationary states, manipulate parameters from input.dat and run as
 
