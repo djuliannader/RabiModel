@@ -27,13 +27,13 @@ Maximum time for Survival Probability (Float) ---> Necessary only for dynamics
 Xi, Modulation amplitude (Float) ---> Necessary only for Floquet operator
 0.05
 omega, Modulation frequency (Float) ---> Necessary only for Floquet operator
-3.2
+1.42
 Intervals of the period (Int) ---> Necessary only for Floquet operator
 1000
 k-eigenstate (Int) 
-2
+1
 L size of the phase space (Float) [-L,L]  
-12.5
+7.5
 For time-dependent term proportional to Jz (1) or Jx (2) (Int)
 1
 

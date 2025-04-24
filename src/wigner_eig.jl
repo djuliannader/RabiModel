@@ -138,6 +138,9 @@ end
    pur=tr(rhopt^2)
    QQ = wigner(rhopt, x, x)
    QQs=transpose(QQ)
+   tick_params(labelsize=30)
+   xticks([-1,0,1])
+   yticks([-1,0,1])
    pcolormesh(xm, xm, QQs, cmap=:bwr,vmin=-0.1,vmax=0.1)
    global rhopti=rhopt
    den=hcubature(Qexabs,(-L,-L),(L,L))
