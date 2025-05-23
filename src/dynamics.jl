@@ -4,6 +4,7 @@ using LinearAlgebra
 using QuantumOptics
 import diagonalization
 import wigner_eig
+import Fisher
 export initialcoherent
 export survivalp
 
@@ -108,9 +109,11 @@ function survivalpt(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},
  return "done"
 end
 
-function fotoc(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi)
+function fotoc(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi,L)
  tint=0.05
  t=0
+ qfilist=[]
+ neglist=[]
  nt=trunc(Int,tmax/tint)
  HMatrix= diagonalization.hamiltonian(Nmax,om,r,lambda,delta,eta,psi)
  bc=FockBasis(Nmax)
@@ -121,33 +124,57 @@ function fotoc(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::
  pi=acos(-1)
  T=(2*pi/om)/1
  nint=trunc(Int64,tmax/T)
- psi0t=psi0
+ psit=psi0
  open("fotoc.dat","w") do io
+ open("qfi.dat","w") do io2
+ open("negativities.dat","w") do io3
  for i in 1:nt+1
-   phi = wigner_eig.buildingstate(psi0t,Nmax)
+   psit=exp(-im*HMatrix*t)*psi0
+   neg = wigner_eig.wigner_negativities(Nmax,psit,L)
+   phi = wigner_eig.buildingstate(psit,Nmax)
    rho = dm(phi)
    rhopt = ptrace(rho,2)
+   qfi=Fisher.fishern(rhopt,Nmax)
    x1m=expect(xop,rhopt)
    x2m=expect(xop^2,rhopt)
    p1m=expect(pop,rhopt)
    p2m=expect(pop^2,rhopt)
    fotoc = (x2m-x1m^2)^(1/2) + (p2m-p1m^2)^(1/2)
    println(io,t," ",round(real(fotoc),digits=16))
-   psi0t=exp(-im*HMatrix*t)*psi0t
+   println(io2,t," ",round(real(qfi),digits=8))
+   println(io3,t," ",round(neg,digits=8))
+   append!(qfilist,round(real(qfi),digits=8))
+   append!(neglist,round(real(neg),digits=8))
    t=t+tint
+ end
+ end
  end
  end
  println("--------------------------------------------------------------------------------------------------- ")
  println("-------------   Go to file fotoc.dat to see the fotoc                                 --------------")
  println("----------- Dynamics governed by the time independent Hamiltonian                              -----")
- println("             The file contains SP from 0 to ",tmax," in steps of ",tint," time units                ")
+ println("             The file contains Fotoc(t) from t=0 to ",tmax," in steps of ",tint," time units        ")
  println("--------------------------------------------------------------------------------------------------- ")
- return "done"
+ println("--------------------------------------------------------------------------------------------------- ")
+ println("-------------   Go to file qfi.dat to see the Quantum Fisher Information              --------------")
+ println("----------- Dynamics governed by the time independent Hamiltonian                              -----")
+ println("             The file contains QFI(t) from t=0 to ",tmax," in steps of ",tint," time units          ")
+ println("--------------------------------------------------------------------------------------------------- ")
+ println("--------------------------------------------------------------------------------------------------- ")
+ println("-------------   Go to file negativities.dat to see the Wigner negativities            --------------")
+ println("----------- Dynamics governed by the time independent Hamiltonian                              -----")
+ println("             The file contains Neg(t) from t=0 to ",tmax," in steps of ",tint," time units          ")
+ println("--------------------------------------------------------------------------------------------------- ")
+ qfiavlist=[tint*qfilist[i] for i in 3:length(qfilist)]
+ negavlist=[tint*neglist[i] for i in 1:length(neglist)]
+ avqfi=(1/(tmax-2*tint)*sum(qfiavlist))
+ avneg=(1/(tmax)*sum(negavlist))
+ return [avqfi,avneg]
 end
 
 
 
-function fotoct(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},tmax::Float64,om::Float64,Nmax)
+function fotoct(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},tmax::Float64,om::Float64,Nmax,L)
  bc=FockBasis(Nmax)
  adop=create(bc)
  aop = destroy(bc)
@@ -157,18 +184,30 @@ function fotoct(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},tmax
  T=(2*pi/om)/1
  nint=trunc(Int64,tmax/T)
  psi0t=psi0
+ qfilist=[]
+ neglist=[]
  open("fotoc_f.dat","w") do io
+ open("qfi_f.dat","w") do io2
+ open("negativities_f.dat","w") do io3
  for i in 0:nint
    phi = wigner_eig.buildingstate(psi0t,Nmax)
+   neg = wigner_eig.wigner_negativities(Nmax,psi0t,L)
    rho = dm(phi)
    rhopt = ptrace(rho,2)
+   qfi=Fisher.fishern(rhopt,Nmax)
    x1m=expect(xop,rhopt)
    x2m=expect(xop^2,rhopt)
    p1m=expect(pop,rhopt)
    p2m=expect(pop^2,rhopt)
    fotoc = (x2m-x1m^2)^(1/2) + (p2m-p1m^2)^(1/2)
-   println(io,T*i," ",round(real(fotoc),digits=16))
+   println(io,T*i," ",round(real(fotoc),digits=8))
+   println(io2,T*i," ",round(real(qfi),digits=8))
+   println(io3,T*i," ",round(neg,digits=8))
+   append!(qfilist,round(real(qfi),digits=8))
+   append!(neglist,round(real(neg),digits=8))
    psi0t=(fq^(1))*psi0t
+ end
+ end
  end
  end
  println("--------------------------------------------------------------------------------------------------- ")
@@ -176,7 +215,21 @@ function fotoct(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},tmax
  println("----------- Dynamics governed by the Floquet operator for the time dependent Hamiltonian       -----")
  println("             The file contains SP from 0 to ",tmax," in steps of ",T ," time units               ")
  println("--------------------------------------------------------------------------------------------------- ")
- return "done"
+ println("--------------------------------------------------------------------------------------------------- ")
+ println("-------------   Go to file qfi_f.dat to see the Quantum Fisher Information            --------------")
+ println("----------- Dynamics governed by the Floquet operator for the time dependent Hamiltonian       -----")
+ println("             The file contains QFI(t) from t=0 to ",tmax," in steps of ",T ," time units          ")
+ println("--------------------------------------------------------------------------------------------------- ")
+ println("--------------------------------------------------------------------------------------------------- ")
+ println("-------------   Go to file negativities_f.dat to see the Wigner negativities          --------------")
+ println("----------- Dynamics governed by the the Floquet operator for the time dependent Hamiltonian   -----")
+ println("             The file contains Neg(t) from t=0 to ",tmax," in steps of ",T ," time units          ")
+ println("--------------------------------------------------------------------------------------------------- ")
+ qfiavlist=[qfilist[i] for i in 3:length(qfilist)]
+ negavlist=[neglist[i] for i in 1:length(neglist)]
+ avqfi=(1/(length(qfiavlist))*sum(qfiavlist))
+ avneg=(1/(length(negavlist))*sum(negavlist))
+ return [avqfi,avneg]
 end
 
 function survivalpt2(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},tmax::Float64,om)

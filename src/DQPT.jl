@@ -2,6 +2,7 @@ module DQPT
 push!(LOAD_PATH, pwd())
 using LinearAlgebra
 import diagonalization
+import wigner_eig
 export amplitud
 export initialstatequench
 export overlapdqpt
@@ -48,7 +49,7 @@ end
 
 
 
-function amplitud(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi)
+function amplitud(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi,L)
 	 tint=0.05
 	 tinti=0.01
 	 nt=trunc(Int,tmax/tint)
@@ -65,20 +66,28 @@ function amplitud(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nma
 	     psi0a[1,k]=conj(psi0[k])
          end
 	 open("Loschmidt_amplitud.dat","w") do io
+	 open("negativities_quench.dat","w") do io2
  	 for i in 1:nt+1
  	     evol=exp(-im*HMatrix*t/hbar)
 	     psi0t=evol*psi0
+	     neg = wigner_eig.wigner_negativities(Nmax,psi0t,L)
  	     sp=psi0a*psi0t
  	     spf=sp[1]
  	     println(io,t," ",round(real(spf),digits=16)," ", round(imag(spf),digits=16))
+	     println(io2,t," ",round(real(neg),digits=8))
  	     t=t+tint
  	    end
- 	 end
+	 end
+	 end
 	 t=0.0
-	 println("-------------   Go to file Loschmidt_amplitud.dat to see the the Loschmidt amplitud  ----------------")
+	 println("-------------   Go to file Loschmidt_amplitud.dat to see the Loschmidt amplitud  ----------------------------")
 	 println("----------- Dynamics governed by the time evolution operator for the time independent Hamiltonian       -----")
-	 println("             The file contains SP from 0 to ",tmax," in steps of ",tint," time units               ")
-	 println("--------------------------------------------------------------------------------------------------- ")
+	 println("             The file contains the Survival amplitude from 0 to ",tmax," in steps of ",tint," time units     ")
+	 println("------------------------------------------------------------------------------------------------------------ ")
+	  println("-------------   Go to file negativities_quench.dat to see the negativities  --------------------------------")
+	 println("----------- Dynamics governed by the time evolution operator for the time independent Hamiltonian       -----")
+	 println("             The file contains Negativities from 0 to ",tmax," in steps of ",tint," time units               ")
+	 println("------------------------------------------------------------------------------------------------------------ ")
  	 open("Loschmidt_amplitud_ct.dat","w") do io
  	 for i in 1:nt+1
 	   tim=-0.5
@@ -93,7 +102,7 @@ function amplitud(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nma
 	    t=t+tint	     
 	 end   
  	 end
-	 println("-------------   Go to file Loschmidt_amplitud_ct.dat to see the the complex time Loschmidt amplitud  ----------------")
+	 println("-------------   Go to file Loschmidt_amplitud_ct.dat to see the  complex time Loschmidt amplitud  ----------------")
 	 println("----------- Dynamics governed by the time evolution operator for the time independent Hamiltonian       -----")
 	 println("             The file contains SP from 0 to ",tmax," in steps of ",tint," time units               ")
 	 println("--------------------------------------------------------------------------------------------------- ")
@@ -357,60 +366,13 @@ function PositionsZeros(psi0::Vector{Complex{Float64}},tcirc::Vector{Complex{Flo
 end
 
 
-#n=110
-#om=1.0
-#r=20.0
-#lambda0=0.0
-#delta0=0.0
-#eta0=3/2
-#psi0=0.0
-#eta1=3/2
-#lambda1=1/5
-#delta1=0.0
-#psi1=0.0
-#nn=500
-#nsubint=1000
-#nsubint2=400
-#nsubint3=30
-
-#name = "position_zeros.dat"
-
-#alpha=1.0
-#ph=0.0
-
-#tmax=10.0
-#tcirc=[0.0-0.5*im,0.0+0.5*im,10.0+0.5*im,10.0-0.5*im]
-#tcircr=[0.0-0.0*im,0.0+0.5*im,10.0+0.5*im,10.0-0.0*im]
-#tcircl=[0.0-0.5*im,0.0+0.0*im,10.0+0.0*im,10.0-0.5*im]
-
-#istate = initialstatequench(n,om,r,lambda0,delta0,eta0,psi0)
-
-#phi0 = alpha^(1/2)*istate[1] + (1-alpha)^(1/2)*exp(im*ph)*istate[2]
-
-#hamf = diagonalization.hamiltonian(n,om,r,lambda1,delta1,eta1,psi1)
-
-#amplitudint = amplitud(phi0,tmax,1.0,n,om,r,lambda1,delta1,eta1,psi1)
+function wigner_rhot(psi0,ham,L,r,Nmax,t)
+ psit = exp(-im*t*ham)*psi0
+ rhot = psit*transpose(conj(psit))
+ wig = wigner_eig.wigner_rhot(rhot,L,r,Nmax)
+ return "done"
+end
 
 
-
-
-
-
-#computingjz = Jz(phi0,tmax,1.0,n,om,r,lambda1,delta1,eta1,psi1)
-#ovl = overlapdqpt(phi0,hamf)
-#println("Overlap Done")
-#rr = Nzeros(phi0,tcirc,1.0,n,om,r,lambda1,delta1,eta1,psi1,nsubint)
-#rrr = Nzeros(phi0,tcircr,1.0,n,om,r,lambda1,delta1,eta1,psi1,nsubint)
-#rrl = Nzeros(phi0,tcircl,1.0,n,om,r,lambda1,delta1,eta1,psi1,nsubint)
-#println("Number of zeros within the full circuit: ",rr)
-#println("Number of zeros on the right of the real axis: ",rrr)
-#println("Number of zeros on the left  of the real axis: ",rrl)
-#println("---------------------------------------------------------")
-
-#println("-Calculating the position of the zeros in the complex plane-")
-#pos = PositionsZeros(phi0,tcirc,1.0,n,om,r,lambda1,delta1,eta1,psi1,nsubint2,nsubint3,name)
-
-#println("Number of zeros found in the contour rectangle: ",pos)
-#println("Their positions in the complex plane can be found in file position_zeros.dat")
 
 end

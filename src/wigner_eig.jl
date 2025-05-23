@@ -61,7 +61,7 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   xy=xycircle(0.18,20)
   #scatter(xy[1],xy[2],s=2,color="black")
   global rhopti=rhopt
-  den=hcubature(Qexabs,(-L,-L),(L,L))
+  den=hcubature(Qexabs,(-L,-L),(L,L),rtol=0.001)
   tight_layout()
   savefig("wigner_eigenstate.png")
   println("See wigner_eigenstate.png for the Wigner function of the ",k,"-eigenstate of the QRM")
@@ -83,8 +83,10 @@ function wigner_evolt(Nmax,om,r,lambda,delta,eta,psi,L,phi0,t)
   QQ = wigner(rhopt, x, x)
   QQs = transpose(QQ)
   tick_params(labelsize=20)
-  xticks([-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5])
-  yticks([-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5])
+  #xticks([-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5])
+  #yticks([-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5])
+  xticks([-2,-1,0,1,2])
+  yticks([-2,-1,0,1,2])
   pcolormesh(xm, xm, QQs, cmap=:bwr,vmin=-0.1,vmax=0.1)
   #colorbar()
   bc=FockBasis(Nmax)
@@ -116,7 +118,7 @@ function wigner_evolt(Nmax,om,r,lambda,delta,eta,psi,L,phi0,t)
   xy=xycircle(0.18,20)
   #scatter(xy[1],xy[2],s=2,color="black")
   global rhopti=rhopt
-  den=hcubature(Qexabs,(-L,-L),(L,L))
+  den=hcubature(Qexabs,(-L,-L),(L,L),rtol=0.0001)
   tight_layout()
   savefig("wigner_psit.png")
   println("See wigner_psit.png for the Wigner function of the state at time= ", t, " evolving under the time-independent AQRM")
@@ -138,12 +140,12 @@ end
    pur=tr(rhopt^2)
    QQ = wigner(rhopt, x, x)
    QQs=transpose(QQ)
-   tick_params(labelsize=30)
-   xticks([-1,0,1])
-   yticks([-1,0,1])
+   #tick_params(labelsize=30)
+   #xticks([-1,0,1])
+   #yticks([-1,0,1])
    pcolormesh(xm, xm, QQs, cmap=:bwr,vmin=-0.1,vmax=0.1)
    global rhopti=rhopt
-   den=hcubature(Qexabs,(-L,-L),(L,L))
+   den=hcubature(Qexabs,(-L,-L),(L,L),rtol=0.001)
    #wentropy=hcubature(QWehrl,(-L,-L),(L,L))
    bc=FockBasis(Nmax)
    adop=create(bc)
@@ -172,8 +174,8 @@ end
    qfi = Fisher.fishern2(rhopt,Nmax)
    println("QFI[rho,n]/(4n) : ", qfi)
    tight_layout()
-   savefig("wigner_driven.png")
-   println("See wigner_driven.png for the Wigner function of the ",k,"-eigenstate of the Floquet operator")
+   savefig("wigner_eigenstate_f.png")
+   println("See wigner_eigenstate_f.png for the Wigner function of the ",k,"-eigenstate of the Floquet operator")
    ham0=diagonalization.hamiltonian(Nmax,om,r,lambda,delta,eta,psi)
    eigvecf0=[evs[j,vecordered[k]] for j in 1:2*(Nmax+1)]
    eigvecf0_t = transpose(eigvecf0)
@@ -244,8 +246,8 @@ function wigner_evolt_driven(Nmax,om,r,lambda,delta,eta,psi,nu,chi,Nf,L,phi0,pf,
   global rhopti=rhopt
   den=hcubature(Qexabs,(-L,-L),(L,L))
   tight_layout()
-  savefig("wigner_psit_driven.png")
-  println("See wigner_psit_driven.png for the Wigner function of the state at time=", pf*(2*pi)/nu," evolving under the Floquet operator of the AQRM")
+  savefig("wigner_psit_f.png")
+  println("See wigner_psit_f.png for the Wigner function of the state at time=", pf*(2*pi)/nu," evolving under the Floquet operator of the AQRM")
   return [real(den[1]-1.0)]
 end
 
@@ -315,7 +317,20 @@ function wigner_driven3(Nmax,om,r,omega,gamma,eta,psi,Nf,k,L,no)
    savefig("wigner_driven_qs.png")
    println("See wigner_driven.png for the Wigner function of the ",k,"-eigenstate of the Floquet operator sorted according to the quasienergies")
  end
- 
+
+
+function wigner_negativities(Nmax,wf,L)
+  bc=FockBasis(Nmax)
+  ba=SpinBasis(1//2)
+  listvec=[wf[i] for i in 1:2*Nmax]
+  phi = buildingstate(listvec,Nmax)
+  rho = dm(phi)
+  rhopt = ptrace(rho,2)
+  global rhopti=rhopt
+  den=hcubature(Qexabs,(-L,-L),(L,L),rtol=0.0001)
+  return real(den[1]-1.0)
+end
+
 
 function buildingstate(lista,nn)
 bc=FockBasis(nn)
@@ -329,17 +344,35 @@ end
 return psif
 end
 
+function buildingrho(rhoi,Nmax)
+rho_ev = eigvals(rhoi)
+rho_evecs = eigvecs(rhoi)
+bc=FockBasis(Nmax)
+ba=SpinBasis(1//2)
+psi0= 0.0*fockstate(bc, 0) ⊗ spindown(ba)
+rho = dm(psi0)  
+for i in 1:length(rho_ev)
+   listrho = [rho_evecs[j,i] for j in 1:length(rho_ev)]
+   psiinst = buildingstate(listrho,Nmax)
+   rhoinst = dm(psiinst)
+   #println(rhoinst)
+   rho = rho + rho_ev[i]*rhoinst
+   #println(rho)
+end
+return rho
+end
+
 function xycircle(r,Npoints)
  xlist=[]
  ylist=[]
  thetaint=2*pi/Npoints
  for i in 1:Npoints
- x=r*cos(thetaint*(i-1))
- y=r*sin(thetaint*(i-1))
- append!(xlist,x) 
- append!(ylist,y)
+   x=r*cos(thetaint*(i-1))
+   y=r*sin(thetaint*(i-1))
+   append!(xlist,x) 
+   append!(ylist,y)
  end
- return [xlist,ylist]
+  return [xlist,ylist]
 end
 
 function Qexabs(x,y)
@@ -351,6 +384,28 @@ function QWehrl(x,y)
    return qfunc(rhopti, x, y)*log(qfunc(rhopti,x,y))
    #return wigner(rhopti, x, y)
    end
+
+function wigner_rhot(rho,L,r,Nmax)
+  rhoqo = buildingrho(rho,Nmax)
+  rhopt = ptrace(rhoqo,2)
+  x = [-L:0.1:L;]
+  xm = x/r^(1/2)
+  QQ = wigner(rhopt, x, x)
+  QQs = transpose(QQ)
+  pcolormesh(xm, xm, QQs, cmap=:bwr,vmin=-0.1,vmax=0.1)
+  tight_layout()
+  savefig("wigner_rhot.png")  
+  println("See wigner_rhot.png for the Wigner function of the state rho(x,p,t)")
+  return "done"
+end
+
+function wigner_rhot_neg(rho,Nmax,L)
+  rhoqo = buildingrho(rho,Nmax)
+  rhopt = ptrace(rhoqo,2)
+  global rhopti=rhopt
+  den=hcubature(Qexabs,(-L,-L),(L,L),rtol=0.0001)
+  return real(den[1]-1.0)
+end
 
 
 end

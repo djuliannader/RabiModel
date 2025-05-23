@@ -3,6 +3,7 @@ push!(LOAD_PATH, pwd())
 using LinearAlgebra
 using DifferentialEquations
 import diagonalization
+import wigner_eig
 export amplitud
 
 
@@ -30,10 +31,10 @@ function initialthermalstate(n,om,r,lambda,delta,eta,psi,beta)
 end
 
 
-function survivalprobabilityt(rho0,tmax,n,om,r,lambda,delta,eta,psi)
+function survivalprobabilityt(rho0,tmax,n,om,r,lambda,delta,eta,psi,L)
  HMatrix= diagonalization.hamiltonian(n,om,r,lambda,delta,eta,psi)
  times=(0.0,tmax)
- tint=0.05
+ tint=0.01
  f(u,p,t) = -im*(HMatrix*u-u*HMatrix)
  prob = ODEProblem(f,rho0,times)
  sol = solve(prob,Tsit5(),alg_hints = [:stiff],dt=tint)
@@ -41,13 +42,38 @@ function survivalprobabilityt(rho0,tmax,n,om,r,lambda,delta,eta,psi)
  nt = floor(Int, tmax/tint)
  surprob = []
  open("Loschmidt_amplitud_thermal.dat","w") do io
+ open("negativities_quench_thermal.dat","w") do io2
  for i in 1:(nt+1)
    rhot = sol(tinst)
-   fidinst = (tr((rhot^(1/2)*rho0*rhot^(1/2))^(1/2)))
-   println(io,tinst," ", round(real(fidinst),digits=16)," ",round(imag(fidinst),digits=16))
+   neg = wigner_eig.wigner_rhot_neg(rhot,n,L)
+   lecho = (tr((rhot^(1/2)*rho0*rhot^(1/2))^(1/2)))
+   #mat = rho0*rhot
+   #ls = [mat[i,i] for i in 1:(2*(n+1))]
+   #lecho   = sum(ls)
+   println(io,tinst," ", round(real(lecho),digits=8)," ",round(imag(lecho),digits=8))
+   println(io2,tinst," ", round(real(neg),digits=8))
    tinst=tinst+tint
  end
  end
+ end
+ println("-------------   Go to file Loschmidt_amplitud_thermal.dat to see the Loschmidt amplitud  ----------------")
+ println("             The file contains the survival amplitude from 0 to ",tmax," in steps of ",tint," time units ")
+ println("-------------------------------------------------------------------------------------------------------- ")
+ println("-------------   Go to file negativities_quench_thermal.dat to see the negativities     ------------------")
+ println("             The file contains Negativities from 0 to ",tmax," in steps of ",tint," time units      ")
+ println("-------------------------------------------------------------------------------------------------------- ")
+ return "done"
+end
+
+function wignerrhot(rho0,tshot,n,om,r,lambda,delta,eta,psi,L)
+ HMatrix= diagonalization.hamiltonian(n,om,r,lambda,delta,eta,psi)
+ times=(0.0,tshot)
+ tint=0.05
+ f(u,p,t) = -im*(HMatrix*u-u*HMatrix)
+ prob = ODEProblem(f,rho0,times)
+ sol = solve(prob,Tsit5(),alg_hints = [:stiff],dt=tint)
+ rhot = sol(tshot)
+ wig = wigner_eig.wigner_rhot(rhot,L,r,n)
  return "done"
 end
 
@@ -74,38 +100,8 @@ function survivalprobabilityt_ct(rho0,tmax,n,om,r,lambda,delta,eta,psi)
  end
  return "done"
 end
-
-
-
  
-n=100
-om=1.0
-r=20.0
-lambda0=0.0
-delta0=0.0
-eta0=3/2
-psi0=0.0
-eta1=3/2
-lambda1=4/5
-delta1=0.0
-psi1=0.0
 
-beta=200000.0
-tmax=10.0
-
-
-rhoistate = initialthermalstate(n,om,r,lambda0,delta0,eta0,psi0,beta)
-
-println("Size of the Fock basis: ",n)
-println("Beta:                   ",beta)
-sp = survivalprobabilityt(rhoistate,tmax,n,om,r,lambda1,delta1,eta1,psi1)
-println(sp)
-#sp_c = survivalprobabilityt_ct(rhoistate,[tmax,0.5],n,om,r,lambda1,delta1,eta1,psi1)
-#println(sp_c)
-println("Real-time survival amplitud data in file Loschmidt_amplitud_thermal.dat")
-
-#ftest = (tr((rhoistate^(1/2)*rhoistate*rhoistate^(1/2))^(1/2)))^2
-#println(ftest)
 
  
 end

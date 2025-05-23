@@ -60,7 +60,7 @@ open("input.dat") do f
  chi = parse(Float64, K28)
  K29=readline(f)
  K30=readline(f)
- nu = parse(Float64, K30)
+ tau = parse(Float64, K30)
  K31=readline(f)
  K32=readline(f)
  nn = parse(Int64, K32)
@@ -83,25 +83,28 @@ open("input.dat") do f
  csc0 = reading.stringtofloatlist(K24)
 
 
+
 # printing information 
 println("------------------------------------------------")
 println("            Input                               ")
 println("Size of the Fock space N:     ",N)
-println("bosonic frequency omega:      ",om)
-println("fermionic frequency R:        ",r)
+println("Oscillator frequency omega:   ",om)
+println("Qubit frequency R:            ",r)
 println("hbar:                         ",1.0)
-println("parameter delta:              ",delta)
-println("carrier  parameter lambda:    ",lambda)
-println("coupling parameter g  :       ",eta)
-println("phase parameter psi:          ",psi)
-println("frequency of the driven term: ",nu)
-println("strength of the driven term : ",chi)
+println("Parameter delta:              ",delta)
+println("Carrier  parameter lambda:    ",lambda)
+println("Coupling parameter g  :       ",eta)
+println("Phase parameter psi:          ",psi)
+println("Period of the modulation    : ",tau)
+println("Amplitude of the modulation : ",chi)
 println("State of interest           : ",kk)
 println("number of subperiods of the drive : ",nn)
 println("------------------------------------------------")
 
+
 # normalization of parameters
 chi=chi*r
+nu=2*pi/tau
 
 println("---------------------------------------------------------------------")
 println("                             Output                                  ")
@@ -202,19 +205,23 @@ if flag1==2  # Dynamics
   if flag2==1 || flag2==3 # static Hamiltonian
     println("---- Dynamics of the time independent AQRM initiates ----")
     mensaje1=dynamics.survivalp(cs0,tmax,1.0,N,om,r,lambda,delta,eta,psi)
-    mensaje4=dynamics.fotoc(cs0,tmax,1.0,N,om,r,lambda,delta,eta,psi)
+    av=dynamics.fotoc(cs0,tmax,1.0,N,om,r,lambda,delta,eta,psi,L)
     wpsit = wigner_eig.wigner_evolt(N,om,r,lambda,delta,eta,psi,L,cs0,tmax)
     println("Negativity of the state (at time=",tmax,"): ",wpsit[1])
+    println("Average QFI over the period T=",tmax,": ",av[1])
+    println("Average Negativities over the period T=",tmax,": ",av[2])
   end
   if flag2==2 || flag2==3 # Floquet
     println("----   Dynamics of the modulated AQRM initiates     ----")
     tau = 2*pi/nu
     pf = floor(tmax/tau)  
-    floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nu,eta,psi)
+    floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nu,eta,psi,flagt)
     mensaje2 = dynamics.survivalpt(cs0,floquet,tmax,nu)
-    mensaje3 = dynamics.fotoct(cs0,floquet,tmax,nu,N)
-    wpsit_floquet = wigner_eig.wigner_evolt_driven(N,om,r,lambda,delta,eta,psi,nu,chi,nn,L,cs0,pf)
+    av_f = dynamics.fotoct(cs0,floquet,tmax,nu,N,L)
+    wpsit_floquet = wigner_eig.wigner_evolt_driven(N,om,r,lambda,delta,eta,psi,nu,chi,nn,L,cs0,pf,flagt)
     println("Negativity of the state (at time=",pf*tau,"): ",wpsit_floquet[1])
+    println("Average QFI over the period T=",tmax,": ",av_f[1])
+    println("Average Negativities over the period T=",tmax,": ",av_f[2])
   end
 end
 

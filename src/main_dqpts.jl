@@ -2,27 +2,28 @@ module main_dqpts
 push!(LOAD_PATH, pwd())
 using LinearAlgebra
 import diagonalization
+import wigner_eig
 import DQPT
-
-
 
 
 n=120             # Size of the Fock basis
 om=1.0            # Bosonic frequency
-r=50.0            # Qubit frequency
+r=10.0            # Qubit frequency
 lambda0=0.0       # Initial Carrier parameter
 delta=0.0         # Parameter (-1,0,1) for (AJC,QRM,JC)
-g0=3/2            # Initial coupling
+g0=0.0            # Initial coupling
 psi=0.0           # Phase of the Hamiltonian
-g1=3/2            # Final coupling
-lambda1=1/5       # Final Carrier parameter
+g1=1.25           # Final coupling
+lambda1=0.0       # Final Carrier parameter
 nsubint=1000      # Subintervales for integrating the survival probability
 nsubint2=400      # Subintervals of real time for estimate the position of zeros
 nsubint3=30       # Subintervals of imaginary time for estimate the position of zeros
 tmax=10.0         # maximal time for the survival probability
+tshot=5.66         # time for the Wigner function
 alpha=1.0         # Parameter of the linear combination for the initial state 
 ph=0.0            # Phase of the initial state
-flag1=1           # (1) for the position of the zeros in the complex plane (0) for skip 
+L=6.5             # Size of the phase space
+flag1=0           # (1) for the position of the zeros in the complex plane (0) for skip
 
 
 name = "position_zeros.dat"   # File for saving the position of the zeros
@@ -41,7 +42,8 @@ phi0 = alpha^(1/2)*istate[1] + (1-alpha)^(1/2)*exp(im*ph)*istate[2]
 
 hamf = diagonalization.hamiltonian(n,om,r,lambda1,delta,g1,psi)
 
-amplitudint = DQPT.amplitud(phi0,tmax,1.0,n,om,r,lambda1,delta,g1,psi)
+wigt = DQPT.wigner_rhot(phi0,hamf,L,r,n,tshot)
+ctsa = DQPT.amplitud(phi0,tmax,1.0,n,om,r,lambda1,delta,g1,psi,L)
 
 
 ovl = DQPT.overlapdqpt(phi0,hamf,n)
