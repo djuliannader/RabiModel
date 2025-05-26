@@ -26,7 +26,7 @@ L=6.5             # Size of the phase space
 flag1=0           # (1) for the position of the zeros in the complex plane (0) for skip
 
 
-name = "position_zeros.dat"   # File for saving the position of the zeros
+name = "output/position_zeros.dat"   # File for saving the position of the zeros
 
 
 

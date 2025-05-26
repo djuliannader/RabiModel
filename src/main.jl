@@ -1,10 +1,11 @@
 push!(LOAD_PATH, pwd())
 import diagonalization
-import reading
-import dynamics
+include("modules/reading.jl")
+import diagonalization
 import troterization
 import stat
 import wigner_eig
+import dynamics
 using LinearAlgebra
 
 
@@ -114,7 +115,7 @@ listaj=[lmm[1]+i*intl for i in 0:spcj]
 listanu = [abs(listaj[i]) for i in 1:length(listaj)]
 if flag1==1  # Spectrum
   println("------------------------------------------------")
-  open("spectrum_output_g.dat","w") do file
+  open("output/spectrum_output_g.dat","w") do file
     for j in 1:length(listaj)
       print(file,string(listaj[j]))
       evalvec=diagonalization.diagonalize(N,om,r,lambda,delta,listaj[j],psi)
@@ -124,8 +125,8 @@ if flag1==1  # Spectrum
       println(file," ")
     end
   end
-  println("See output file spectrum_output_g.dat for spectrum as a function of g")
-  open("spectrum_output_lambda.dat","w") do file
+  println("See output file output/spectrum_output_g.dat for spectrum as a function of g")
+  open("output/spectrum_output_lambda.dat","w") do file
   for j in 1:length(listaj)
       print(file,string(listaj[j]))
       evalvec=diagonalization.diagonalize(N,om,r,listaj[j],delta,eta,psi)
@@ -135,9 +136,9 @@ if flag1==1  # Spectrum
       println(file," ")
   end
   end
-  println("See output file spectrum_output_lambda.dat for spectrum as a function of lambda")
+  println("See output file output/spectrum_output_lambda.dat for spectrum as a function of lambda")
   if lmm[1]>0.0
-  open("spectrum_quasienergies_output.dat","w") do file
+  open("output/spectrum_quasienergies_output.dat","w") do file
   for nuj in listanu
     print(file,string(nuj))
     qs = stat.quasienergies(N,om,r,lambda,delta,nn,nuj,chi,eta,psi,flagt)
@@ -168,7 +169,7 @@ if flag1==1  # Spectrum
     println(io,nui,"  ",ovlist[1]," ",ovlist[2]," ",ovlist[3]," ", ovlist[4]," ",ovlist[5])
   end
   end
-  println("See output file spectrum_contributions_output.dat")
+  println("See output file output/spectrum_contributions_output.dat")
   end
 end
 

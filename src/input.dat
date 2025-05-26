@@ -27,7 +27,7 @@ Maximum time for Survival Probability (Float) ---> Necessary only for dynamics
 Xi, Modulation amplitude (Float) ---> Necessary only for Floquet operator
 0.05
 tau (2*pi/omega), Modulation Period (Float) ---> Necessary only for Floquet operator
-3.85
+5.2
 Intervals of the period (Int) ---> Necessary only for Floquet operator
 1000
 k-eigenstate (Int) 
