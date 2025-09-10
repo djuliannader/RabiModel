@@ -13,13 +13,13 @@ lambda0=0.0       # Initial Carrier parameter
 delta=0.0         # Parameter (-1,0,1) for (AJC,QRM,JC)
 g0=0              # Initial coupling
 psi=0.0           # Phase of the Hamiltonian
-g1=5/4            # Final coupling
+g1=3/4            # Final coupling
 lambda1=0.5       # Final Carrier parameter
 tmax=10.0         # maximal time for the survival probability
-tshot=3.35        # time for Wigner function
+tshot=9.5        # time for Wigner function
 flag1=0           # (1) for the complex time survival probability (0) for skip 
-beta=1.0          # temperature
-L=6.5             # Size of the phase space
+beta=10.0          # temperature
+L=7.5             # Size of the phase space
 
 
 

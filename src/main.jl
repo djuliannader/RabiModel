@@ -74,7 +74,9 @@ open("input.dat") do f
  K37=readline(f)
  K38=readline(f)
  flagt = parse(Int64, K38)
-
+ K39=readline(f)
+ K40=readline(f)
+ lk = parse(Int64, K40)
 
 ##-------------
 #
@@ -88,18 +90,17 @@ open("input.dat") do f
 # printing information 
 println("------------------------------------------------")
 println("            Input                               ")
-println("Size of the Fock space N:     ",N)
-println("Oscillator frequency omega:   ",om)
-println("Qubit frequency R:            ",r)
-println("hbar:                         ",1.0)
-println("Parameter delta:              ",delta)
-println("Carrier  parameter lambda:    ",lambda)
-println("Coupling parameter g  :       ",eta)
-println("Phase parameter psi:          ",psi)
-println("Period of the modulation    : ",tau)
-println("Amplitude of the modulation : ",chi)
-println("State of interest           : ",kk)
-println("number of subperiods of the drive : ",nn)
+println("Size of the Fock space   (N)         : ",N)
+println("Oscillator frequency   (Omega)       : ",om)
+println("Qubit frequency          (R)         : ",r)
+println("QRM (0), JC (1) or AJC (-1)          : ",delta)
+println("Carrier  parameter     (lambda)      : ",lambda)
+println("Coupling parameter       (g)         : ",eta)
+println("Phase parameter         (psi)        : ",psi)
+println("Modulation period       (Tau)        : ",tau)
+println("Modulation amplitude     (Xi)        : ",chi)
+println("State of interest        (k)         : ",kk)
+println("Number of subperiods of the modulation    : ",nn)
 println("------------------------------------------------")
 
 
@@ -180,20 +181,26 @@ if flag1==3
    message = stat.analysisH(N,om,r,lambda,delta,nn,nu,chi,eta,psi,flagt)
    evalst  = diagonalization.diagonalize(N,om,r,lambda,delta,eta,psi)
    wigeig  = wigner_eig.wigner_eigenstate(N,om,r,lambda,delta,eta,psi,kk,L)
-   println("Ground state energy of the AQRM :",evalst[1][1])
-   println("Energy of the ",kk," state of the AQRM :",evalst[1][kk])
-   println("Negativity of the ",kk," state of the AQRM :",real(wigeig[1]))
-   println("Purity of the ",kk," state of the AQRM     :",real(wigeig[2]))
+   println("Ground state energy of the AQRM                  :",evalst[1][1])
+   println("Expectation value <E_k|H_0|E_k>                  :",evalst[1][kk])
+   println("Negativity of the ",kk," state of the AQRM       :",real(wigeig[1]))
+   println("Purity of the ",kk," state of the AQRM           :",real(wigeig[2]))
    println("------ Results of the modulated AQRM-------------------------")
-   wfloquet   = wigner_eig.wigner_driven(N,om,r,lambda,delta,eta,psi,nu,chi,nn,kk,L,flagt)
+   wfloquet   = wigner_eig.wigner_driven(N,om,r,lambda,delta,eta,psi,nu,chi,nn,kk,L,flagt,lk)
    rpar=stat.parameter_r(N,om,r,lambda,delta,nn,nu,chi,eta,psi,flagt)
    # mswflod  = wigner_eig.wigner_drivenqs(N,om,r,lambda,delta,eta,psi,nu,chi,nn,kk,L)
-   println("parameter <r> of the Floquet operator : ",rpar)
-   println("expectation value of the AQRM Hamiltonian in the Floquet ",kk,"-th stationary state: ",real(wfloquet[1]))
-   println("Negativity of the ",kk,"-th stationary state: ",real(wfloquet[2]))
-   println("Purity  of the ",kk,"-th stationary state: ",real(wfloquet[3]))
+   println("parameter <r> of the Floquet operator            : ",rpar)
+   println("expectation value      <F_k|H_0|F_k>             : ",real(wfloquet[1]))
+   println("Negativity of the ",kk,"-th stationary state     : ",real(wfloquet[2]))
+   println("Purity  of the ",kk,"-th stationary state        : ",real(wfloquet[3]))
    #println("Wehlr entropy  of the ",kk,"-th stationary state: ",real(wfloquet[4]))
    #println("Maximal fidelity |<F_k|E_n>|^2= ",real(wfloquet[4])," for k= ",kk," and n= ",floor(Int,real(wfloquet[5])))
+   for jk in 1:lk
+     println("Overlap |<E_l|F_k>|^2 for k= ",kk," and l=",jk,"  : ",real(wfloquet[4][jk]))
+   end
+   for jk in 1:lk
+     println("Overlap |<n|F_k>|^2 for k= ",kk," and n=",jk,"  : ",real(wfloquet[5][jk]))
+   end
    println("See file levels_output.dat")
    println("-------------------------------------------------------------")
    # --------------------------------------
@@ -207,21 +214,24 @@ if flag1==2  # Dynamics
     println("---- Dynamics of the time independent AQRM initiates ----")
     mensaje1=dynamics.survivalp(cs0,tmax,1.0,N,om,r,lambda,delta,eta,psi)
     av=dynamics.fotoc(cs0,tmax,1.0,N,om,r,lambda,delta,eta,psi,L)
+    println("----->here")
     wpsit = wigner_eig.wigner_evolt(N,om,r,lambda,delta,eta,psi,L,cs0,tmax)
     println("Negativity of the state (at time=",tmax,"): ",wpsit[1])
-    println("Average QFI over the period T=",tmax,": ",av[1])
+    println("Average QFI[N,t] over the period T=",tmax,": ",av[1])
+    println("Average QFI[squeezing,t] over the period T=",tmax,": ",av[3])
     println("Average Negativities over the period T=",tmax,": ",av[2])
   end
   if flag2==2 || flag2==3 # Floquet
     println("----   Dynamics of the modulated AQRM initiates     ----")
-    tau = 2*pi/nu
     pf = floor(tmax/tau)  
     floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nu,eta,psi,flagt)
     mensaje2 = dynamics.survivalpt(cs0,floquet,tmax,nu)
+    println("here")
     av_f = dynamics.fotoct(cs0,floquet,tmax,nu,N,L)
     wpsit_floquet = wigner_eig.wigner_evolt_driven(N,om,r,lambda,delta,eta,psi,nu,chi,nn,L,cs0,pf,flagt)
     println("Negativity of the state (at time=",pf*tau,"): ",wpsit_floquet[1])
-    println("Average QFI over the period T=",tmax,": ",av_f[1])
+    println("Average QFI[N,t] over the period T=",tmax,": ",av_f[1])
+    println("Average QFI[squeezing,t] over the period T=",tmax,": ",av_f[3])
     println("Average Negativities over the period T=",tmax,": ",av_f[2])
   end
 end

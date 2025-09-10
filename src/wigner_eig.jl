@@ -12,6 +12,11 @@ import Fisher
 
 Qexabs(v) = Qexabs(v...)  # denominator accepts a vector
 QWehrl(v) = QWehrl(v...)  # denominator accepts a vector
+Psimarginals(v) = Psimarginals(v...)  # denominator accepts a vector
+
+
+#axis("scaled")
+
 
 function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   bc=FockBasis(Nmax)
@@ -28,10 +33,13 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   QQ = wigner(rhopt, x, x)
   QQs = transpose(QQ)
   tick_params(labelsize=20)
-  xticks([-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5])
-  yticks([-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5])
+  xticks([-2,-1.5,-1,-0.5,0,0.5,1,1.5,2])
+  yticks([-2,-1.5,-1,-0.5,0,0.5,1,1.5,2])
+  #xticks([])
+  #yticks([])
   pcolormesh(xm, xm, QQs, cmap=:bwr,vmin=-0.1,vmax=0.1)
-  #colorbar()
+  #colorbar(fraction=0.25,shrink=0.75,ticks=[-0.1,-0.05,0,0.05,0.1])
+  #axis("off")
   bc=FockBasis(Nmax)
   adop=create(bc)
   aop = destroy(bc)
@@ -45,6 +53,9 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   p2m=expect(pop^2,rhopt)
   p3m=expect(pop^3,rhopt)
   p4m=expect(pop^4,rhopt)
+  xpm=expect(xop*pop,rhopt)
+  pxm=expect(pop*xop,rhopt)
+  nexp=expect(adop*aop,rhopt)
   println("central moments of the ",k,"-th stationary state")
   println("x 1 moment (normalized): ",x1m/r^(1/2))
   println("p 1 moment (normalized): ",p1m/r^(1/2))
@@ -54,14 +65,41 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   println("p 3 moment : ",p3m-3*p2m*p1m+3*p1m^3-p1m^3)
   println("x 4 moment : ",x4m-4*x3m*x1m+6*x2m*x1m^2-4*x1m^4+x1m^4)
   println("p 4 moment : ",p4m-4*p3m*p1m+6*p2m*p1m^2-4*p1m^4+p1m^4)
+  println(" mean photon number n : ",nexp)
+  #V11 = x2m-x1m^2
+  #V22 = p2m-p1m^2
+  #V12 = (1/2)*(xpm+pxm)-x1m*p1m
+  #Vmat = [V11 V12; V12 V22]
+  #meig = eigvals(Vmat)
+  #println("real squeezing parameter: ",(-1/2)*log(2*(real(meig[1]))))
+  println("real squeezing parameter: ",real(asinh(nexp^(1/2))))
   un = (x2m-x1m^2)^(1/2)*(p2m-p1m^2)^(1/2)
   println("Uncertainity : ",un)
-  qfi = Fisher.fisherp(rhopt,Nmax)
-  println("QFI[rho,p] : ", qfi)
-  xy=xycircle(0.18,20)
+  qfi = Fisher.fishern2(rhopt,Nmax)
+  qfi2 = Fisher.fisherdisplacementp(rhopt,Nmax)
+  qfi3 = Fisher.fisherdisplacementx(rhopt,Nmax)
+  println("QFI[rho,n]/(4n) : ", qfi)
+  println("QFI[rho,p]/2    : ", qfi2)
+  println("QFI[rho,x]/2    : ", qfi3)
+  #xy=xycircle((1/(r)^(1/2)),20)
   #scatter(xy[1],xy[2],s=2,color="black")
+  #scatter([1],[1],s=2,color="black")
   global rhopti=rhopt
   den=hcubature(Qexabs,(-L,-L),(L,L),rtol=0.001)
+  open("output/marginals.dat","w") do io
+  global summar3 = 0.0
+  for ix in x
+    summar1 = 0.0
+    summar2 = 0.0
+    for ip in x
+      summar1 = summar1 + wigner(rhopti, ix, ip)*(2*L/length(x))
+      summar2 = summar2 + wigner(rhopti, ip, ix)*(2*L/length(x))
+      global summar3 = summar3 + wigner(rhopti, ip, ix)*(2*L/length(x))^2
+    end
+    println(io,ix," ",round(summar1,digits=8)," ",round(summar2,digits=8))
+  end
+  end
+  #println("********volume:", summar3)
   tight_layout()
   savefig("output/wigner_eigenstate.png")
   println("See output/wigner_eigenstate.png for the Wigner function of the ",k,"-eigenstate of the QRM")
@@ -83,10 +121,10 @@ function wigner_evolt(Nmax,om,r,lambda,delta,eta,psi,L,phi0,t)
   QQ = wigner(rhopt, x, x)
   QQs = transpose(QQ)
   tick_params(labelsize=20)
-  #xticks([-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5])
-  #yticks([-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5])
-  xticks([-2,-1,0,1,2])
-  yticks([-2,-1,0,1,2])
+  xticks([-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5])
+  yticks([-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5])
+  #xticks([-2,-1,0,1,2])
+  #yticks([-2,-1,0,1,2])
   pcolormesh(xm, xm, QQs, cmap=:bwr,vmin=-0.1,vmax=0.1)
   #colorbar()
   bc=FockBasis(Nmax)
@@ -125,15 +163,28 @@ function wigner_evolt(Nmax,om,r,lambda,delta,eta,psi,L,phi0,t)
   return [real(den[1]-1.0)]
 end
 
- function wigner_driven(Nmax,om,r,lambda,delta,eta,psi,nu,chi,Nf,k,L,flagt)
+ function wigner_driven(Nmax,om,r,lambda,delta,eta,psi,nu,chi,Nf,k,L,flagt,kl)
    bc=FockBasis(Nmax)
    ba=SpinBasis(1//2)
    x = [-L:0.1:L;]
    xm = x/r^(1/2)
+   ham=diagonalization.hamiltonian(Nmax,om,r,lambda,delta,eta,psi)
    floquet=troterization.troter(Nmax,Nf,r,om,lambda,delta,chi,nu,eta,psi,flagt)
    vecordered = stat.orderinfvec(Nmax,om,r,lambda,delta,Nf,nu,chi,eta,psi,flagt)
    evs=eigvecs(floquet)
    listvec=[evs[i,vecordered[k]] for i in 1:2*Nmax]
+   evsham = eigvecs(ham)
+   listovlp=[]
+   listovlpn=[]
+   for jk in 1:kl
+     klstate=[evsham[i,jk] for i in 1:2*Nmax]
+     fockstate=[0.0 for i in 1:2*Nmax]
+     fockstate[jk]=1
+     ovlp= abs2(transpose(conj(klstate))*listvec)
+     ovlpn= abs2(transpose(conj(fockstate))*listvec)
+     append!(listovlp,ovlp)
+     append!(listovlpn,ovlpn)
+   end
    phi = buildingstate(listvec,Nmax)
    rho = dm(phi)
    rhopt = ptrace(rho,2)
@@ -160,6 +211,7 @@ end
    p2m=expect(pop^2,rhopt)
    p3m=expect(pop^3,rhopt)
    p4m=expect(pop^4,rhopt)
+   nexp=expect(adop*aop,rhopt)
    println("central moments of the ",k,"-th stationary state")
    println("x 1 moment (normalized): ",x1m/r^(1/2))
    println("p 1 moment (normalized): ",p1m/r^(1/2))
@@ -169,10 +221,15 @@ end
    println("p 3 moment : ",p3m-3*p2m*p1m+3*p1m^3-p1m^3)
    println("x 4 moment : ",x4m-4*x3m*x1m+6*x2m*x1m^2-4*x1m^4+x1m^4)
    println("p 4 moment : ",p4m-4*p3m*p1m+6*p2m*p1m^2-4*p1m^4+p1m^4)
+   println(" mean photon number n : ",nexp)
    un = (x2m-x1m^2)^(1/2)*(p2m-p1m^2)^(1/2)
    println("Uncertainity : ",un)
    qfi = Fisher.fishern2(rhopt,Nmax)
-   println("QFI[rho,n]/(4n) : ", qfi)
+   qfi2 = Fisher.fisherdisplacementp(rhopt,Nmax)
+   qfi3 = Fisher.fisherdisplacementx(rhopt,Nmax)
+   println("QFI[rho,n]/(4n)   : ", qfi)
+   println("QFI[rho,p]/2      : ", qfi2)
+   println("QFI[rho,x]/2      : ", qfi3)
    tight_layout()
    savefig("output/wigner_eigenstate_f.png")
    println("See output/wigner_eigenstate_f.png for the Wigner function of the ",k,"-eigenstate of the Floquet operator")
@@ -191,7 +248,7 @@ end
    #    nk = ik
    #  end
    #end
-   return [exp_val,real(den[1]-1.0),pur] 
+   return [exp_val,real(den[1]-1.0),pur,listovlp,listovlpn] 
  end
 
 function wigner_evolt_driven(Nmax,om,r,lambda,delta,eta,psi,nu,chi,Nf,L,phi0,pf,flagt)
@@ -297,23 +354,14 @@ end
 return rho
 end
 
-function xycircle(r,Npoints)
- xlist=[]
- ylist=[]
- thetaint=2*pi/Npoints
- for i in 1:Npoints
-   x=r*cos(thetaint*(i-1))
-   y=r*sin(thetaint*(i-1))
-   append!(xlist,x) 
-   append!(ylist,y)
- end
-  return [xlist,ylist]
-end
+
 
 function Qexabs(x,y)
    return abs(wigner(rhopti, x, y))
    #return wigner(rhopti, x, y)
    end
+   
+   
 
 function QWehrl(x,y)
    return qfunc(rhopti, x, y)*log(qfunc(rhopti,x,y))
@@ -327,10 +375,23 @@ function wigner_rhot(rho,L,r,Nmax)
   xm = x/r^(1/2)
   QQ = wigner(rhopt, x, x)
   QQs = transpose(QQ)
+  tick_params(labelsize=20)
+  #xy=xycircle((1/(2*r)^(1/2)),20)
+  xy=xycircle(0.1,20)
+  scatter([0],[0],s=2,color="black")
   pcolormesh(xm, xm, QQs, cmap=:bwr,vmin=-0.1,vmax=0.1)
   tight_layout()
   savefig("output/wigner_rhot.png")  
   println("See output/wigner_rhot.png for the Wigner function of the state rho(x,p,t)")
+  println("The data for figure output/wigner_rhot.png can be found in file output/wigner_rhot_data.dat")
+  open("output/wigner_rhot_data.dat","w") do io
+  for i in x
+    for j in x
+      wig = wigner(rhopt, i, j)
+      println(io,i/r^(1/2)," ",j/r^(1/2)," ",round(wig,digits=8))
+    end
+  end
+  end
   return "done"
 end
 
@@ -340,6 +401,53 @@ function wigner_rhot_neg(rho,Nmax,L)
   global rhopti=rhopt
   den=hcubature(Qexabs,(-L,-L),(L,L),rtol=0.0001)
   return real(den[1]-1.0)
+end
+
+function wigner_rhot_ZerosCut(rho,Nmax,r)
+  rhoqo = buildingrho(rho,Nmax)
+  rhopt = ptrace(rhoqo,2)
+  maxxp = round(Int,2/0.01)
+  int = 0.01
+  xplist=[-1+i*int for i in 0:maxxp]
+  global count = 0
+  #println("-----")
+  for i in 1:(length(xplist)-1)
+      w1cp = wigner(rhopt, xplist[i] , 0.0)
+      w2cp = wigner(rhopt, xplist[i+1], 0.0)
+      w1cx = wigner(rhopt, 0.0 , xplist[i])
+      w2cx = wigner(rhopt, 0.0, xplist[i+1])
+      if (real(w1cp) > 0) && ( real(w2cp) < 0)
+         global count = count + 1
+	 #println("zero->"," x=",xplist[i]/r^(1/2)," p=",0) 
+      end
+      if (real(w1cp) < 0) && ( real(w2cp) > 0)
+         global count = count + 1
+	 #println("zero->"," x=",xplist[i]/r^(1/2)," p=",0) 
+      end
+      if (real(w1cx) > 0) && ( real(w2cx) < 0)
+         global count = count + 1
+	 #println("zero->"," p=",xplist[i]/r^(1/2)," x=",0) 
+      end
+      if (real(w1cx) < 0) && ( real(w2cx) > 0)
+         global count = count + 1
+	 #println("zero->"," p=",xplist[i]/r^(1/2)," x=",0) 
+      end
+  end
+  return count
+end
+  
+
+function xycircle(r,Npoints)
+ xlist=[]
+ ylist=[]
+ thetaint=2*pi/Npoints
+ for i in 1:Npoints
+   x=r*cos(thetaint*(i-1))
+   y=r*sin(thetaint*(i-1))
+   append!(xlist,x) 
+   append!(ylist,y)
+ end
+  return [xlist,ylist]
 end
 
 

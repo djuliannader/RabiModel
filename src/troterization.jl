@@ -6,7 +6,6 @@ import dynamics
 import diagonalization
 
 
-
 function troter(Nmax::Int64,nn::Int64,r,om,lambda,delta,b,nu,eta,psi,flagt::Int64)
  pi=acos(-1)
  T=2*pi/nu

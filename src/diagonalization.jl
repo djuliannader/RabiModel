@@ -85,4 +85,12 @@ function hamiltonian_rmp2(n::Int64,r,om,gamma,omega,eta,psi)
 end
 
 
+function sigmaz(n)
+ # diagonal matrix elements
+ vdiag=[(-1)^j+0*im for i in 0:n for j in -1:0]
+ #println(vdiag)
+ HMatrix=Array(Diagonal(vdiag))
+ return HMatrix
+end
+
 end

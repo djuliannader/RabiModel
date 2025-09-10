@@ -113,6 +113,7 @@ function fotoc(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::
  tint=0.05
  t=0
  qfilist=[]
+ qfilist2=[]
  neglist=[]
  nt=trunc(Int,tmax/tint)
  HMatrix= diagonalization.hamiltonian(Nmax,om,r,lambda,delta,eta,psi)
@@ -135,15 +136,17 @@ function fotoc(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::
    rho = dm(phi)
    rhopt = ptrace(rho,2)
    qfi=Fisher.fishern(rhopt,Nmax)
+   qfi2=Fisher.fishersqueezing(rhopt,Nmax)
    x1m=expect(xop,rhopt)
    x2m=expect(xop^2,rhopt)
    p1m=expect(pop,rhopt)
    p2m=expect(pop^2,rhopt)
    fotoc = (x2m-x1m^2)^(1/2) + (p2m-p1m^2)^(1/2)
    println(io,t," ",round(real(fotoc),digits=16))
-   println(io2,t," ",round(real(qfi),digits=8))
+   println(io2,t," ",round(real(qfi),digits=8)," ",round(real(qfi2),digits=8))
    println(io3,t," ",round(neg,digits=8))
    append!(qfilist,round(real(qfi),digits=8))
+   append!(qfilist2,round(real(qfi2),digits=8))
    append!(neglist,round(real(neg),digits=8))
    t=t+tint
  end
@@ -166,10 +169,12 @@ function fotoc(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::
  println("             The file contains Neg(t) from t=0 to ",tmax," in steps of ",tint," time units          ")
  println("--------------------------------------------------------------------------------------------------- ")
  qfiavlist=[tint*qfilist[i] for i in 3:length(qfilist)]
+ qfiavlist2=[tint*qfilist2[i] for i in 3:length(qfilist2)]
  negavlist=[tint*neglist[i] for i in 1:length(neglist)]
  avqfi=(1/(tmax-2*tint)*sum(qfiavlist))
+ avqfi2=(1/(tmax-2*tint)*sum(qfiavlist2))
  avneg=(1/(tmax)*sum(negavlist))
- return [avqfi,avneg]
+ return [avqfi,avneg,avqfi2]
 end
 
 
@@ -185,6 +190,7 @@ function fotoct(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},tmax
  nint=trunc(Int64,tmax/T)
  psi0t=psi0
  qfilist=[]
+ qfilist2=[]
  neglist=[]
  open("output/fotoc_f.dat","w") do io
  open("output/qfi_f.dat","w") do io2
@@ -195,15 +201,17 @@ function fotoct(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},tmax
    rho = dm(phi)
    rhopt = ptrace(rho,2)
    qfi=Fisher.fishern(rhopt,Nmax)
+   qfi2=Fisher.fishersqueezing(rhopt,Nmax)
    x1m=expect(xop,rhopt)
    x2m=expect(xop^2,rhopt)
    p1m=expect(pop,rhopt)
    p2m=expect(pop^2,rhopt)
    fotoc = (x2m-x1m^2)^(1/2) + (p2m-p1m^2)^(1/2)
    println(io,T*i," ",round(real(fotoc),digits=8))
-   println(io2,T*i," ",round(real(qfi),digits=8))
+   println(io2,T*i," ",round(real(qfi),digits=8)," ",round(real(qfi2),digits=8))
    println(io3,T*i," ",round(neg,digits=8))
    append!(qfilist,round(real(qfi),digits=8))
+   append!(qfilist2,round(real(qfi2),digits=8))
    append!(neglist,round(real(neg),digits=8))
    psi0t=(fq^(1))*psi0t
  end
@@ -225,11 +233,13 @@ function fotoct(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},tmax
  println("----------- Dynamics governed by the the Floquet operator for the time dependent Hamiltonian   -----")
  println("             The file contains Neg(t) from t=0 to ",tmax," in steps of ",T ," time units          --")
  println("--------------------------------------------------------------------------------------------------- ")
- qfiavlist=[qfilist[i] for i in 3:length(qfilist)]
+ qfiavlist=[qfilist[i] for i in 2:length(qfilist)]
+ qfiavlist2=[qfilist2[i] for i in 2:length(qfilist2)]
  negavlist=[neglist[i] for i in 1:length(neglist)]
  avqfi=(1/(length(qfiavlist))*sum(qfiavlist))
+ avqfi2=(1/(length(qfiavlist2))*sum(qfiavlist2))
  avneg=(1/(length(negavlist))*sum(negavlist))
- return [avqfi,avneg]
+ return [avqfi,avneg,avqfi2]
 end
 
 function survivalpt2(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},tmax::Float64,om)

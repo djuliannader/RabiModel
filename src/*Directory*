@@ -1,0 +1,5 @@
+Directory /home/daniel/Documents/Codigos/RabiModel/src/
+diagonalization.jl  Fisher.jl		   main.jl   quasienergies_spacing.dat
+DQPT.jl		    input.dat		   modules/  stat.jl
+DQPT_thermal.jl     main_dqpts.jl	   output/   troterization.jl
+dynamics.jl	    main_dqpts_thermal.jl  QPT.jl    wigner_eig.jl

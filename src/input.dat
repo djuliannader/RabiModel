@@ -4,38 +4,39 @@ Omega, Oscillator frequency (Float)
 1.0
 R, Qubit frequency (Float)
 50.0
-delta, parameter (1) for JC, (0) for QRM  or (-1) for Anti JC (Float)
+Parameter (1) for JC, (0) for QRM  or (-1) for Anti JC (Float)
 0.0
 lambda, carrier parameter (Float) 
 0.0
 g, coupling parameter (Float)
-0.7071067811865475
+1.4142135623730951
 psi, phase parameter (Float) 
 0.0
 Flag, 1 for spectrum 2 for dynamics 3 for stationary states (Integer)
-2
+3
 Minimum and maximum value of g (List[Float])   ---> Necessary only for spectrum
 [0.5,2.8]
 Spacing of the parameter (Float) ---> Necessary only for spectrum
 0.01
 Flag, 1 for static Hamiltonian 2 for Floquet 3 for both (Integer) ---> Necessary only for dynamics
-2
+1
 Coordinates of the initial coherent state (List[Float]) [Theta0,Phi0,X0,P0] ---> Necessary only for dynamics
 [0.0,0.0,0.0,0.0]
 Maximum time for Survival Probability (Float) ---> Necessary only for dynamics
-500.0
+10.0
 Xi, Modulation amplitude (Float) ---> Necessary only for Floquet operator
 0.05
 tau (2*pi/omega), Modulation Period (Float) ---> Necessary only for Floquet operator
-5.2
+14.7
 Intervals of the period (Int) ---> Necessary only for Floquet operator
 1000
 k-eigenstate (Int) 
 1
 L size of the phase space (Float) [-L,L]  
-7.5
-For time-dependent term proportional to Sigma_z (1) or Sigma_x (2) (Int)
+11.0
+For time-dependent term pxdroportional to Sigma_z (1) or Sigma_x (2) (Int)
 1
-
+Number of eigenstates (l) for fidelities |<E_l|F_k>|^2  and |<n|F_k>|
+6
 
 

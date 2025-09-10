@@ -1,8 +1,10 @@
 module DQPT
 push!(LOAD_PATH, pwd())
 using LinearAlgebra
+using QuantumOptics
 import diagonalization
 import wigner_eig
+import Fisher
 export amplitud
 export initialstatequench
 export overlapdqpt
@@ -25,7 +27,7 @@ end
 function overlapdqpt(psi0,Hamf,nmax)
    eners =eigvals(Hamf) 
    states=eigvecs(Hamf)
-   open("overlap_dqpt.dat","w") do io
+   open("output/overlap_dqpt.dat","w") do io
    for i in 1:length(eners)
      istate=[states[j,i] for j in 1:2*(nmax+1)]
      psi0t = transpose(conj(psi0))
@@ -67,28 +69,51 @@ function amplitud(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nma
          end
 	 open("output/Loschmidt_amplitud.dat","w") do io
 	 open("output/negativities_quench.dat","w") do io2
+	 open("output/qfi_quench.dat","w") do io3
+	 open("output/zeros_cutwigner.dat","w") do io4
  	 for i in 1:nt+1
  	     evol=exp(-im*HMatrix*t/hbar)
 	     psi0t=evol*psi0
 	     neg = wigner_eig.wigner_negativities(Nmax,psi0t,L)
+	     rho =  psi0t*transpose(conj(psi0t))
+	     zeros =  wigner_eig.wigner_rhot_ZerosCut(rho,Nmax,r)
+	     rhoqo = wigner_eig.buildingrho(rho,Nmax)
+	     rhopt = ptrace(rhoqo,2)
+	     qfi1 = Fisher.fishern2(rhopt,Nmax)
+	     qfi2 = Fisher.fisherdisplacementp(rhopt,Nmax)
+             qfi3 = Fisher.fisherdisplacementx(rhopt,Nmax)
  	     sp=psi0a*psi0t
  	     spf=sp[1]
  	     println(io,t," ",round(real(spf),digits=16)," ", round(imag(spf),digits=16))
 	     println(io2,t," ",round(real(neg),digits=8))
+	     println(io3,t," ",round(real(qfi1),digits=8)," ",round(real(qfi2),digits=8)," ",round(real(qfi3),digits=8))
+	     println(io4,t," ",round(real(zeros),digits=8))
  	     t=t+tint
  	    end
 	 end
 	 end
+	 end
+	 end
 	 t=0.0
-	 println("-------------   Go to file output/Loschmidt_amplitud.dat to see the Loschmidt amplitud  ----------------------")
+	 println("------------------------------------------------------------------------------------------------------------ ")
+	 println("-------------   Go to file output/Loschmidt_amplitud.dat to see the Loschmidt amplitud as function of time---")
 	 println("----------- Dynamics governed by the time evolution operator for the time independent Hamiltonian       -----")
 	 println("             The file contains the Survival amplitude from 0 to ",tmax," in steps of ",tint," time units     ")
 	 println("------------------------------------------------------------------------------------------------------------ ")
-	  println("-------------   Go to file output/negativities_quench.dat to see the negativities  -------------------------")
+	 println("-------------   Go to file output/negativities_quench.dat to see the negativity volume as a function of time-")
 	 println("----------- Dynamics governed by the time evolution operator for the time independent Hamiltonian       -----")
-	 println("             The file contains Negativities from 0 to ",tmax," in steps of ",tint," time units               ")
+	 println("             The file contains the negativity volume from t=0 to ",tmax," in steps of ",tint," time units    ")
 	 println("------------------------------------------------------------------------------------------------------------ ")
- 	 open("Loschmidt_amplitud_ct.dat","w") do io
+	 println("-------------   Go to file output/qfi_quench.dat to see the QFI as a function of time   ---------------------")
+	 println("----------- Dynamics governed by the time evolution operator for the time independent Hamiltonian       -----")
+	 println("             The file contains the negativity volume from t=0 to ",tmax," in steps of ",tint," time units    ")
+	 println("------------------------------------------------------------------------------------------------------------ ")
+	 println("-------------   Go to file output/zeros_cutwigner.dat to the the number of sign changes (Ns)       ----------")
+	 println("-------------   of the Wigner function cuts along the position and momentum axis as a function of time ------")
+	 println("----------- Dynamics governed by the time evolution operator for the time independent Hamiltonian       -----")
+	 println("             The file contains Ns from 0 to ",tmax," in steps of ",tint," time units                         ")
+	 println("------------------------------------------------------------------------------------------------------------ ")
+ 	 open("output/Loschmidt_amplitud_ct.dat","w") do io
  	 for i in 1:nt+1
 	   tim=-0.5
 	   for j in 1:nt2+1
@@ -102,7 +127,7 @@ function amplitud(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nma
 	    t=t+tint	     
 	 end   
  	 end
-	 println("-------------   Go to file outputLoschmidt_amplitud_ct.dat to see the  complex time Loschmidt amplitud  -----")
+	 println("-------------   Go to file output/Loschmidt_amplitud_ct.dat to see the  complex time Loschmidt amplitud  -----")
 	 println("----------- Dynamics governed by the time evolution operator for the time independent Hamiltonian       -----")
 	 println("             The file contains SP from 0 to ",tmax," in steps of ",tint," time units               ")
 	 println("------------------------------------------------------------------------------------------------------------ ")

@@ -22,7 +22,7 @@ function analysisH(N,om,r,lambda,delta,nn,nu,chi,eta,psi,flagt)
        eigvecf_t[1,k]=conj(eigvecf[k])
      end
      evf=eigvecf_t*ham*eigvecf
-     append!(evfvec, real(evf) )
+     append!(evfvec, real(evf))
    end
    evfvecs=sort(evfvec)
    for i in 1:length(evfvec)
