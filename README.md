@@ -28,11 +28,10 @@ To run this repository, please make sure the following environment is available:
 
 ## Usage
 
-Hereeee To run this repository, please make sure the following environment is available:
+To run the code, navigate to the /src folder and execute the corresponding file:
 
-For using the code move to the folder /src and go to the corresponding file
-
-- For stationary states, manipulate parameters from input.dat and run as
+- Stationary and Floquet states
+Edit the parameters in input.dat and run:
 
 ```bash
 julia main.jl
