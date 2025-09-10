@@ -38,13 +38,18 @@ Edit the parameters in input.dat and run:
 julia main.jl
 ```
 
-- For the survival amplitude of quench dynamics, manipulate parameters from main_dqpts.jl and run as :
+- Survival amplitude of quench dynamics
+
+Edit the parameters in main_dqpts.jl and run:
+
 
 ```bash
 julia main_dqpts.jl
 ```
 
-- For the survival amplitude of quench dynamics, with initial thermal state, manipulate parameters from main_dqpts.jl and run as :
+- Survival amplitude of quench dynamics with an initial thermal state
+
+Edit the parameters in main_dqpts_thermal.jl and run:
 
 ```bash
 julia main_dqpts_thermal.jl
