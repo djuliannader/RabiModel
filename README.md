@@ -18,11 +18,17 @@ The paper is available on arXiv.
 The repository is currently being developed; please await its completion. Some data for the figures can be found in folder /data1.  The files contain Mathematica notebooks, necessary to recreate the Figures of the article.
 
 
+## Environment Requirements  
 
+To run this repository, please make sure the following environment is available:
+
+- LinearAlgebra (stdlib)  
+- DifferentialEquations
+- QuantumOptics
 
 ## Usage
 
-To run this repository, please make sure the following environment is available:
+Hereeee To run this repository, please make sure the following environment is available:
 
 For using the code move to the folder /src and go to the corresponding file
 
