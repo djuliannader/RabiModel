@@ -3370,7 +3370,7 @@ v19YsFKRlSFA+b62pFtxkb9LBQv3F4AgQOag+T0=
    3.953880098185494*^9, {3.959338188081287*^9, 3.959338190826356*^9}},
  CellLabel->"Out[73]=",ExpressionUUID->"df2af52e-23f0-4e10-83df-82624811407e"]
 }, Open  ]]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -4302,7 +4302,7 @@ Cell[BoxData["\<\"Period_QRM_resonant4.png\"\>"], "Output",
  CellChangeTimes->{3.9593384877013817`*^9, 3.9593386097212477`*^9},
  CellLabel->"Out[96]=",ExpressionUUID->"e71bb7af-7fdd-4bfc-a866-6f1e393c018f"]
 }, Open  ]]
-}, Open  ]]
+}, Closed]]
 }, Open  ]]
 },
 WindowSize->{1387.5, 852.},
@@ -4353,9 +4353,9 @@ Cell[CellGroupData[{
 Cell[160301, 2954, 7168, 138, 98, "Input",ExpressionUUID->"eec8b903-55e9-4539-aab0-c113c8f46a20"],
 Cell[167472, 3094, 15328, 276, 247, "Output",ExpressionUUID->"df2af52e-23f0-4e10-83df-82624811407e"]
 }, Open  ]]
-}, Open  ]],
+}, Closed]],
 Cell[CellGroupData[{
-Cell[182849, 3376, 217, 4, 45, "Subsubsection",ExpressionUUID->"fac17105-8184-4af4-80fc-25ee9d0d408e"],
+Cell[182849, 3376, 217, 4, 37, "Subsubsection",ExpressionUUID->"fac17105-8184-4af4-80fc-25ee9d0d408e"],
 Cell[183069, 3382, 175, 3, 29, "Input",ExpressionUUID->"6df2ef86-9232-4a6c-977a-6f05fffaa87e"],
 Cell[183247, 3387, 5568, 151, 575, "Input",ExpressionUUID->"b89d29df-b3d6-4c5a-9652-2c1be290bbdd"],
 Cell[188818, 3540, 7212, 224, 383, "Input",ExpressionUUID->"fa4959ba-5eb4-4995-a9a4-59b9939d167a"],
@@ -4367,7 +4367,7 @@ Cell[CellGroupData[{
 Cell[225178, 4294, 259, 4, 29, "Input",ExpressionUUID->"bb25dfc1-519c-4149-89a3-845d99d10869"],
 Cell[225440, 4300, 206, 2, 33, "Output",ExpressionUUID->"e71bb7af-7fdd-4bfc-a866-6f1e393c018f"]
 }, Open  ]]
-}, Open  ]]
+}, Closed]]
 }, Open  ]]
 }
 ]

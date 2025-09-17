@@ -1,5 +1,5 @@
 # RabiModel
-Static and dynamical properties of states in the Asymmetric Quantum Rabi Model with an small modulation in the qubit frequency
+HEEEEE Static and dynamical properties of states in the Asymmetric Quantum Rabi Model with an small modulation in the qubit frequency
 
 clone as:
 
@@ -24,6 +24,7 @@ To run this repository, please make sure the following environment is available:
 
 - LinearAlgebra (stdlib)  
 - DifferentialEquations
+- HCubature
 - QuantumOptics
 
 ## Usage
@@ -40,7 +41,7 @@ julia main.jl
 
 - Survival amplitude of quench dynamics
 
-Edit the parameters in main_dqpts.jl and run:
+Edit the parameters directly in the file main_dqpts.jl and run:
 
 
 ```bash
@@ -49,8 +50,16 @@ julia main_dqpts.jl
 
 - Survival amplitude of quench dynamics with an initial thermal state
 
-Edit the parameters in main_dqpts_thermal.jl and run:
+Edit the parameters directly in the file  main_dqpts_thermal.jl and run:
 
 ```bash
 julia main_dqpts_thermal.jl
+```
+
+- Adiabatic ramp for the preparation of Floquet states
+
+Edit the parameters directly in the file main_adiabaticramp.jl and run:
+
+```bash
+julia main_adiabaticramp.jl
 ```
