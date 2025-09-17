@@ -1,10 +1,17 @@
 module stat
 push!(LOAD_PATH, pwd())
 using LinearAlgebra
-import diagonalization
-import troterization
-import wigner_eig
 using QuantumOptics
+include("diagonalization.jl")
+include("troterization.jl")
+#include("wigner_eig.jl")
+using .diagonalization
+using .troterization
+#using .wigner_eig
+#using diagonalization
+#using troterization
+using wigner_f
+
 
 function analysisH(N,om,r,lambda,delta,nn,nu,chi,eta,psi,flagt)
    eigvs=diagonalization.diagonalize(N,om,r,lambda,delta,eta,psi)
@@ -22,7 +29,7 @@ function analysisH(N,om,r,lambda,delta,nn,nu,chi,eta,psi,flagt)
        eigvecf_t[1,k]=conj(eigvecf[k])
      end
      evf=eigvecf_t*ham*eigvecf
-     append!(evfvec, real(evf) )
+     append!(evfvec, real(evf))
    end
    evfvecs=sort(evfvec)
    for i in 1:length(evfvec)
@@ -63,7 +70,7 @@ function parameter_r(N,om,r,lambda,delta,nn,nu,chi,eta,psi,flagt)
    sn=(1/fac)*(sn)
    #println(sn)
    rn=zeros(0)
-   open("quasienergies_spacing.dat","w") do io
+   open("output/quasienergies_spacing.dat","w") do io
      for i in 1:length(sn)
        println(io,sn[i])
      end

@@ -2,8 +2,10 @@ module DQPT_thermal
 push!(LOAD_PATH, pwd())
 using LinearAlgebra
 using DifferentialEquations
-import diagonalization
-import wigner_eig
+include("diagonalization.jl")
+include("wigner_eig.jl")
+using .diagonalization
+using .wigner_eig
 export amplitud
 
 

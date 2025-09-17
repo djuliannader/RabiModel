@@ -1,10 +1,11 @@
 module troterization
 push!(LOAD_PATH, pwd())
 using LinearAlgebra
+include("dynamics.jl")
+include("diagonalization.jl")
+using .dynamics
+using .diagonalization
 export troter
-import dynamics
-import diagonalization
-
 
 
 function troter(Nmax::Int64,nn::Int64,r,om,lambda,delta,b,nu,eta,psi,flagt::Int64)

@@ -1,13 +1,21 @@
 push!(LOAD_PATH, pwd())
-module wigner_eig
+module wigner_f
 using LinearAlgebra
 using QuantumOptics
 using HCubature  # loaded by CalculusWithJulia
 using PyPlot
-import stat
-import diagonalization
-import troterization
-import Fisher
+include("modules/stat.jl")
+include("modules/diagonalization.jl")
+include("modules/troterization.jl")
+include("modules/Fisher.jl")
+using .stat
+using .diagonalization
+using .troterization
+using .Fisher
+#using stat
+#using diagonalization
+#using troterization
+#using Fisher
 
 
 Qexabs(v) = Qexabs(v...)  # denominator accepts a vector

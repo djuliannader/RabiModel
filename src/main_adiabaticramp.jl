@@ -1,8 +1,8 @@
 module main_adiabaticramp
 push!(LOAD_PATH, pwd())
 using LinearAlgebra
-import diagonalization
-import adiabatic_ramp
+include("modules/adiabatic_ramp.jl")
+using .adiabatic_ramp
 
 
 
@@ -14,7 +14,7 @@ delta=0.0          # Parameter (-1,0,1) for (AJC,QRM,JC)
 g=(1/2^(1/2))      # Coupling
 phi=0.0            # Phase 
 xi=0.05            # Modulation amplitude
-tau = 7.5          # Modulation period
+tau = 8.2          # Modulation period
 tcycles=100        # Number of cycles of the ramp
 L=10.0             # Size of the phase space
 k=1                # Initial eigenstate of H0

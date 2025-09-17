@@ -1,19 +1,22 @@
 module main_dqpts
 push!(LOAD_PATH, pwd())
 using LinearAlgebra
-import diagonalization
-import wigner_eig
-import DQPT
+include("modules/diagonalization.jl")
+include("modules/wigner_eig.jl")
+include("modules/DQPT.jl")
+using .diagonalization
+using .DQPT
+using .wigner_eig
 
 
 n=100              # Size of the Fock basis
 om=1.0            # Bosonic frequency
-r=30.0            # Qubit frequency
+r=10.0            # Qubit frequency
 lambda0=0.0       # Initial Carrier parameter
 delta=0.0         # Parameter (-1,0,1) for (AJC,QRM,JC)
 g0=0.0            # Initial coupling
 psi=0.0           # Phase of the Hamiltonian
-g1=1.75           # Final coupling
+g1=0.75           # Final coupling
 lambda1=0.0       # Final Carrier parameter
 nsubint=1000      # Subintervales for integrating the survival probability
 nsubint2=400      # Subintervals of real time for estimate the position of zeros
@@ -22,7 +25,7 @@ tmax=10.0         # maximal time for the survival probability
 tshot=4.0         # time for the Wigner function
 alpha=1.0         # Parameter of the linear combination for the initial state 
 ph=0.0            # Phase of the initial state
-L=15.0             # Size of the phase space
+L=7.5             # Size of the phase space
 flag1=0           # (1) for the position of the zeros in the complex plane (0) for skip
 
 

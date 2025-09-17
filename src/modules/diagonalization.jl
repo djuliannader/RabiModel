@@ -2,8 +2,6 @@ module diagonalization
 push!(LOAD_PATH, pwd())
 using LinearAlgebra
 export diagonalize
-#import potential
-#import norm
 
 function diagonalize(n,om,r,lambda,delta,eta,psi)
  # diagonal matrix elements
@@ -84,5 +82,23 @@ function hamiltonian_rmp2(n::Int64,r,om,gamma,omega,eta,psi)
  return [H0,a,ad,CCp,CCm]
 end
 
+
+function sigmaz(n)
+ # diagonal matrix elements
+ vdiag=[(-1)^j+0*im for i in 0:n for j in -1:0]
+ #println(vdiag)
+ HMatrix=Array(Diagonal(vdiag))
+ return HMatrix
+end
+
+function sigmax(n)
+    vdiag=[0.0 for i in 0:n for j in -1:0]
+    Sigx=Array(Diagonal(vdiag))
+    for i in 1:n
+      Sigx[2*i,2*i-1]=1.0
+      Sigx[2*i-1,2*i]=1.0
+    end
+    return Sigx
+end
 
 end

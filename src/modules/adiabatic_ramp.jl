@@ -3,11 +3,16 @@ push!(LOAD_PATH, pwd())
 using LinearAlgebra
 using DifferentialEquations
 using QuantumOptics
-import diagonalization
-import wigner_eig
-import Fisher
-import troterization
-import stat
+include("diagonalization.jl")
+include("Fisher.jl")
+include("troterization.jl")
+include("wigner_eig.jl")
+include("stat.jl")
+using .diagonalization
+using .Fisher
+using .troterization
+using .wigner_eig
+using .stat
 export initialeigenstateH
 export rhoevoladiabatic
 export wignerrhot

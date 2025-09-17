@@ -1,12 +1,21 @@
 push!(LOAD_PATH, pwd())
-import diagonalization
-include("modules/reading.jl")
-import diagonalization
-import troterization
-import stat
-import wigner_eig
-import dynamics
 using LinearAlgebra
+include("modules/diagonalization.jl")
+include("modules/reading.jl")
+include("modules/stat.jl")
+include("modules/wigner_eig.jl")
+include("modules/dynamics.jl")
+include("modules/troterization.jl")
+using .diagonalization
+using .troterization
+using .stat
+using .wigner_eig
+using .dynamics
+#using diagonalization
+#using troterization
+#using stat
+#using wigner_eig
+#using dynamics
 
 
 

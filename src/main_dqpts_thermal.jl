@@ -1,8 +1,10 @@
 module main_dqpts_thermal
 push!(LOAD_PATH, pwd())
 using LinearAlgebra
-import diagonalization
-import DQPT_thermal
+include("modules/diagonalization.jl")
+include("modules/DQPT_thermal.jl")
+using .diagonalization
+using .DQPT_thermal
 
 
 
@@ -14,7 +16,7 @@ delta=0.0         # Parameter (-1,0,1) for (AJC,QRM,JC)
 g0=0              # Initial coupling
 psi=0.0           # Phase of the Hamiltonian
 g1=3/4            # Final coupling
-lambda1=0.5       # Final Carrier parameter
+lambda1=0.0       # Final Carrier parameter
 tmax=10.0         # maximal time for the survival probability
 tshot=9.5        # time for Wigner function
 flag1=0           # (1) for the complex time survival probability (0) for skip 
