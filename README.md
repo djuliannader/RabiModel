@@ -1,5 +1,5 @@
 # RabiModel
-HEEEEE Static and dynamical properties of states in the Asymmetric Quantum Rabi Model with an small modulation in the qubit frequency
+Static and dynamical properties of states in the Asymmetric Quantum Rabi Model with an small modulation in the qubit frequency
 
 clone as:
 
