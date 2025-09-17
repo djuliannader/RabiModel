@@ -9,7 +9,7 @@ Parameter (1) for JC, (0) for QRM  or (-1) for Anti JC (Float)
 lambda, carrier parameter (Float) 
 0.0
 g, coupling parameter (Float)
-1.4142135623730951
+0.7071067811865475
 psi, phase parameter (Float) 
 0.0
 Flag, 1 for spectrum 2 for dynamics 3 for stationary states (Integer)
@@ -27,16 +27,16 @@ Maximum time for Survival Probability (Float) ---> Necessary only for dynamics
 Xi, Modulation amplitude (Float) ---> Necessary only for Floquet operator
 0.05
 tau (2*pi/omega), Modulation Period (Float) ---> Necessary only for Floquet operator
-14.7
+7.3
 Intervals of the period (Int) ---> Necessary only for Floquet operator
 1000
 k-eigenstate (Int) 
 1
 L size of the phase space (Float) [-L,L]  
-11.0
+10.0
 For time-dependent term pxdroportional to Sigma_z (1) or Sigma_x (2) (Int)
-1
+2
 Number of eigenstates (l) for fidelities |<E_l|F_k>|^2  and |<n|F_k>|
-6
+1
 
 

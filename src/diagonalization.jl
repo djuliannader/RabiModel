@@ -93,4 +93,14 @@ function sigmaz(n)
  return HMatrix
 end
 
+function sigmax(n)
+    vdiag=[0.0 for i in 0:n for j in -1:0]
+    Sigx=Array(Diagonal(vdiag))
+    for i in 1:n
+      Sigx[2*i,2*i-1]=1.0
+      Sigx[2*i-1,2*i]=1.0
+    end
+    return Sigx
+end
+
 end
