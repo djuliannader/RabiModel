@@ -21,7 +21,7 @@ k=1                # Initial eigenstate of H0
 Nf = 1000          # Number of subintervals for Trotterization
 flagt = 2          # Flag for the time-dependent term (1) for sigma_z (2) for sigma_x
 kf = 1             # Target Floquet state
-acc = 1e-12        # Accuracy for the differential equation
+acc = 1e-13        # Accuracy for the differential equation
 
 
 

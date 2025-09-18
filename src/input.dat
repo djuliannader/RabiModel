@@ -37,6 +37,6 @@ L size of the phase space (Float) [-L,L]
 For time-dependent term pxdroportional to Sigma_z (1) or Sigma_x (2) (Int)
 2
 Number of eigenstates (l) for fidelities |<E_l|F_k>|^2  and |<n|F_k>|
-1
+8
 
 
