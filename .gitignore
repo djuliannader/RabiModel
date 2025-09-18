@@ -2,6 +2,7 @@
 *.dat~
 *.txt~
 *.gitignore~
+*.gitattributes~
 #main.jl#
 .#main.jl
 #README.md#
