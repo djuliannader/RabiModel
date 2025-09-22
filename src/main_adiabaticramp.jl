@@ -14,14 +14,14 @@ delta=0.0          # Parameter (-1,0,1) for (AJC,QRM,JC)
 g=(1/2^(1/2))      # Coupling
 phi=0.0            # Phase 
 xi=0.05            # Modulation amplitude
-tau = 8.2          # Modulation period
-tcycles=100        # Number of cycles of the ramp
+tau = 8.25         # Modulation period
+tcycles=55        # Number of cycles of the ramp
 L=10.0             # Size of the phase space
 k=1                # Initial eigenstate of H0
 Nf = 1000          # Number of subintervals for Trotterization
 flagt = 2          # Flag for the time-dependent term (1) for sigma_z (2) for sigma_x
 kf = 1             # Target Floquet state
-acc = 1e-13        # Accuracy for the differential equation
+acc = 1e-12        # Accuracy for the differential equation
 
 
 
