@@ -44,9 +44,8 @@ function rhoevoladiabatic(psi0,tmax,n,om,r,lambda,delta,eta,psi,xi,tau,Nf,flagt,
  times=(0.0,tmax)
  tint=0.01
  f(u,p,t) = -im*(HMatrix + ((r*xi/2)*((1/2)*(1-cos(pi*t/tmax)))^1)*sig*cos(2*pi*t/tau))*u
- #f(u,p,t) = -im*(HMatrix + (r*xi/(2))*sigz*cos(2*pi*t/tau))*u
+ #f(u,p,t) = -im*(HMatrix)*u
  prob = ODEProblem(f,psi0,times)
- #prob = ODEProblem(f,listvec,times)
  sol = solve(prob,abstol = acc,Tsit5(),alg_hints = [:stiff],dt=tint)
  open("output/fidelities_adiabatic.dat","w") do io
  open("output/qfi_adiabatic.dat","w") do io2
@@ -55,8 +54,10 @@ function rhoevoladiabatic(psi0,tmax,n,om,r,lambda,delta,eta,psi,xi,tau,Nf,flagt,
  dt = tau
  for i in 0:round(Int, tfmax) 
    psit = sol(i*dt)
+   #psit = exp(-i*dt*im*HMatrix)*psi0  
    ov1 = psi0t*psit
    ov2 = listvect*psit
+   #println("------------>",i*dt," ",abs2(ov1))
    global rhot = psit*transpose(conj(psit))
    rhotqo =  wigner_eig.buildingrho(rhot,n)
    neg  =  wigner_eig.wigner_rhot_neg(rhot,n,L)
