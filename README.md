@@ -26,6 +26,8 @@ To run this repository, please make sure the following environment is available:
 - DifferentialEquations
 - HCubature
 - QuantumOptics
+- Convex 
+- SCS
 - PyPlot
 
 ## Usage
