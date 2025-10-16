@@ -7,9 +7,9 @@ R, Qubit frequency (Float)
 Parameter (1) for JC, (0) for QRM  or (-1) for Anti JC (Float)
 0.0
 lambda, carrier parameter (Float) 
-0.0
+0.1
 g, coupling parameter (Float)
-1.0
+2.0
 psi, phase parameter (Float) 
 0.0
 Flag, 1 for spectrum 2 for dynamics 3 for stationary states (Integer)
