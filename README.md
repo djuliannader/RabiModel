@@ -64,5 +64,5 @@ julia main_dqpts_thermal.jl
 Edit the parameters directly in the file main_adiabaticramp.jl and run:
 
 ```bash
-julia main_adiabaticramp.jl
+julia Floquet_ramp.jl
 ```
