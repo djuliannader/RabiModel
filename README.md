@@ -61,8 +61,16 @@ julia main_dqpts_thermal.jl
 
 - Adiabatic ramp for the preparation of Floquet states
 
-Edit the parameters directly in the file main_adiabaticramp.jl and run:
+Edit the parameters directly in the file Floquet_ramp.jl and run:
 
 ```bash
 julia Floquet_ramp.jl
+```
+
+- Adiabatic ramp for the transference of quantumness
+
+Edit the parameters directly in the file Adiabatic_ramp.jl and run:
+
+```bash
+julia Adiabatic_ramp.jl
 ```

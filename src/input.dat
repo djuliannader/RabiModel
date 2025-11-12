@@ -3,11 +3,11 @@ Dimension of Fock Space (Integer)
 Omega, Oscillator frequency (Float)
 1.0
 R, Qubit frequency (Float)
-50.0
+10.0
 Parameter (1) for JC, (0) for QRM  or (-1) for Anti JC (Float)
 0.0
 lambda, carrier parameter (Float) 
-0.0
+0.05
 g, coupling parameter (Float)
 1.2
 psi, phase parameter (Float) 
