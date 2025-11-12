@@ -90,8 +90,8 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   qfi2 = Fisher.fisherdisplacementp(rhopt,Nmax)
   qfi3 = Fisher.fisherdisplacementx(rhopt,Nmax)
   println("QFI[rho,n]/(4n) : ", qfi)
-  println("QFI[rho,p]/2    : ", qfi2)
-  println("QFI[rho,x]/2    : ", qfi3)
+  println("QFI[rho,x]/2    : ", qfi2)
+  println("QFI[rho,p]/2    : ", qfi3)
   #xy=xycircle((1/(r)^(1/2)),20)
   #scatter(xy[1],xy[2],s=2,color="black")
   #scatter([1],[1],s=2,color="black")
@@ -123,7 +123,7 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   tight_layout()
   savefig("output/wigner_eigenstate.png")
   println("See output/wigner_eigenstate.png for the Wigner function of the ",k,"-eigenstate of the AQRM")
-  return [real(den[1]-1.0),pur]
+  return [real(den[1]-1),pur]
 end
 
 function wigner_evolt(Nmax,om,r,lambda,delta,eta,psi,L,phi0,t)
@@ -180,7 +180,7 @@ function wigner_evolt(Nmax,om,r,lambda,delta,eta,psi,L,phi0,t)
   tight_layout()
   savefig("output/wigner_psit.png")
   println("See output/wigner_psit.png for the Wigner function of the state at time= ", t, " evolving under the time-independent AQRM")
-  return [real(den[1]-1.0)]
+  return [real(den[1]-1)]
 end
 
  function wigner_driven(Nmax,om,r,lambda,delta,eta,psi,nu,chi,Nf,k,L,flagt,kl)
@@ -249,8 +249,8 @@ end
    qfi2 = Fisher.fisherdisplacementp(rhopt,Nmax)
    qfi3 = Fisher.fisherdisplacementx(rhopt,Nmax)
    println("QFI[rho,n]/(4n)   : ", qfi)
-   println("QFI[rho,p]/2      : ", qfi2)
-   println("QFI[rho,x]/2      : ", qfi3)
+   println("QFI[rho,x]/2      : ", qfi2)
+   println("QFI[rho,p]/2      : ", qfi3)
    mr = magic.robustness(rho_q)
    println("Magic robustness of the qubit mode R(rho_q) : ",mr)
    wigner_q = magic.discrete_wigner(rho_q)
@@ -278,7 +278,7 @@ end
    #    nk = ik
    #  end
    #end
-   return [exp_val,real(den[1]-1.0),pur,listovlp,listovlpn] 
+   return [exp_val,real(den[1]-1),pur,listovlp,listovlpn] 
  end
 
 function wigner_evolt_driven(Nmax,om,r,lambda,delta,eta,psi,nu,chi,Nf,L,phi0,pf,flagt)
@@ -335,7 +335,7 @@ function wigner_evolt_driven(Nmax,om,r,lambda,delta,eta,psi,nu,chi,Nf,L,phi0,pf,
   tight_layout()
   savefig("output/wigner_psit_f.png")
   println("See output/wigner_psit_f.png for the Wigner function of the state at time=", pf*(2*pi)/nu," evolving under the Floquet operator of the AQRM")
-  return [real(den[1]-1.0)]
+  return [real(den[1]-1)]
 end
 
 
@@ -350,7 +350,7 @@ function wigner_negativities(Nmax,wf,L)
   rhopt = ptrace(rho,2)
   global rhopti=rhopt
   den=hcubature(Qexabs,(-L,-L),(L,L),rtol=0.0001)
-  return real(den[1]-1.0)
+  return real(den[1]-1)
 end
 
 
@@ -387,7 +387,9 @@ end
 
 
 function Qexabs(x,y)
-   return abs(wigner(rhopti, x, y))
+    wabs = abs(wigner(rhopti, x, y))
+    ww    = wigner(rhopti, x, y)
+   return wabs  
    #return wigner(rhopti, x, y)
    end
    
@@ -430,7 +432,7 @@ function wigner_rhot_neg(rho,Nmax,L)
   rhopt = ptrace(rhoqo,2)
   global rhopti=rhopt
   den=hcubature(Qexabs,(-L,-L),(L,L),rtol=0.0001)
-  return real(den[1]-1.0)
+  return real(den[1]-1)
 end
 
 function wigner_rhot_ZerosCut(rho,Nmax,r)

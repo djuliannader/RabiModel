@@ -15,7 +15,7 @@ g=(1/2^(1/2))      # Coupling
 phi=0.0            # Phase 
 xi=0.05            # Modulation amplitude
 tau = 4.28         # Modulation period
-tcycles=50          # Number of cycles of the ramp
+tcycles=50        # Number of cycles of the ramp
 L=10.0             # Size of the phase space
 k=1                # Initial eigenstate of H0
 Nf = 1000          # Number of subintervals for Trotterization
@@ -28,7 +28,7 @@ acc = 1e-10        # Accuracy for the differential equation
 #------------- Perform calculations---------------------------#
 psi0 = adiabatic_ramp.initialeigenstateH(n,om,r,lambda,delta,g,phi,k)
 println("Building initial state -> Done")
-rhot = adiabatic_ramp.rhoevoladiabatic(psi0,tcycles,n,om,r,lambda,delta,g,phi,xi,tau,Nf,flagt,kf,acc,L)
+rhot = adiabatic_ramp.rhot_floquetramp(psi0,tcycles,n,om,r,lambda,delta,g,phi,xi,tau,Nf,flagt,kf,acc,L)
 println("Solving schrodinger equation -> Done")
 plotwigner = adiabatic_ramp.wignerrhot(rhot,L,r,n)
 println("Wigner function at the end of the ramp -> Done")

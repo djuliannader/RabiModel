@@ -85,8 +85,8 @@ function amplitud(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nma
 	     rhoqo = wigner_eig.buildingrho(rho,Nmax)
 	     rhopt = ptrace(rhoqo,2)
 	     qfi1 = Fisher.fishern2(rhopt,Nmax)
-	     qfi2 = Fisher.fisherdisplacementp(rhopt,Nmax)
-             qfi3 = Fisher.fisherdisplacementx(rhopt,Nmax)
+	     qfi2 = Fisher.fisherdisplacementx(rhopt,Nmax)
+             qfi3 = Fisher.fisherdisplacementp(rhopt,Nmax)
  	     sp=psi0a*psi0t
  	     spf=sp[1]
  	     println(io,t," ",round(real(spf),digits=16)," ", round(imag(spf),digits=16))
