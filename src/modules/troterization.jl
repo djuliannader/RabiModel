@@ -1,9 +1,7 @@
 module troterization
 push!(LOAD_PATH, pwd())
 using LinearAlgebra
-include("dynamics.jl")
 include("diagonalization.jl")
-using .dynamics
 using .diagonalization
 export troter
 

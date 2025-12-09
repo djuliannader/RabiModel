@@ -11,11 +11,6 @@ using .troterization
 using .stat
 using .wigner_eig
 using .dynamics
-#using diagonalization
-#using troterization
-#using stat
-#using wigner_eig
-#using dynamics
 
 
 
@@ -163,7 +158,7 @@ if flag1==1  # Spectrum
    eigvecsh0 = eigvecs(h0)
    open("spectrum_contributions_output.dat","w") do io
    ovlist=[0.0,0.0,0.0,0.0,0.0]
-   println("------------>here")
+   #println("------------>here")
    for nui in listanu
     floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nui,eta,psi,flagt)
     vecordered = stat.orderinfvec(N,om,r,lambda,delta,nn,nui,chi,eta,psi,flagt)
@@ -224,26 +219,34 @@ if flag1==2  # Dynamics
     println("---- Dynamics of the time independent AQRM initiates ----")
     mensaje1=dynamics.survivalp(cs0,tmax,1.0,N,om,r,lambda,delta,eta,psi)
     av=dynamics.fotoc(cs0,tmax,1.0,N,om,r,lambda,delta,eta,psi,L)
-    println("----->here")
-    wpsit = wigner_eig.wigner_evolt(N,om,r,lambda,delta,eta,psi,L,cs0,tmax)
-    println("Negativity of the state (at time=",tmax,"): ",wpsit[1])
+    #wpsit = wigner_eig.wigner_evolt(N,om,r,lambda,delta,eta,psi,L,cs0,tmax)
+    #println("Negativity of the state (at time=",tmax,"): ",wpsit[1])
     println("Average QFI[N,t] over the period T=",tmax,": ",av[1])
     println("Average QFI[squeezing,t] over the period T=",tmax,": ",av[3])
-    println("Average Negativities over the period T=",tmax,": ",av[2])
+    println("Average Negativity volume over the period T=",tmax,": ",av[2])
+    if flag2==1  
+      println("---------------------------------------")
+      println(" Wigner function at time t=",tmax)
+    end
   end
   if flag2==2 || flag2==3 # Floquet
     println("----   Dynamics of the modulated AQRM initiates     ----")
     pf = floor(tmax/tau)  
     floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nu,eta,psi,flagt)
     mensaje2 = dynamics.survivalpt(cs0,floquet,tmax,nu)
-    println("here")
-    av_f = dynamics.fotoct(cs0,floquet,tmax,nu,N,L)
-    wpsit_floquet = wigner_eig.wigner_evolt_driven(N,om,r,lambda,delta,eta,psi,nu,chi,nn,L,cs0,pf,flagt)
-    println("Negativity of the state (at time=",pf*tau,"): ",wpsit_floquet[1])
-    println("Average QFI[N,t] over the period T=",tmax,": ",av_f[1])
-    println("Average QFI[squeezing,t] over the period T=",tmax,": ",av_f[3])
-    println("Average Negativities over the period T=",tmax,": ",av_f[2])
-  end
+    av = dynamics.fotoct(cs0,floquet,tmax,nu,N,L)
+    #wpsit_floquet = wigner_eig.wigner_evolt_driven(N,om,r,lambda,delta,eta,psi,nu,chi,nn,L,cs0,pf,flagt)
+    #println("Negativity of the state (at time=",pf*tau,"): ",wpsit_floquet[1])
+    println("Average QFI[N,t] over the period T=",tmax,": ",av[1])
+    println("Average QFI[squeezing,t] over the period T=",tmax,": ",av[3])
+    println("Average Negativity volume over the period T=",tmax,": ",av[2])
+    println("---------------------------------------")
+    println(" Wigner function at time t=",pf*tau)
+  end 
+  psit = av[4]
+  rhot = psit*transpose(conj(psit))  
+  wig = wigner_eig.wigner_rhot(rhot,L,r,N)
+  println("---------------------------------------")
 end
 
 

@@ -9,12 +9,12 @@ using .adiabatic_ramp
 n=100              # Size of the Fock basis
 om=1.0             # Bosonic frequency
 r=10.0             # Qubit frequency
-lambda0=0.05        # Initial Carrier parameter
-lambdaf=0.0       # Final Carrier parameter
+lambda0=0.05       # Initial Carrier parameter
+lambdaf=0.0        # Final Carrier parameter
 delta=0.0          # Parameter (-1,0,1) for (AJC,QRM,JC)
 g=1.2              # Coupling strength
 phi=0.0            # Phase 
-tramp = 40.0       # Period of the ramp
+tramp = 50.0       # Period of the ramp
 L=7.5              # Size of the phase space
 k=1                # Initial eigenstate of H0
 kf = 1             # Target Floquet state

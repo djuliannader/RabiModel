@@ -1,5 +1,5 @@
-push!(LOAD_PATH, pwd())
 module Fisher
+push!(LOAD_PATH, pwd())
 using LinearAlgebra
 using QuantumOptics
 using HCubature  # loaded by CalculusWithJulia
