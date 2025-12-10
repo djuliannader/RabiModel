@@ -128,7 +128,11 @@ function fishersqueezing(rho,Nmax)
      qfiinst1t = 4*lam[k]*(sq2ev -sqev2)
      qfi1t = qfi1t + qfiinst1t
   end
-  return real(qfi1t - qfi2t)
+  bc=FockBasis(Nmax)
+  nn = number(bc) 
+  nexp = real(expect(rho,nn))
+  #println("------->here:",nexp)
+  return real(qfi1t - qfi2t)/(4*(nexp+1/2))
 end
 
 function fishern2(rho,Nmax)
@@ -201,7 +205,7 @@ end
 function squeezingop(Nmax)
   aop=anhilation(Nmax)
   adop = transpose(aop)
-  sqop = adop^2-aop^2
+  sqop = (im/2)*(adop^2-aop^2)
   return sqop
 end
 

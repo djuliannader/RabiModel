@@ -4,13 +4,8 @@ using LinearAlgebra
 using QuantumOptics
 include("diagonalization.jl")
 include("troterization.jl")
-#include("wigner_eig.jl")
 using .diagonalization
 using .troterization
-#using .wigner_eig
-#using diagonalization
-#using troterization
-using wigner_f
 
 
 function analysisH(N,om,r,lambda,delta,nn,nu,chi,eta,psi,flagt)

@@ -23,15 +23,15 @@ Flag, 1 for time-independent Hamiltonian 2 for Floquet dynamics 3 for both (Inte
 Coordinates of the initial coherent state (List[Float]) [Theta0,Phi0,X0,P0] ---> Necessary only for dynamics
 [0.0,0.0,0.0,0.0]
 Maximum time for dynamics (Float) ---> Necessary only for dynamics
-881.0
+500.0
 Xi, Modulation amplitude (Float) ---> Necessary only for Floquet operator
 0.05
 Tau, Modulation Period (Float) ---> Necessary only for Floquet operator
-4.4
+1.0
 Intervals of the period (Int) ---> Necessary only for Floquet operator
 1000
 k-eigenstate (Int) 
-3
+1
 L size of the phase space (Float) [-L,L]  
 7.5
 For time-dependent term proportional to: (1) Sigma_z or (2) Sigma_x (Int)
