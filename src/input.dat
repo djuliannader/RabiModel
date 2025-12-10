@@ -25,9 +25,9 @@ Coordinates of the initial coherent state (List[Float]) [Theta0,Phi0,X0,P0] --->
 Maximum time for dynamics (Float) ---> Necessary only for dynamics
 500.0
 Xi, Modulation amplitude (Float) ---> Necessary only for Floquet operator
-0.05
+0.2
 Tau, Modulation Period (Float) ---> Necessary only for Floquet operator
-1.0
+4.4
 Intervals of the period (Int) ---> Necessary only for Floquet operator
 1000
 k-eigenstate (Int) 
