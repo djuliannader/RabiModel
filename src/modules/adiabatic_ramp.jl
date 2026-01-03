@@ -204,7 +204,7 @@ function wignerrhot_discrete(rhot,n)
     println("   W01 : ",wigner_q[1][1,2])
     println("   W10 : ",wigner_q[1][2,1])
     println("   W11 : ",wigner_q[1][2,2])
-    println("Mana M(rho_q) : ",wigner_q[2])  
+    println("Qubit Wigner-negativity delta(rho_q) : ", wigner_q[2])  
  return "done"
 end
 

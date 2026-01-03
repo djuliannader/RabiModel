@@ -101,7 +101,11 @@ function discrete_wigner(rho)
     W[2,1] = real((1/2)*tr(rho*A10))
     W[2,2] = real((1/2)*tr(rho*A11))
 
-    mana = log2(sum(abs.(W)))
+    #mana = log2(sum(abs.(W)))
+    
+    #mana = sum(abs.(W)) - sum(W)
+    mana = sum([abs(W[i,j]) for i in 1:2 for j in 1:2]) - sum(W)
+    println("flaaaaag:",sum(W)) 
 
     
    return [W,mana]

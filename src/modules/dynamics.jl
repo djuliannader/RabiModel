@@ -116,6 +116,7 @@ function fotoc(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::
  qfilist=[]
  qfilist2=[]
  qfilist3=[]
+ qfilist4=[]
  neglist=[]
  nt=trunc(Int,tmax/tint)
  HMatrix= diagonalization.hamiltonian(Nmax,om,r,lambda,delta,eta,psi)
@@ -145,13 +146,14 @@ function fotoc(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::
    x2m=expect(xop^2,rhopt)
    p1m=expect(pop,rhopt)
    p2m=expect(pop^2,rhopt)
-   fotoc = (x2m-x1m^2) + (p2m-p1m^2)
+   fotoc = ((x2m-x1m^2) + (p2m-p1m^2))/r
    println(io,t," ",round(real(fotoc),digits=16))
    println(io2,t," ",round(real(qfi),digits=8)," ",round(real(qfi2),digits=8)," ",round(real(qfi3),digits=8)," ",round(real(qfi4),digits=8))
    println(io3,t," ",round(neg,digits=8))
    append!(qfilist,round(real(qfi),digits=8))
    append!(qfilist2,round(real(qfi2),digits=8))
    append!(qfilist3,round(real(qfi3),digits=8))
+   append!(qfilist4,round(real(qfi4),digits=8))
    append!(neglist,round(real(neg),digits=8))
    t=t+tint
  end
@@ -175,26 +177,30 @@ function fotoc(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::
  println("--------------------------------------------------------------------------------------------------- ")
  println("---------------->here")
  if length(qfilist)>2   
- qfiavlist=[tint*qfilist[i] for i in 3:length(qfilist)]
- qfiavlist2=[tint*qfilist2[i] for i in 3:length(qfilist2)]
- qfiavlist3=[tint*qfilist3[i] for i in 3:length(qfilist2)]
+ qfiavlist=[tint*qfilist[i] for i in 2:length(qfilist)]
+ qfiavlist2=[tint*qfilist2[i] for i in 1:length(qfilist2)]
+ qfiavlist3=[tint*qfilist3[i] for i in 1:length(qfilist3)]
+ qfiavlist4=[tint*qfilist4[i] for i in 1:length(qfilist4)]
  negavlist=[tint*neglist[i] for i in 1:length(neglist)]
  else
  qfiavlist=0.0
  qfiavlist2=0.0
  qfiavlist3=0.0
+ qfiavlist4=0.0
  negavlist= 0.0    
  end    
  avqfi=(1/(tmax-2*tint)*sum(qfiavlist))
  avqfi2=(1/(tmax-2*tint)*sum(qfiavlist2))
+ avqfi3=(1/(tmax-2*tint)*sum(qfiavlist3))
+ avqfi4=(1/(tmax-2*tint)*sum(qfiavlist4))
  avneg=(1/(tmax)*sum(negavlist))
  psit=exp(-im*HMatrix*tmax)*psi0
- return [avqfi,avneg,avqfi2,psit]
+ return [avneg,avqfi,avqfi2,avqfi3,avqfi4,psit]
 end
 
 
 
-function fotoct(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},tmax::Float64,om::Float64,Nmax,L)
+function fotoct(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},tmax::Float64,om::Float64,r::Float64,Nmax,L)
  bc=FockBasis(Nmax)
  adop=create(bc)
  aop = destroy(bc)
@@ -207,6 +213,7 @@ function fotoct(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},tmax
  qfilist=[]
  qfilist2=[]
  qfilist3=[]
+ qfilist4=[]
  neglist=[]
  open("output/fotoc_f.dat","w") do io
  open("output/qfi_f.dat","w") do io2
@@ -225,13 +232,14 @@ function fotoct(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},tmax
    x2m=expect(xop^2,rhopt)
    p1m=expect(pop,rhopt)
    p2m=expect(pop^2,rhopt)
-   fotoc = (x2m-x1m^2) + (p2m-p1m^2)
+   fotoc = ((x2m-x1m^2) + (p2m-p1m^2))
    println(io,T*(i-1)," ",round(real(fotoc),digits=8))
-   println(io2,T*(i-1)," ",round(real(qfi),digits=8)," ",round(real(qfi2),digits=8)," ",round(real(qfi3),digits=8)," ",round(real(qfi3),digits=8))
+   println(io2,T*(i-1)," ",round(real(qfi),digits=8)," ",round(real(qfi2),digits=8)," ",round(real(qfi3),digits=8)," ",round(real(qfi4),digits=8))
    println(io3,T*(i-1)," ",round(neg,digits=8))
    append!(qfilist,round(real(qfi),digits=8))
    append!(qfilist2,round(real(qfi2),digits=8))
-   append!(qfilist3,round(real(qfi3),digits=8))  
+   append!(qfilist3,round(real(qfi3),digits=8))
+   append!(qfilist4,round(real(qfi4),digits=8))  
    append!(neglist,round(real(neg),digits=8))
    psi0t=(fq^(1))*psi0t
  end
@@ -256,20 +264,24 @@ function fotoct(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},tmax
  println("hereee")
  if length(qfilist)>2   
  qfiavlist=[qfilist[i] for i in 2:length(qfilist)]
- qfiavlist2=[qfilist2[i] for i in 2:length(qfilist2)]
- qfiavlist3=[qfilist3[i] for i in 2:length(qfilist2)]
+ qfiavlist2=[qfilist2[i] for i in 1:length(qfilist2)]
+ qfiavlist3=[qfilist3[i] for i in 1:length(qfilist3)]
+ qfiavlist4=[qfilist4[i] for i in 1:length(qfilist4)]
  negavlist=[neglist[i] for i in 1:length(neglist)]
  else
- qfiavlist=0.0
- qfiavlist2=0.0
- qfiavlist3=0.0
- negavlist=0.0
+ qfiavlist=[0.0]
+ qfiavlist2=[0.0]
+ qfiavlist3=[0.0]
+ qfiavlist4=[0.0]
+ negavlist=[0.0]
  end
  avqfi=(1/(length(qfiavlist))*sum(qfiavlist))
  avqfi2=(1/(length(qfiavlist2))*sum(qfiavlist2))
+ avqfi3=(1/(length(qfiavlist3))*sum(qfiavlist3))
+ avqfi4=(1/(length(qfiavlist4))*sum(qfiavlist4))   
  avneg=(1/(length(negavlist))*sum(negavlist))
  psitff = psi0t
- return [avqfi,avneg,avqfi2,psitff]
+ return [avneg,avqfi,avqfi2,avqfi3,avqfi4,psitff]
 end
 
 function survivalpt2(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},tmax::Float64,om)

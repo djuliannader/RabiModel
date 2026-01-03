@@ -106,7 +106,7 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   println("   W01 : ",wigner_q[1][1,2])
   println("   W10 : ",wigner_q[1][2,1])
   println("   W11 : ",wigner_q[1][2,2])
-  println("Mana M(rho_q) : ",wigner_q[2])  
+  println("Qubit Wigner Negativity delta(rho_q) : ",wigner_q[2])  
   global rhopti=rhopt
   den=hcubature(Qexabs,(-L,-L),(L,L),rtol=0.001)
   open("output/marginals.dat","w") do io
@@ -265,7 +265,7 @@ end
    println("   W01 : ",wigner_q[1][1,2])
    println("   W10 : ",wigner_q[1][2,1])
    println("   W11 : ",wigner_q[1][2,2])
-   println("Mana M(rho_q) : ",wigner_q[2])  
+   println("Qubit Wigner negativity delta(rho_q) : ",wigner_q[2])  
    tight_layout()
    savefig("output/wigner_eigenstate_f.png")
    println("See output/wigner_eigenstate_f.png for the Wigner function of the ",k,"-eigenstate of the Floquet operator")
