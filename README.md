@@ -12,10 +12,17 @@ git clone https://github.com/djuliannader/RabiModel.git
 
 ## Data 
 
-This repository provides data and codes for the paper Quantum non-Gaussian criticality in the quantum a Rabi model with a small modulation of the
-qubit frequency, by D. J. Nader, P. Stransky, J. Chavez, P. Cejnar and R. Filip.
-The paper is available on arXiv.
-The repository is currently being developed; please await its completion. Some data for the figures can be found in folder /data1.  The files contain Mathematica notebooks, necessary to recreate the Figures of the article.
+This repository provides codes and data for the papers
+
+- Controllable distribution of nonclassicality in qubit-oscillator systems, by D. J. Nader
+
+- Sensitivity enhanced by qubit modulation, by D. J. Nader, P. Stransky, J. Chavez, P. Cejnar and R. Filip.
+
+- Wigner negativity as a precursor of dynamical phase transitions, by D. J. Nader, P. Stransky, J. Novotny, P. Cejnar and R. Filip.
+
+
+The repository is currently being developed; please await its completion.
+The Mathematica notebooks, necessary to recreate the Figures of the articles can be found in the directory Figures/
 
 
 ## Environment Requirements  

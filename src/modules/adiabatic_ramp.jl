@@ -42,6 +42,8 @@ function rhot_floquetramp(psi0,tmax,n,om,r,lambda,delta,eta,psi,xi,tau,Nf,flagt,
  sig = diagonalization.sigmaz(n)
  bc=FockBasis(n)
  ba=SpinBasis(1//2)
+ ov2=0
+ neg=0
  if flagt==2  
      sig = diagonalization.sigmax(n)
  end
@@ -105,7 +107,7 @@ function rhot_floquetramp(psi0,tmax,n,om,r,lambda,delta,eta,psi,xi,tau,Nf,flagt,
  #psit = sol(tmax)
  #rhot = psit*transpose(conj(psit))
  #rhot = listvec*transpose(conj(listvec))
- return rhot
+ return [rhot,abs2(ov2),real(neg)]
 end
 
 function rhot_adiabaticramp(psi0,tmax,n,om,r,lambda0,lambda1,delta,eta,psi,kf,acc,L)

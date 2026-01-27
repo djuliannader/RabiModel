@@ -67,6 +67,7 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   xpm=expect(xop*pop,rhopt)
   pxm=expect(pop*xop,rhopt)
   nexp=expect(adop*aop,rhopt)
+  println("a) Bosonic mode ")   
   println("Central moments of the ",k,"-th stationary state")
   println("  x 1 moment (normalized): ",x1m/r^(1/2))
   println("  p 1 moment (normalized): ",p1m/r^(1/2))
@@ -90,25 +91,17 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   qfi2 = Fisher.fisherdisplacementp(rhopt,Nmax)
   qfi3 = Fisher.fisherdisplacementx(rhopt,Nmax)
   qfi4 = Fisher.fishersqueezing(rhopt,Nmax)
-  println("---QFI--- ")  
+  println(" Quantum Fisher Information ")  
   println("QFI[rho,n]/(4n)            : ", qfi)
   println("QFI[rho,x]/2               : ", qfi2)
   println("QFI[rho,p]/2               : ", qfi3)
   println("QFI[rho,xp+px]/(4n+2)    : ", qfi4)
   #xy=xycircle((1/(r)^(1/2)),20)
   #scatter(xy[1],xy[2],s=2,color="black")
-  #scatter([1],[1],s=2,color="black")    
-  mr = magic.robustness(rho_q)
-  println("Magic robustness of the qubit mode R(rho_q) : ",mr)
-  wigner_q = magic.discrete_wigner(rho_q)
-  println("Components of the discrete Wigner function of the qubit mode")
-  println("   W00 : ",wigner_q[1][1,1])
-  println("   W01 : ",wigner_q[1][1,2])
-  println("   W10 : ",wigner_q[1][2,1])
-  println("   W11 : ",wigner_q[1][2,2])
-  println("Qubit Wigner Negativity delta(rho_q) : ",wigner_q[2])  
+  #scatter([1],[1],s=2,color="black")
   global rhopti=rhopt
   den=hcubature(Qexabs,(-L,-L),(L,L),rtol=0.001)
+  minn = 0.0  
   open("output/marginals.dat","w") do io
   global summar3 = 0.0
   for ix in x
@@ -118,6 +111,10 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
       summar1 = summar1 + wigner(rhopti, ix, ip)*(2*L/length(x))
       summar2 = summar2 + wigner(rhopti, ip, ix)*(2*L/length(x))
       global summar3 = summar3 + wigner(rhopti, ip, ix)*(2*L/length(x))^2
+      winst = wigner(rhopti, ip, ix)
+        if winst < minn
+            minn = winst
+        end
     end
     println(io,ix," ",round(summar1,digits=8)," ",round(summar2,digits=8))
   end
@@ -125,8 +122,21 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   #println("********volume:", summar3)
   tight_layout()
   savefig("output/wigner_eigenstate.png")
-  println("See output/wigner_eigenstate.png for the Wigner function of the ",k,"-eigenstate of the AQRM")
-  return [real(den[1]-1),pur]
+  println("Bosonic Negativity   delta(rho_b)    : ",real(den[1]-1))
+  println("Purity of the Wigner function        : ",real(pur))  
+  println("See output/wigner_eigenstate.png for the Wigner function")
+  cw = wigner_rho(rhopt,L,r,Nmax,"output/wigner_eig_data.dat","output/wignercut_eig_data.dat") 
+  mr = magic.robustness(rho_q)
+  println("b) Qubit mode*")   
+  println("Magic robustness of the qubit mode R(rho_q) : ",mr)
+  wigner_q = magic.discrete_wigner(rho_q)
+  println("Components of the discrete Wigner function of the qubit mode")
+  println("   W00 : ",wigner_q[1][1,1])
+  println("   W01 : ",wigner_q[1][1,2])
+  println("   W10 : ",wigner_q[1][2,1])
+  println("   W11 : ",wigner_q[1][2,2])
+  println("Qubit Wigner Negativity delta(rho_q) : ",wigner_q[2])  
+  return [real(den[1]-1),pur,minn]
 end
 
 function wigner_evolt(Nmax,om,r,lambda,delta,eta,psi,L,phi0,t)
@@ -236,6 +246,14 @@ end
    p3m=expect(pop^3,rhopt)
    p4m=expect(pop^4,rhopt)
    nexp=expect(adop*aop,rhopt)
+   ham0=diagonalization.hamiltonian(Nmax,om,r,lambda,delta,eta,psi)
+   eigvecf0=[evs[j,vecordered[k]] for j in 1:2*(Nmax+1)]
+   eigvecf0_t = transpose(eigvecf0)
+   exp_val = eigvecf0_t*ham0*eigvecf0
+   eigvecsH0 = eigvecs(ham0)
+   fid = 0.0
+   println("Expectation value      <F_k|H_0|F_k>             : ",real(exp_val))
+   println("a) Bosonic mode") 
    println("Central moments of the ",k,"-th stationary state")
    println("  x 1 moment (normalized): ",x1m/r^(1/2))
    println("  p 1 moment (normalized): ",p1m/r^(1/2))
@@ -246,17 +264,23 @@ end
    println("  x 4 moment : ",x4m-4*x3m*x1m+6*x2m*x1m^2-4*x1m^4+x1m^4)
    println("  p 4 moment : ",p4m-4*p3m*p1m+6*p2m*p1m^2-4*p1m^4+p1m^4)
    println("Mean photon number n : ",nexp)
+   println("Bosonic Negativity   delta(rho_b)    : ",real(den[1]-1))
+   println("Purity of the Wigner function        : ",real(pur))
    un = (x2m-x1m^2)^(1/2)*(p2m-p1m^2)^(1/2)
    println("Uncertainity : ",un)
    qfi = Fisher.fishern2(rhopt,Nmax)
    qfi2 = Fisher.fisherdisplacementp(rhopt,Nmax)
    qfi3 = Fisher.fisherdisplacementx(rhopt,Nmax)
    qfi4 = Fisher.fishersqueezing(rhopt,Nmax)
-   println("---QFI--- ")
+   println("  Quantum Fisher Information ")
    println("QFI[rho,n]/(4n)   : ", qfi)
    println("QFI[rho,x]/2      : ", qfi2)
    println("QFI[rho,p]/2      : ", qfi3)
    println("QFI[rho,xp+px]/(4n+2)    : ", qfi4)
+   tight_layout()
+   savefig("output/wigner_eigenstate_f.png")
+   println("See output/wigner_eigenstate_f.png for the Wigner function of the ",k,"-eigenstate of the Floquet operator")
+   println("b) Qubit mode*") 
    mr = magic.robustness(rho_q)
    println("Magic robustness of the qubit mode R(rho_q) : ",mr)
    wigner_q = magic.discrete_wigner(rho_q)
@@ -266,15 +290,6 @@ end
    println("   W10 : ",wigner_q[1][2,1])
    println("   W11 : ",wigner_q[1][2,2])
    println("Qubit Wigner negativity delta(rho_q) : ",wigner_q[2])  
-   tight_layout()
-   savefig("output/wigner_eigenstate_f.png")
-   println("See output/wigner_eigenstate_f.png for the Wigner function of the ",k,"-eigenstate of the Floquet operator")
-   ham0=diagonalization.hamiltonian(Nmax,om,r,lambda,delta,eta,psi)
-   eigvecf0=[evs[j,vecordered[k]] for j in 1:2*(Nmax+1)]
-   eigvecf0_t = transpose(eigvecf0)
-   exp_val = eigvecf0_t*ham0*eigvecf0
-   eigvecsH0 = eigvecs(ham0)
-   fid = 0.0
    #nk = k
    #for ik in 1:40
    #  statekH0 = [eigvecsH0[j,nk] for j in 1:2*(Nmax+1)]
@@ -321,6 +336,7 @@ function wigner_evolt_driven(Nmax,om,r,lambda,delta,eta,psi,nu,chi,Nf,L,phi0,pf,
   p2m=expect(pop^2,rhopt)
   p3m=expect(pop^3,rhopt)
   p4m=expect(pop^4,rhopt)
+  println("*Bosonic mode*") 
   println("central moments of the state at time ",pf*(2*pi)/nu)
   println("x 1 moment (normalized): ",x1m/r^(1/2))
   println("p 1 moment (normalized): ",p1m/r^(1/2))
@@ -357,6 +373,28 @@ function wigner_negativities(Nmax,wf,L)
   global rhopti=rhopt
   den=hcubature(Qexabs,(-L,-L),(L,L),rtol=0.0001)
   return real(den[1]-1)
+end
+
+function wigner_negativities2(Nmax,wf,L)
+  bc=FockBasis(Nmax)
+  ba=SpinBasis(1//2)
+  listvec=[wf[i] for i in 1:2*Nmax]
+  phi = buildingstate(listvec,Nmax)
+  rho = dm(phi)
+  rhopt = ptrace(rho,2)
+  global rhopti=rhopt
+  den=hcubature(Qexabs,(-L,-L),(L,L),rtol=0.0001)
+  x = [-L:0.1:L;]
+  minn = 0.0  
+  for ix in x
+    for ip in x
+      winst = wigner(rhopti, ip, ix)
+        if winst < minn
+            minn = winst
+        end
+    end
+  end 
+  return [real(den[1]-1),minn]
 end
 
 
@@ -433,6 +471,29 @@ function wigner_rhot(rho,L,r,Nmax)
   return "done"
 end
 
+
+function wigner_rho(rho,L,r,Nmax,name1,name2)
+  x = [-L:0.1:L;]
+  println("The data for the Wigner function are in the file ",name1)
+  println("The data for the cuts of the Wigner function in the file ",name2)
+  open(name1,"w") do io
+  for i in x
+    for j in x
+      wig = wigner(rho, i, j)
+      println(io,i/r^(1/2)," ",j/r^(1/2)," ",round(wig,digits=8))
+    end
+  end
+  end
+  open(name2,"w") do io
+  for i in x
+      wig1 = wigner(rho, i, 0)
+      wig2 = wigner(rho, 0, i)
+      println(io,i/r^(1/2)," ",round(wig1,digits=8)," ",round(wig2,digits=8))
+  end
+  end  
+  return "done"
+end
+
 function wigner_rhot_neg(rho,Nmax,L)
   rhoqo = buildingrho(rho,Nmax)
   rhopt = ptrace(rhoqo,2)
@@ -472,6 +533,41 @@ function wigner_rhot_ZerosCut(rho,Nmax,r)
       end
   end
   return count
+end
+
+function wigner_rhot_ZerosCut2(rho,Nmax,r)
+  rhoqo = buildingrho(rho,Nmax)
+  rhopt = ptrace(rhoqo,2)
+  maxxp = round(Int,2/0.01)
+  int = 0.01
+  inttheta = pi/(2*10)  
+  thetalist  = [i*inttheta for i in 0:10]
+  countlist = []  
+  for k in 1:length(thetalist)
+  theta = thetalist[k]      
+  global count = 0
+  xlist1 = [(1-int*i)*cos(theta+pi) for i in 0:100]
+  xlist2 = [int*i*cos(theta) for i in 1:100]
+  xlist=vcat(xlist1,xlist2)
+  plist1 = [(1-int*i)*sin(theta+pi) for i in 0:100]
+  plist2 = [int*i*sin(theta) for i in 1:100]
+  plist=vcat(plist1,plist2)  
+  #println("-----")
+  for i in 1:(length(xlist)-1)
+      w1 = wigner(rhopt, xlist[i] , plist[i])
+      w2 = wigner(rhopt, xlist[i+1], plist[i+1])
+      if (real(w1) > 0) && ( real(w2) < 0)
+         global count = count + 1
+	 #println("zero->"," x=",xplist[i]/r^(1/2)," p=",0) 
+      end
+      if (real(w1) < 0) && ( real(w2) > 0)
+         global count = count + 1
+	 #println("zero->"," x=",xplist[i]/r^(1/2)," p=",0) 
+      end
+  end
+  append!(countlist,count)    
+  end    
+  return countlist
 end
   
 

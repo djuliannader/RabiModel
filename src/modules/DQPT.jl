@@ -79,9 +79,9 @@ function amplitud(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nma
  	 for i in 1:nt+1
  	     evol=exp(-im*HMatrix*t/hbar)
 	     psi0t=evol*psi0
-	     neg = wigner_eig.wigner_negativities(Nmax,psi0t,L)
+	     neg = wigner_eig.wigner_negativities2(Nmax,psi0t,L)
 	     rho =  psi0t*transpose(conj(psi0t))
-	     zeros =  wigner_eig.wigner_rhot_ZerosCut(rho,Nmax,r)
+             zeros =  wigner_eig.wigner_rhot_ZerosCut2(rho,Nmax,r)
 	     rhoqo = wigner_eig.buildingrho(rho,Nmax)
 	     rhopt = ptrace(rhoqo,2)
 	     qfi1 = Fisher.fishern2(rhopt,Nmax)
@@ -90,9 +90,9 @@ function amplitud(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nma
  	     sp=psi0a*psi0t
  	     spf=sp[1]
  	     println(io,t," ",round(real(spf),digits=16)," ", round(imag(spf),digits=16))
-	     println(io2,t," ",round(real(neg),digits=8))
+	     println(io2,t," ",round(real(neg[1]),digits=8)," ",round(real(neg[2]),digits=8))
 	     println(io3,t," ",round(real(qfi1),digits=8)," ",round(real(qfi2),digits=8)," ",round(real(qfi3),digits=8))
-	     println(io4,t," ",round(real(zeros),digits=8))
+	     println(io4,t," ",(join(zeros, " ")))
  	     t=t+tint
  	    end
 	 end

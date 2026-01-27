@@ -105,7 +105,7 @@ function discrete_wigner(rho)
     
     #mana = sum(abs.(W)) - sum(W)
     mana = sum([abs(W[i,j]) for i in 1:2 for j in 1:2]) - sum(W)
-    println("flaaaaag:",sum(W)) 
+    #println("flaaaaag:",sum(W)) 
 
     
    return [W,mana]
