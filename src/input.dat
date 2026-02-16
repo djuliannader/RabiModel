@@ -7,7 +7,7 @@ R, Qubit frequency (Float)
 Parameter (1) for JC, (0) for QRM  or (-1) for Anti JC (Float)
 0.0
 lambda, carrier parameter (Float) 
-0.0 
+0.0
 g, coupling parameter (Float)
 0.7071067811865475
 psi, phase parameter (Float) 
@@ -27,7 +27,7 @@ Maximum time for dynamics (Float) ---> Necessary only for dynamics
 Xi, Modulation amplitude (Float) ---> Necessary only for Floquet operator
 0.05
 Tau, Modulation Period (Float) ---> Necessary only for Floquet operator
-1.2
+4.28
 Intervals of the period (Int) ---> Necessary only for Floquet operator
 1000
 k-eigenstate (Int) 
@@ -35,7 +35,7 @@ k-eigenstate (Int)
 L size of the phase space (Float) [-L,L]  
 12.5
 For time-dependent term proportional to: (1) Sigma_z or (2) Sigma_x (Int)
-2
+1
 Number of eigenstates (l) for fidelities |<E_l|F_k>|^2  and |<n|F_k>|
 0
 

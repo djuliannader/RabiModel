@@ -88,13 +88,19 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   un = (x2m-x1m^2)^(1/2)*(p2m-p1m^2)^(1/2)
   println("Uncertainity : ",un)
   qfi = Fisher.fishern2(rhopt,Nmax)
+  cfi = Fisher.cfisherrotation(rhopt,Nmax)  
   qfi2 = Fisher.fisherdisplacementp(rhopt,Nmax)
+  cfi2 = Fisher.cfisherdisplacement(rhopt,Nmax,0)     
   qfi3 = Fisher.fisherdisplacementx(rhopt,Nmax)
+  cfi3 = Fisher.cfisherdisplacement(rhopt,Nmax,pi/2)        
   qfi4 = Fisher.fishersqueezing(rhopt,Nmax)
-  println(" Quantum Fisher Information ")  
+  println("       Fisher Information (QFI and CFI)  ")
   println("QFI[rho,n]/(4n)            : ", qfi)
+  println("CFI[rho,n]/(4n)            : ", real(cfi[2])," photon counting (beta=",cfi[1],")")  
   println("QFI[rho,x]/2               : ", qfi2)
+  println("CFI[rho,x]/2               : ", cfi2, " homodyne detection ")        
   println("QFI[rho,p]/2               : ", qfi3)
+  println("CFI[rho,p]/2               : ", cfi3, " homodyne detection ")          
   println("QFI[rho,xp+px]/(4n+2)    : ", qfi4)
   #xy=xycircle((1/(r)^(1/2)),20)
   #scatter(xy[1],xy[2],s=2,color="black")
@@ -269,13 +275,20 @@ end
    un = (x2m-x1m^2)^(1/2)*(p2m-p1m^2)^(1/2)
    println("Uncertainity : ",un)
    qfi = Fisher.fishern2(rhopt,Nmax)
+   cfi = Fisher.cfisherrotation(rhopt,Nmax)    
    qfi2 = Fisher.fisherdisplacementp(rhopt,Nmax)
+   cfi2 = Fisher.cfisherdisplacement(rhopt,Nmax,0)  
    qfi3 = Fisher.fisherdisplacementx(rhopt,Nmax)
+   cfi3 = Fisher.cfisherdisplacement(rhopt,Nmax,pi/2)   
    qfi4 = Fisher.fishersqueezing(rhopt,Nmax)
-   println("  Quantum Fisher Information ")
-   println("QFI[rho,n]/(4n)   : ", qfi)
-   println("QFI[rho,x]/2      : ", qfi2)
-   println("QFI[rho,p]/2      : ", qfi3)
+   println("       Fisher Information (QFI and CFI)  ")
+   println("QFI[rho,n]/(4n)            : ", qfi)
+   println("CFI[rho,n]/(4n)            : ", real(cfi[2])," photon counting (beta=",cfi[1],")")  
+   println("QFI[rho,x]/2               : ", qfi2)
+   println("CFI[rho,x]/2               : ", cfi2, " homodyne detection ")        
+   println("QFI[rho,p]/2               : ", qfi3)
+   println("CFI[rho,p]/2               : ", cfi3, " homodyne detection ")          
+   println("QFI[rho,xp+px]/(4n+2)    : ", qfi4)
    println("QFI[rho,xp+px]/(4n+2)    : ", qfi4)
    tight_layout()
    savefig("output/wigner_eigenstate_f.png")
@@ -447,7 +460,7 @@ function QWehrl(x,y)
 function wigner_rhot(rho,L,r,Nmax)
   rhoqo = buildingrho(rho,Nmax)
   rhopt = ptrace(rhoqo,2)
-  x = [-L:0.1:L;]
+  x = [-L:0.05:L;]
   xm = x/r^(1/2)
   QQ = wigner(rhopt, x, x)
   QQs = transpose(QQ)
@@ -474,8 +487,8 @@ end
 
 function wigner_rho(rho,L,r,Nmax,name1,name2)
   x = [-L:0.1:L;]
-  println("The data for the Wigner function are in the file ",name1)
-  println("The data for the cuts of the Wigner function in the file ",name2)
+  println("The data for the Wigner function can be found in the file ",name1)
+  println("The data for the cuts of the Wigner function can be foun in the file ",name2)
   open(name1,"w") do io
   for i in x
     for j in x
@@ -535,13 +548,13 @@ function wigner_rhot_ZerosCut(rho,Nmax,r)
   return count
 end
 
-function wigner_rhot_ZerosCut2(rho,Nmax,r)
+function wigner_rhot_ZerosCut2(rho,Nmax,r,thetalist)
   rhoqo = buildingrho(rho,Nmax)
   rhopt = ptrace(rhoqo,2)
   maxxp = round(Int,2/0.01)
   int = 0.01
   inttheta = pi/(2*10)  
-  thetalist  = [i*inttheta for i in 0:10]
+  #thetalist  = [i*inttheta for i in 0:10]
   countlist = []  
   for k in 1:length(thetalist)
   theta = thetalist[k]      
@@ -568,6 +581,40 @@ function wigner_rhot_ZerosCut2(rho,Nmax,r)
   append!(countlist,count)    
   end    
   return countlist
+end
+
+
+function wigner_rho_cuts(rho,L,r,Nmax,name1,thetalist)
+    rhoqo = buildingrho(rho,Nmax)
+    rhopt = ptrace(rhoqo,2)
+    maxxp = round(Int,2/0.01)
+    int = 0.01
+    inttheta = pi/length(thetalist)  
+    thetalist  = [i*inttheta for i in 0:length(thetalist)]
+    println("The data for the cuts of the Wigner function can be found in the file ",name1)
+    open(name1,"w") do io
+    for rad in 0:int:L
+     wlist=[]
+    for i in 1:length(thetalist)
+        xinst = (L-rad)*cos(-thetalist[i])
+        pinst = (L-rad)*sin(-thetalist[i])        
+        wiginst = wigner(rhopt, xinst, pinst)
+        append!(wlist,wiginst)    
+    end
+     println(io,-(L-rad)/r^(1/2)," ",join(wlist," "))
+    end
+    for rad in int:int:L
+    wlist=[]
+    for i in 1:length(thetalist)
+        xinst = rad*cos(thetalist[i])
+        pinst = rad*sin(thetalist[i])        
+        wiginst = wigner(rhopt, xinst, pinst)
+        append!(wlist,wiginst)    
+     end
+     println(io,rad/r^(1/2)," ",join(wlist," "))
+    end
+    end
+  return "done"
 end
   
 

@@ -16,19 +16,22 @@ lambda0=0.0       # Initial Carrier parameter
 delta=0.0         # Parameter (-1,0,1) for (AJC,QRM,JC)
 g0=0.0            # Initial coupling
 psi=0.0           # Phase of the Hamiltonian
-g1=1.25           # Final coupling
+g1=0.75           # Final coupling
 lambda1=0.0       # Final Carrier parameter
 nsubint=1000      # Subintervales for integrating the survival probability
 nsubint2=400      # Subintervals of real time for estimate the position of zeros
 nsubint3=30       # Subintervals of imaginary time for estimate the position of zeros
-tmax=10.0         # maximal time for the survival probability
-tshot=4.65         # time for the Wigner function
+tint =0.05       # time interval for the survival amplitude
+tmax=10.0         # maximal time for the survival amplitude
+tshot=5.0        # time for the Wigner function
 alpha=1.0         # Parameter of the linear combination for the initial state 
 ph=0.0            # Phase of the initial state
-L=12.5             # Size of the phase space
+L=7.5             # Size of the phase space
 flag1=0           # (1) for the position of the zeros in the complex plane (0) for skip
 
-
+# data for cuts along the angles
+ncuts=20                
+thetal = [i*(pi)/ncuts for i in 0:(ncuts-1)]
 name = "output/position_zeros.dat"   # File for saving the position of the zeros
 
 #   Circuits that contains zeros
@@ -36,7 +39,9 @@ tcirc=[0.0-0.5*im,0.0+0.5*im,10.0+0.5*im,10.0-0.5*im]
 tcircr=[0.0-0.0*im,0.0+0.5*im,10.0+0.5*im,10.0-0.0*im]
 tcircl=[0.0-0.5*im,0.0+0.0*im,10.0+0.0*im,10.0-0.5*im]
 
-#------------- Preform calculations---------------------------#
+
+
+#------------- Perform calculations---------------------------#
 
 
 
@@ -45,8 +50,12 @@ istate = DQPT.initialstatequench(n,om,r,lambda0,delta,g0,psi)
 phi0 = alpha^(1/2)*istate[1] + (1-alpha)^(1/2)*exp(im*ph)*istate[2]
 hamf = diagonalization.hamiltonian(n,om,r,lambda1,delta,g1,psi)
 
+# Wigner function at the selected time
 wigt = DQPT.wigner_rhot(phi0,hamf,L,r,n,tshot)
-ctsa = DQPT.amplitud(phi0,tmax,1.0,n,om,r,lambda1,delta,g1,psi,L)
+wigcuts = DQPT.wigner_rhot(phi0,hamf,L,r,n,tshot,"output/Wignercuts_quench.dat",thetal)
+
+# Obtaining survival amplitude from 0 - tmax
+ctsa = DQPT.amplitud(phi0,tint,tmax,1.0,n,om,r,lambda1,delta,g1,psi,L,thetal)
 
 
 ovl = DQPT.overlapdqpt(phi0,hamf,n)

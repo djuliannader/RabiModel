@@ -56,8 +56,7 @@ end
 
 
 
-function amplitud(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi,L)
-	 tint=0.05
+function amplitud(psi0::Vector{Complex{Float64}},tint::Float64,tmax::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi,L,thetal)
 	 tinti=0.01
 	 nt=trunc(Int,tmax/tint)
 	 nt2=100
@@ -76,29 +75,55 @@ function amplitud(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nma
 	 open("output/negativities_quench.dat","w") do io2
 	 open("output/qfi_quench.dat","w") do io3
 	 open("output/zeros_cutwigner.dat","w") do io4
- 	 for i in 1:nt+1
+         open("output/observables_quench.dat","w") do io5
+         open("output/cfi_quench.dat","w") do io6        
+ 	     for i in 1:nt+1
+             QFIlist=[]
+             CFIlist=[]    
  	     evol=exp(-im*HMatrix*t/hbar)
 	     psi0t=evol*psi0
 	     neg = wigner_eig.wigner_negativities2(Nmax,psi0t,L)
 	     rho =  psi0t*transpose(conj(psi0t))
-             zeros =  wigner_eig.wigner_rhot_ZerosCut2(rho,Nmax,r)
+             zeros =  wigner_eig.wigner_rhot_ZerosCut2(rho,Nmax,r,thetal)
+             fb = FockBasis(Nmax)
+             nop = number(fb)
+             psivstate = fockstate(fb,0)
+             rhovs = dm(psivstate)
 	     rhoqo = wigner_eig.buildingrho(rho,Nmax)
 	     rhopt = ptrace(rhoqo,2)
+             expn = expect(nop,rhopt)
+             psicoherent = coherentstate(fb,sqrt(real(expn)))
+             rhocoherent = dm(psicoherent)
+             SP = fidelity(rhocoherent,rhovs)
+             expncoh = expect(nop,rhocoherent)    
 	     qfi1 = Fisher.fishern2(rhopt,Nmax)
-	     qfi2 = Fisher.fisherdisplacementx(rhopt,Nmax)
-             qfi3 = Fisher.fisherdisplacementp(rhopt,Nmax)
+             append!(QFIlist,real(qfi1))
+             #cfi1 = Fisher.cfisherrotation(rhopt,Nmax)
+             cfi1 = 0.0    
+             append!(CFIlist,real(cfi1[1]))   
+             for i in 1:length(thetal)     
+	         qfid = Fisher.fisherdisplacement(rhopt,Nmax,thetal[i])
+                 cfid = Fisher.cfisherdisplacement(rhopt,Nmax,thetal[i])
+                 #println(t," ",thetal[i]," ",cfid)    
+                 append!(QFIlist,real(qfid))
+                 append!(CFIlist,real(cfid))
+             end
  	     sp=psi0a*psi0t
  	     spf=sp[1]
  	     println(io,t," ",round(real(spf),digits=16)," ", round(imag(spf),digits=16))
 	     println(io2,t," ",round(real(neg[1]),digits=8)," ",round(real(neg[2]),digits=8))
-	     println(io3,t," ",round(real(qfi1),digits=8)," ",round(real(qfi2),digits=8)," ",round(real(qfi3),digits=8))
+	     println(io3,t," ",(join(QFIlist, " ")))
 	     println(io4,t," ",(join(zeros, " ")))
+             println(io5,t," ",real(expn)," ",real(SP)," ",real(expncoh))
+             println(io6,t," ",(join(CFIlist, " ")))    
  	     t=t+tint
  	    end
 	 end
 	 end
 	 end
+         end
 	 end
+         end    
 	 t=0.0
 	 println("------------------------------------------------------------------------------------------------------------ ")
 	 println("-------------   Go to file output/Loschmidt_amplitud.dat to see the Loschmidt amplitud as function of time---")
@@ -111,8 +136,13 @@ function amplitud(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nma
 	 println("------------------------------------------------------------------------------------------------------------ ")
 	 println("-------------   Go to file output/qfi_quench.dat to see the QFI as a function of time   ---------------------")
 	 println("----------- Dynamics governed by the time evolution operator for the time independent Hamiltonian       -----")
-	 println("             The file contains the negativity volume from t=0 to ",tmax," in steps of ",tint," time units    ")
+	 println("    The file contains the QFI for displacement,phase from t=0 to ",tmax," in steps of ",tint," time units    ")
 	 println("------------------------------------------------------------------------------------------------------------ ")
+	 println("-------------   Go to file output/cfi_quench.dat to see the CFI as a function of time   ---------------------")
+	 println("----------- Dynamics governed by the time evolution operator for the time independent Hamiltonian       -----")
+	 println("  The file contains the CFI for homodyne and photon countin                                             -----")
+         println("                                           detection from t=0 to ",tmax," in steps of ",tint," time units    ")
+	 println("------------------------------------------------------------------------------------------------------------ ")    
 	 println("-------------   Go to file output/zeros_cutwigner.dat to the the number of sign changes (Ns)       ----------")
 	 println("-------------   of the Wigner function cuts along the position and momentum axis as a function of time ------")
 	 println("----------- Dynamics governed by the time evolution operator for the time independent Hamiltonian       -----")
@@ -400,6 +430,13 @@ function wigner_rhot(psi0,ham,L,r,Nmax,t)
  psit = exp(-im*t*ham)*psi0
  rhot = psit*transpose(conj(psit))
  wig = wigner_eig.wigner_rhot(rhot,L,r,Nmax)
+ return "done"
+end
+
+function wigner_rhot(psi0,ham,L,r,Nmax,t,name,thetalist)
+ psit = exp(-im*t*ham)*psi0
+ rhot = psit*transpose(conj(psit))
+ wig = wigner_eig.wigner_rho_cuts(rhot,L,r,Nmax,name,thetalist)
  return "done"
 end
 
