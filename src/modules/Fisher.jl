@@ -4,6 +4,7 @@ using LinearAlgebra
 using QuantumOptics
 using HCubature  # loaded by CalculusWithJulia
 using PyPlot
+using Optim
 
 
 function fisherdisplacementp(rho,Nmax)
@@ -21,7 +22,7 @@ function fisherdisplacementp(rho,Nmax)
        lstate = [rhodiag[2][l][i] for i in 1:length(lam)]
        lstatead = transpose(conj(lstate))
        sd = lstatead*sqop*kstate
-       if (lam[k]+lam[l])>epsilon
+       if abs(lam[k]+lam[l])>epsilon
          qfiinst2t = 8*((lam[l]*lam[k])/(lam[k]+lam[l]))*abs2(sd) 
          qfi2t = qfi2t + qfiinst2t
        end
@@ -31,7 +32,7 @@ function fisherdisplacementp(rho,Nmax)
        lstate = [rhodiag[2][l][i] for i in 1:length(lam)]
        lstatead = transpose(conj(lstate))
        sd = lstatead*sqop*kstate
-       if (lam[k]+lam[l])>epsilon
+       if abs(lam[k]+lam[l])>epsilon
          qfiinst2t = 8*((lam[l]*lam[k])/(lam[k]+lam[l]))*abs2(sd) 
          qfi2t = qfi2t + qfiinst2t
        end
@@ -193,7 +194,7 @@ function fishern2(rho,Nmax)
        lstate = [rhodiag[2][l][i] for i in 1:length(lam)]
        lstatead = transpose(conj(lstate))
        sd = lstatead*nop*kstate
-       if (lam[k]+lam[l])>epsilon
+       if abs(lam[k]+lam[l])>epsilon
          qfiinst2t = 8*((lam[l]*lam[k])/(lam[k]+lam[l]))*abs2(sd) 
          qfi2t = qfi2t + qfiinst2t
        end
@@ -203,7 +204,7 @@ function fishern2(rho,Nmax)
        lstate = [rhodiag[2][l][i] for i in 1:length(lam)]
        lstatead = transpose(conj(lstate))
        sd = lstatead*nop*kstate
-       if (lam[k]+lam[l])>epsilon
+       if abs(lam[k]+lam[l])>epsilon
          qfiinst2t = 8*((lam[l]*lam[k])/(lam[k]+lam[l]))*abs2(sd) 
          qfi2t = qfi2t + qfiinst2t
        end
@@ -313,7 +314,8 @@ function cfisherdisplacement(rhoqo,Nmax,theta)
   return real(cfi)/2  
 end
 
-function cfisherrotationb(rhoqo,Nmax,theta,beta)
+function cfisherrotationb(rhoqo,Nmax,theta,beta1,beta2)
+    beta = beta1+im*beta2
     fb = FockBasis(Nmax)
     aop = destroy(fb)
     adop = dagger(aop)  
@@ -333,8 +335,129 @@ function cfisherrotationb(rhoqo,Nmax,theta,beta)
        sum  = sum + num/den
     end
     nexp = real(expect(rhoqo,nop))
-    return real(sum)/(4*nexp)
+    return real((sum)/(4*nexp))
 end
+
+function cfisherrotationg(rhoqo,Nmax,theta,beta1,beta2)
+    beta = beta1+im*beta2
+    fb = FockBasis(Nmax)
+    aop = destroy(fb)
+    adop = dagger(aop)  
+    nop = adop*aop
+    rhodiag = eigenstates(dense(rhoqo))
+    lam = rhodiag[1]
+    rhotheta = exp(im*theta*nop)*rhoqo*exp(-im*theta*nop)
+    rhobeta = exp(beta*adop - conj(beta)*aop)*rhotheta*exp(conj(beta)*aop - beta*adop)
+    rhobdat = rhobeta.data
+    drho = im*(nop*rhobeta - rhobeta*nop)
+    #drhob = exp(beta*adop - conj(beta)*aop)*drho*exp(conj(beta)*aop - beta*adop)
+    drhobdat = drho.data
+    sum = 0.0 + 0*im
+    for n in 1:length(lam)
+        num = abs2(drhobdat[n,n])
+        den = rhobdat[n,n]
+       sum  = sum + num/den
+    end
+    nexp = real(expect(rhoqo,nop))
+    return real((sum)/(4*nexp))
+end
+
+
+
+function cfisherdisplacementb(rhoqo,Nmax,phi,theta,beta1,beta2)
+    beta = beta1 + im*beta2
+    fb = FockBasis(Nmax)
+    aop = destroy(fb)
+    adop = dagger(aop)
+    nop = adop*aop
+    xop = (adop + aop)/2^(1/2)
+    pop = im*(adop - aop)/2^(1/2)
+    gop =  cos(phi)*xop + sin(phi)*pop
+    rhodiag = eigenstates(dense(rhoqo))
+    lam = rhodiag[1]
+    rhotheta = exp(im*theta*gop)*rhoqo*exp(-im*theta*gop)
+    rhobeta = exp(beta*adop - conj(beta)*aop)*rhotheta*exp(conj(beta)*aop - beta*adop)
+    rhobdat = rhobeta.data
+    drho = im*(gop*rhotheta - rhotheta*gop)
+    drhob = exp(beta*adop - conj(beta)*aop)*drho*exp(conj(beta)*aop - beta*adop)
+    drhobdat = drhob.data
+    sum = 0.0 + 0*im
+    for n in 1:length(lam)
+        num = abs2(drhobdat[n,n])
+        den = rhobdat[n,n]
+       sum  = sum + num/den
+    end
+    return real(sum)/2
+end
+
+
+
+
+# CFI photon counting (beta optimized)
+function cfisherphotoncounting(rhoqo,Nmax,philist)
+    #beta =  [i + j*im for i in 0.1:0.1:5 for j in 0.1:0.1:5]
+    beta =  [0.0+0.0*im]
+    cfirot=[]
+    listscfidis = [Float64[] for _ in 1:length(philist)]
+    cfires = []
+    thetag=0.1
+    for b in beta
+        cc  = cfisherrotationb(rhoqo,Nmax,thetag,real(b),imag(b))
+        append!(cfirot,cc)
+        for i in 1:length(philist)
+          ccdis = cfisherdisplacementb(rhoqo,Nmax,philist[i],thetag,real(b),imag(b))
+          append!(listscfidis[i],ccdis)
+        end
+    end
+    val, idx = findmax(cfirot)
+    append!(cfires,val)
+    append!(cfires,beta[idx])
+    for i in 1:length(philist)
+        val2, idx2 = findmax(listscfidis[i])
+        append!(cfires,val2)
+        append!(cfires,beta[idx2])
+    end    
+    return cfires
+end
+
+# cfi photon counting with AI optimized parameter for displacement
+function cfisherphotoncountingia(rhoqo,Nmax,philist)
+    cfires = []
+    thetag=0.1
+    objective(v) = -cfisherrotationb(rhoqo,Nmax,thetag,v...)
+    lower = [-5.0, -5.0]
+    upper = [5.0, 5.0]
+    initial_guess = [-4.9, 4.9]
+    # Set options
+    result = optimize(
+    objective,
+    lower,
+    upper,
+    initial_guess,
+    Fminbox(),
+    Optim.Options(iterations = 500)
+    )
+    
+    append!(cfires,-result.minimum)
+    append!(cfires,result.minimizer[1]+im*result.minimizer[2])
+
+    for k in 1:length(philist)
+        initial_guess = [-4.9, 4.9]
+        objective2(v) = -cfisherdisplacementb(rhoqo,Nmax,philist[k],thetag,v...)
+        result = optimize(
+        objective2,
+        lower,
+        upper,
+        initial_guess,
+        Fminbox(),
+        Optim.Options(iterations = 500)
+        )
+           append!(cfires,-result.minimum)
+           append!(cfires,result.minimizer[1]+im*result.minimizer[2])
+    end
+
+    return cfires
+end    
 
 #Nmax=50
 #fb = FockBasis(Nmax)
@@ -345,6 +468,22 @@ end
 #psi2 = coherentstate(fb,-al)
 #psi0 = (1/(2*(1+exp(-2*abs2(al))))^(1/2))*(psi1+psi2)
 #rho0 = dm(psi0)
+#qfi = fisherdisplacement(rho0,Nmax,0.0)
+#qfir = fishern2(rho0,Nmax)
+#println("qfi (x) : ",real(qfi[1]))
+#println("qfi (n) : ",real(qfir[1]))
+#cfihom = cfisherdisplacement(rho0,Nmax,0.0)
+#println("cfi hom: ",cfihom)
+#cfipc = cfisherphotoncountingia(rho0,Nmax,[0.0,pi/2])
+#println("cfi pc : ",real(cfipc[1]), " parameter :",cfipc[2])
+#println("cfi pc : ",real(cfipc[3]), " parameter :",cfipc[4])
+#println("cfi pc : ",real(cfipc[3]), " parameter :",cfipc[4])
+#cfipcia = cfisherphotoncountingia(rho0,Nmax,[0.0,pi/2])
+#println("cfi pc : ",real(cfipcia[1]), " parameter :",cfipcia[2])
+#println("cfi pc : ",real(cfipcia[3]), " parameter :",cfipcia[4])
+#println("cfi pc : ",real(cfipcia[3]), " parameter :",cfipcia[4])
+#qfidis = fisherdisplacement(rho0,Nmax,0)
+#println("QFI : ",real(qfidis))
 #beta=[i for i in 0:0.5:20]
 #open("test.dat","w") do io
 #for b in beta
@@ -354,16 +493,6 @@ end
 #end
 
 
-# Displacement photon counting
-function cfisherrotation(rhoqo,Nmax)
-    beta =  [i + j*im for i in 0.1:0.1:5 for j in 0.1:0.1:5]
-    cfi=[]
-    for b in beta
-        cc = cfisherrotationb(rhoqo,Nmax,0.5,b)
-        append!(cfi,cc)
-    end
-    val, idx = findmax(cfi)
-    return [beta[idx],val]
-end
+
 
 end

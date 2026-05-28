@@ -1,5 +1,5 @@
 Dimension of Fock Space (Integer)
-100
+80
 Omega, Oscillator frequency (Float)
 1.0
 R, Qubit frequency (Float)
@@ -7,7 +7,7 @@ R, Qubit frequency (Float)
 Parameter (1) for JC, (0) for QRM  or (-1) for Anti JC (Float)
 0.0
 lambda, carrier parameter (Float) 
-0.0
+0.0     
 g, coupling parameter (Float)
 0.7071067811865475
 psi, phase parameter (Float) 
@@ -18,16 +18,18 @@ Minimum and maximum value of g (List[Float])   ---> Necessary only for spectrum
 [0.5,2.8]
 Spacing of the parameter (Float) ---> Necessary only for spectrum
 0.01
-Flag, 1 for time-independent Hamiltonian 2 for Floquet dynamics 3 for both (Integer) ---> Necessary only for dynamics
-3
+Flag, 1 for time-independent AQRM 2 for Gibbs thermal state of AQRM 3 for time-periodic AQRM (Integer) 
+2
+Beta (Float) ---> Necessary for thermal state
+1000.0
 Coordinates of the initial coherent state (List[Float]) [Theta0,Phi0,X0,P0] ---> Necessary only for dynamics
-[0.0,0.0,0.0,0.0]
+[1.5707963267948966,0.0,7.07,0.0]
 Maximum time for dynamics (Float) ---> Necessary only for dynamics
-1780.1
+20.0
 Xi, Modulation amplitude (Float) ---> Necessary only for Floquet operator
 0.05
 Tau, Modulation Period (Float) ---> Necessary only for Floquet operator
-4.28
+4.29
 Intervals of the period (Int) ---> Necessary only for Floquet operator
 1000
 k-eigenstate (Int) 

@@ -7,10 +7,11 @@ include("modules/wigner_eig.jl")
 include("modules/dynamics.jl")
 include("modules/troterization.jl")
 using .diagonalization
-using .troterization
+using .reading
 using .stat
 using .wigner_eig
 using .dynamics
+using .troterization
 
 
 
@@ -57,37 +58,40 @@ open("input.dat") do f
  flag2  = parse(Int64, K22)
  K23=readline(f)
  K24=readline(f)
+ beta = parse(Float64, K24)
  K25=readline(f)
  K26=readline(f)
- tmax = parse(Float64, K26)
  K27=readline(f)
- K28=readline(f)
- chi = parse(Float64, K28)
+ K28=readline(f)   
+ tmax = parse(Float64, K28)
  K29=readline(f)
  K30=readline(f)
- tau = parse(Float64, K30)
+ chi = parse(Float64, K30)
  K31=readline(f)
  K32=readline(f)
- nn = parse(Int64, K32)
+ tau = parse(Float64, K32)
  K33=readline(f)
  K34=readline(f)
- kk = parse(Int64, K34)
+ nn = parse(Int64, K34)
  K35=readline(f)
  K36=readline(f)
- L = parse(Float64, K36)
+ kk = parse(Int64, K36)
  K37=readline(f)
  K38=readline(f)
- flagt = parse(Int64, K38)
+ L = parse(Float64, K38)
  K39=readline(f)
  K40=readline(f)
- lk = parse(Int64, K40)
+ flagt = parse(Int64, K40)
+ K41=readline(f)
+ K42=readline(f)
+ lk = parse(Int64, K42)
 
 ##-------------
 #
 #
 ##------ converting string to a list
  lmm  = reading.stringtofloatlist(K18)
- csc0 = reading.stringtofloatlist(K24)
+ csc0 = reading.stringtofloatlist(K26)
 
 
 
@@ -181,42 +185,40 @@ end
 
 
 if flag1==3
-   println("------ Results of the time-independent AQRM   --------------")
-   message = stat.analysisH(N,om,r,lambda,delta,nn,nu,chi,eta,psi,flagt)
-   evalst  = diagonalization.diagonalize(N,om,r,lambda,delta,eta,psi)
-   println("Ground state energy of the AQRM                  : ",evalst[1][1])
-   println("Expectation value <E_k|H_0|E_k>                  : ",evalst[1][kk]) 
-   wigeig  = wigner_eig.wigner_eigenstate(N,om,r,lambda,delta,eta,psi,kk,L)
-   #println("Bosonic Negativity of the ",kk," state of the AQRM   delta(rho_b)    : ",real(wigeig[1]))
-   #println("minimum of the bosonic Wigner function ",real(wigeig[3]))
-   #println("Purity of the ",kk," state of the AQRM           : ",real(wigeig[2]))
-    println("------ Results of AQRM with a small modulation in the qubit frequency ------")
-    println("---------------------------------------------------------------------------")
-   rpar=stat.parameter_r(N,om,r,lambda,delta,nn,nu,chi,eta,psi,flagt)
-   println("Parameter <r> of the Floquet operator            : ",rpar)
-   wfloquet   = wigner_eig.wigner_driven(N,om,r,lambda,delta,eta,psi,nu,chi,nn,kk,L,flagt,lk)
-   # mswflod  = wigner_eig.wigner_drivenqs(N,om,r,lambda,delta,eta,psi,nu,chi,nn,kk,L)
-   #println("Expectation value      <F_k|H_0|F_k>             : ",real(wfloquet[1]))
-   #println("Bosonic Negativity of the ",kk,"-th stationary state  delta(rho_b)  : ",real(wfloquet[2]))
-   #println("Purity  of the ",kk,"-th stationary state        : ",real(wfloquet[3]))
-   #println("Wehlr entropy  of the ",kk,"-th stationary state: ",real(wfloquet[4]))
-   #println("Maximal fidelity |<F_k|E_n>|^2= ",real(wfloquet[4])," for k= ",kk," and n= ",floor(Int,real(wfloquet[5])))
-   for jk in 1:lk
-     println("Overlap |<E_l|F_k>|^2 for k= ",kk," and l=",jk,"  : ",real(wfloquet[4][jk]))
+   if flag2==1
+       println("------ Eigenstate of the time-independent AQRM   --------------")
+       message = stat.analysisH(N,om,r,lambda,delta,nn,nu,chi,eta,psi,flagt)
+       evalst  = diagonalization.diagonalize(N,om,r,lambda,delta,eta,psi)
+       println("Ground state energy of the AQRM                  : ",evalst[1][1])
+       println("Expectation value <E_k|H_0|E_k>                  : ",evalst[1][kk]) 
+       wigeig  = wigner_eig.wigner_eigenstate(N,om,r,lambda,delta,eta,psi,kk,L)
    end
-   for jk in 1:lk
-     println("Overlap |<n|F_k>|^2 for k= ",kk," and n=",jk,"  : ",real(wfloquet[5][jk]))
-   end
-   println("See file levels_output.dat")
-   println("-------------------------------------------------------------")
-   # --------------------------------------
-  end
+   if flag2==2
+   println("------ Thermal state of the time-independent AQRM   --------------")
+       ww = wigner_eig.wigner_thermalstate(N,om,r,lambda,delta,eta,psi,L,beta)
+   end      
+   if flag2==3
+       println("------ Floquet state of the time-periodic AQRM with qubit modulation ------")
+       println("---------------------------------------------------------------------------")
+       rpar=stat.parameter_r(N,om,r,lambda,delta,nn,nu,chi,eta,psi,flagt)
+       println("Parameter <r> of the Floquet operator            : ",rpar)
+       wfloquet   = wigner_eig.wigner_driven(N,om,r,lambda,delta,eta,psi,nu,chi,nn,kk,L,flagt,lk)
+       for jk in 1:lk
+           println("Overlap |<E_l|F_k>|^2 for k= ",kk," and l=",jk,"  : ",real(wfloquet[4][jk]))
+       end
+       for jk in 1:lk
+           println("Overlap |<n|F_k>|^2 for k= ",kk," and n=",jk,"  : ",real(wfloquet[5][jk]))
+       end
+       println("See file levels_output.dat")
+       println("-------------------------------------------------------------")
+   end 
+end
 
 
 if flag1==2  # Dynamics
   cs0=dynamics.initialcoherent(csc0[3],csc0[4],csc0[1],csc0[2],1.0,N)
   #cs0=dynamics.initialsqueezed(csc0[3],csc0[4],csc0[1],csc0[2],1.0,N,0.5,pi/2)
-  if flag2==1 || flag2==3 # static Hamiltonian
+  if flag2==1 # static Hamiltonian
     println("---- Dynamics of the time independent AQRM initiates ----")
     mensaje1=dynamics.survivalp(cs0,tmax,1.0,N,om,r,lambda,delta,eta,psi)
     av=dynamics.fotoc(cs0,tmax,1.0,N,om,r,lambda,delta,eta,psi,L)
@@ -233,7 +235,7 @@ if flag1==2  # Dynamics
       println(" Wigner function at time t=",tmax)
     end
   end
-  if flag2==2 || flag2==3 # Floquet
+  if flag2==3 # Floquet
     println("----   Dynamics of the modulated AQRM initiates     ----")
     pf = floor(tmax/tau)  
     floquet=troterization.troter(N,nn,r,om,lambda,delta,chi,nu,eta,psi,flagt)

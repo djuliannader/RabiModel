@@ -56,10 +56,10 @@ end
 
 
 
-function amplitud(psi0::Vector{Complex{Float64}},tint::Float64,tmax::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi,L,thetal)
+function amplitud(psi0::Vector{Complex{Float64}},tint::Float64,tmax::Float64,timax::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi,L,thetal)
 	 tinti=0.01
 	 nt=trunc(Int,tmax/tint)
-	 nt2=100
+	 nt2=2*timax/tinti
 	 t=0.0
 	 # building Hamiltonian
          HMatrix= diagonalization.hamiltonian(Nmax,om,r,lambda,delta,eta,psi)
@@ -67,24 +67,24 @@ function amplitud(psi0::Vector{Complex{Float64}},tint::Float64,tmax::Float64,hba
 	 eigvals1=eigvals(HMatrix)
 	 #println("ev1:",eigvals1[1])
 	 # adjunt initial state
-	 psi0a=Array{Complex{Float64}}(undef,1,length(psi0))
+         psi0a=Array{Complex{Float64}}(undef,1,length(psi0))
 	 for k in 1:length(psi0)
 	     psi0a[1,k]=conj(psi0[k])
          end
-	 open("output/Loschmidt_amplitud.dat","w") do io
+         rho0 = psi0*psi0a
+	 open("output/survival_probability.dat","w") do io
 	 open("output/negativities_quench.dat","w") do io2
 	 open("output/qfi_quench.dat","w") do io3
-	 open("output/zeros_cutwigner.dat","w") do io4
+	 #open("output/zeros_cutwigner.dat","w") do io4        
          open("output/observables_quench.dat","w") do io5
-         open("output/cfi_quench.dat","w") do io6        
+         open("output/cfi_quench.dat","w") do io6
  	     for i in 1:nt+1
-             QFIlist=[]
-             CFIlist=[]    
+             println(t)
  	     evol=exp(-im*HMatrix*t/hbar)
 	     psi0t=evol*psi0
-	     neg = wigner_eig.wigner_negativities2(Nmax,psi0t,L)
-	     rho =  psi0t*transpose(conj(psi0t))
-             zeros =  wigner_eig.wigner_rhot_ZerosCut2(rho,Nmax,r,thetal)
+             rho =  psi0t*transpose(conj(psi0t))    
+	     neg = wigner_eig.wigner_negativities2(Nmax,rho,rho0,L,r)
+             #zeros =  wigner_eig.wigner_rhot_ZerosCut2(rho,Nmax,r,thetal)
              fb = FockBasis(Nmax)
              nop = number(fb)
              psivstate = fockstate(fb,0)
@@ -92,43 +92,48 @@ function amplitud(psi0::Vector{Complex{Float64}},tint::Float64,tmax::Float64,hba
 	     rhoqo = wigner_eig.buildingrho(rho,Nmax)
 	     rhopt = ptrace(rhoqo,2)
              expn = expect(nop,rhopt)
+             exppar = expect(exp(im*pi*nop),rhopt)    
              psicoherent = coherentstate(fb,sqrt(real(expn)))
              rhocoherent = dm(psicoherent)
              SP = fidelity(rhocoherent,rhovs)
-             expncoh = expect(nop,rhocoherent)    
-	     qfi1 = Fisher.fishern2(rhopt,Nmax)
-             append!(QFIlist,real(qfi1))
-             #cfi1 = Fisher.cfisherrotation(rhopt,Nmax)
-             cfi1 = 0.0    
-             append!(CFIlist,real(cfi1[1]))   
-             for i in 1:length(thetal)     
-	         qfid = Fisher.fisherdisplacement(rhopt,Nmax,thetal[i])
-                 cfid = Fisher.cfisherdisplacement(rhopt,Nmax,thetal[i])
-                 #println(t," ",thetal[i]," ",cfid)    
-                 append!(QFIlist,real(qfid))
-                 append!(CFIlist,real(cfid))
+             expncoh = expect(nop,rhocoherent)   
+             qfidmax  = 0    
+             thetamax = 0
+             cfidmax  = 0    
+             thetacmax = 0    
+             for i in 1:length(thetal)
+                 cfidinst  = Fisher.cfisherdisplacement(rhopt,Nmax,thetal[i])    
+	         qfidinst  = Fisher.fisherdisplacement(rhopt,Nmax,thetal[i])
+                 if (qfidinst>qfidmax)
+                     qfidmax = qfidinst
+                     thetamax = thetal[i]
+                 end
+                 if (cfidinst>cfidmax)
+                     cfidmax = cfidinst
+                     thetacmax = thetal[i]
+                 end 
              end
  	     sp=psi0a*psi0t
  	     spf=sp[1]
- 	     println(io,t," ",round(real(spf),digits=16)," ", round(imag(spf),digits=16))
-	     println(io2,t," ",round(real(neg[1]),digits=8)," ",round(real(neg[2]),digits=8))
-	     println(io3,t," ",(join(QFIlist, " ")))
-	     println(io4,t," ",(join(zeros, " ")))
-             println(io5,t," ",real(expn)," ",real(SP)," ",real(expncoh))
-             println(io6,t," ",(join(CFIlist, " ")))    
+ 	     println(io,t," ",round(abs2(spf),digits=16))
+	     println(io2,t," ",(join(neg, " ")))
+	     println(io3,t," ",qfidmax," ",thetamax)
+	     #println(io4,t," ",(join(zeros, " ")))
+             println(io5,t," ",real(expn)," ",real(SP)," ",real(expncoh)," ",real(exppar))
+             println(io6,t," ",cfidmax," ",thetacmax) 
  	     t=t+tint
  	    end
 	 end
 	 end
-	 end
+	 #end
          end
 	 end
          end    
 	 t=0.0
 	 println("------------------------------------------------------------------------------------------------------------ ")
-	 println("-------------   Go to file output/Loschmidt_amplitud.dat to see the Loschmidt amplitud as function of time---")
-	 println("----------- Dynamics governed by the time evolution operator for the time independent Hamiltonian       -----")
-	 println("             The file contains the Survival amplitude from 0 to ",tmax," in steps of ",tint," time units     ")
+	 println("-------------   Go to file output/survival_probability.dat to see the survival probability as function of time---")
+	 println("----------- Dynamics governed by the time evolution operator for the time independent Hamiltonian        -----")
+	 println("             The file contains the Survival probability from 0 to ",tmax," in steps of ",tint," time units    ")
 	 println("------------------------------------------------------------------------------------------------------------ ")
 	 println("-------------   Go to file output/negativities_quench.dat to see the negativity volume as a function of time-")
 	 println("----------- Dynamics governed by the time evolution operator for the time independent Hamiltonian       -----")
@@ -148,9 +153,9 @@ function amplitud(psi0::Vector{Complex{Float64}},tint::Float64,tmax::Float64,hba
 	 println("----------- Dynamics governed by the time evolution operator for the time independent Hamiltonian       -----")
 	 println("             The file contains Ns from 0 to ",tmax," in steps of ",tint," time units                         ")
 	 println("------------------------------------------------------------------------------------------------------------ ")
- 	 open("output/Loschmidt_amplitud_ct.dat","w") do io
+ 	 open("output/survival_amplitude_ct.dat","w") do io
  	 for i in 1:nt+1
-	   tim=-0.5
+	   tim=-timax
 	   for j in 1:nt2+1
  	     evol=exp(-im*HMatrix*(t+tim*im)/hbar)
 	     psi0t=evol*psi0
@@ -162,7 +167,7 @@ function amplitud(psi0::Vector{Complex{Float64}},tint::Float64,tmax::Float64,hba
 	    t=t+tint	     
 	 end   
  	 end
-	 println("-------------   Go to file output/Loschmidt_amplitud_ct.dat to see the  complex time Loschmidt amplitud  -----")
+	 println("-------------   Go to file output/survival_amplitude_ct.dat to see the  complex time survival amplitude  -----")
 	 println("----------- Dynamics governed by the time evolution operator for the time independent Hamiltonian       -----")
 	 println("             The file contains SP from 0 to ",tmax," in steps of ",tint," time units               ")
 	 println("------------------------------------------------------------------------------------------------------------ ")

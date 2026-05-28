@@ -36,8 +36,14 @@ function analysisH(N,om,r,lambda,delta,nn,nu,chi,eta,psi,flagt)
        println(ioa,(eigvs[1][2*i]+eigvs[1][2*i-1])/2," ",1.0/(eigvs[1][2*i]-eigvs[1][2*i-1])," ",(evfvecs[2*i]+evfvecs[2*i-1])/2," ",1.0/(evfvecs[2*i]-evfvecs[2*i-1]))
      end
    else
-     for i in 1:trunc(Int64,length(eigvs[1])/2-1)
-       println(ioa,(eigvs[1][2*i+1]+eigvs[1][2*i-1])/2," ",1.0/(eigvs[1][2*i+1]-eigvs[1][2*i-1])," ",(evfvecs[2*i+1]+evfvecs[2*i-1])/2," ",1.0/(evfvecs[2*i+1]-evfvecs[2*i-1]))
+       #println("heeere")
+       for i in 1:trunc(Int64,length(eigvs[1])/2-1)
+        eav =  (eigvs[1][i+1]+eigvs[1][i])/(2*r)
+       if eav > -0.5
+           println(ioa,(eigvs[1][i+1]+eigvs[1][i])/2," ",1.0/(eigvs[1][i+1]-eigvs[1][i])," ",(evfvecs[i+1]+evfvecs[i])/2," ",1.0/(evfvecs[i+1]-evfvecs[i]))
+       else
+          println(ioa,(eigvs[1][i+2]+eigvs[1][i])/2," ",2.0/(eigvs[1][i+2]-eigvs[1][i])," ",(evfvecs[i+2]+evfvecs[i])/2," ",1.0/(evfvecs[i+2]-evfvecs[i])) 
+       end    
      end
    end
    #open("DensityOfStates_output2.dat","w") do ioa

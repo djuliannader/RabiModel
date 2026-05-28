@@ -28,9 +28,14 @@ function initialeigenstateH(n,om,r,lambda,delta,eta,psi,k)
 end
 
 
-function rhot_floquetramp(psi0,tmax,n,om,r,lambda,delta,eta,psi,xi,tau,Nf,flagt,kf,acc,L)
- tfmax = tmax
- tmax = tau*tmax
+
+
+
+function rhot_floquetramp(psi0,Trcycles,Tscycles,n,om,r,lambda,delta,eta,psi,xi,tau,Nf,flagt,kf,acc,L)
+ tmax =  tau*Trcycles
+ tshot = tau*Tscycles
+ tlist = [tau*i for i in 0:Trcycles]
+ times = (0.0,tmax)      
  psi0t = transpose(conj(psi0))
  HMatrix= diagonalization.hamiltonian(n,om,r,lambda,delta,eta,psi)
  floquet=troterization.troter(n,Nf,r,om,lambda,delta,xi*r,2*pi/tau,eta,psi,flagt)
@@ -44,28 +49,37 @@ function rhot_floquetramp(psi0,tmax,n,om,r,lambda,delta,eta,psi,xi,tau,Nf,flagt,
  ba=SpinBasis(1//2)
  ov2=0
  neg=0
+ man=0.0
+ rob = 0.0
+ qfi = 0.0
+ qfi2 = 0.0
+ qfi3 = 0.0   
  if flagt==2  
      sig = diagonalization.sigmax(n)
  end
- times=(0.0,tmax)
- tint=0.01
+ tint=0.1
  f(u,p,t) = -im*(HMatrix + ((r*xi/2)*((1/2)*(1-cos(pi*t/tmax)))^1)*sig*cos(2*pi*t/tau))*u
- #f(u,p,t) = -im*(HMatrix)*u
  prob = ODEProblem(f,psi0,times)
- sol = solve(prob,abstol = acc,Tsit5(),alg_hints = [:stiff],dt=tint)
+ sol = solve(prob,abstol = acc,Tsit5(),alg_hints = [:stiff], dt=0.1, saveat = tlist, save_everystep = false)
  open("output/fidelities_ramp.dat","w") do io
  open("output/qfi_ramp.dat","w") do io2
  open("output/negativity_ramp.dat","w") do io3
  open("output/magic_ramp.dat","w") do io4        
  #dt=1.0
  dt = tau
- for i in 0:round(Int, tfmax) 
-   psit = sol(i*dt)
-   #psit = exp(-i*dt*im*HMatrix)*psi0  
+ for i in eachindex(sol.t)
+   println(sol.t[i])              
+   psit = sol.u[i]
+   psitt = psit'
+   nfac = psitt*psit  
+   psit = psit/nfac^(1/2)
    ov1 = psi0t*psit
    ov2 = listvect*psit
    #println("------------>",i*dt," ",abs2(ov1))
-   global rhot = psit*transpose(conj(psit))
+   rhot = psit*transpose(conj(psit))
+   if abs(sol.t[i]-tshot)<10^(-6)
+     global rhots = rhot
+   end    
    rhotqo =  wigner_eig.buildingrho(rhot,n)
    neg  =  wigner_eig.wigner_rhot_neg(rhot,n,L)
    rhotpt = ptrace(rhotqo,2)
@@ -75,10 +89,111 @@ function rhot_floquetramp(psi0,tmax,n,om,r,lambda,delta,eta,psi,xi,tau,Nf,flagt,
    qfi = Fisher.fishern2(rhotpt,n)
    qfi2 = Fisher.fisherdisplacementp(rhotpt,n)
    qfi3 = Fisher.fisherdisplacementx(rhotpt,n)
-   println(io,i*dt," ",abs2(ov1)," ",abs2(ov2))
-   println(io2,i*dt," ",real(qfi)," ",real(qfi2)," ",real(qfi3))
-   println(io3,i*dt," ",real(neg))
-   println(io4,i*dt," ",real(wigner_q[2]), " ",real(rb))
+   man = real(wigner_q[2])
+   rob = real(rb)
+   println(io,sol.t[i]," ",abs2(ov1)," ",abs2(ov2))
+   println(io2,sol.t[i]," ",real(qfi)," ",real(qfi2)," ",real(qfi3))
+   println(io3,sol.t[i]," ",real(neg))
+   println(io4,sol.t[i]," ",man, " ",rob)
+ end
+ end
+ end
+ end
+ end
+ println("--------------------------------------------------------------------------------------------------- ")
+ println("-------------   Go to file output/fidelities_ramp.dat to see the fidelities            -------------")
+ println("----------- Dynamics during the ramp                                                           -----")
+ println("             The file contains F(t) from t=0 to ",tmax," in steps of ",tau," time units             ")
+ println("   - Survival probavility                                                                           ")
+ println("   - Fidelity between the state and the target state                                                ")   
+ println("--------------------------------------------------------------------------------------------------- ")
+ println("--------------------------------------------------------------------------------------------------- ")
+ println("-------------   Go to file output/qfi_ramp.dat to see the QFI                          -------------")
+ println("----------- Dynamics during the ramp                                                           -----")
+ println("             The file contains QFI(rho(t),A) from t=0 to ",tmax," in steps of ",tau," time units    ")
+ println("   - Phase sensitivity QFI(rho(f),n)                                                                ")
+ println("   - Displacement sensitivity QFI(rho(f),p)                                                         ")
+ println("   - Displacement sensitivity QFI(rho(f),x)                                                         ")
+ println("--------------------------------------------------------------------------------------------------- ")
+ println("--------------------------------------------------------------------------------------------------- ")
+ println("-------------   Go to file output/negativity_ramp.dat to see the negativity volume       -----------")
+ println("----------- Dynamics during the ramp                                                           -----")
+ println("             The file contains delta(t) from t=0 to ",tmax," in steps of ",tau," time units         ")  
+ println("--------------------------------------------------------------------------------------------------- ")
+ println("Final fidelity to target state : ", abs2(ov2))
+ println("Final QFI phase sensing (n)    : ", real(qfi))
+ println("Final QFI displacement (x)     : ", real(qfi2))
+ println("Final QFI displacement (p)     : ", real(qfi3))
+ println("Final bosonic negativity       : ", neg)   
+ println("Final qubit negativity         : ", man)
+ println("Final qubit magic              : ", rob)
+ return [rhots,abs2(ov2),real(neg)]
+end
+
+
+function rhot_floquetramp2(psi0,Tcycles,Tsc,n,om,r,lambda,delta,eta,psi,xi,tau,Nf,flagt,kf,acc,L,Jp,Jq)
+ tmax =  tau*Tcycles
+ tshot = tau*Tsc  
+ tlist = [tau*i for i in 0:Tcycles]
+ times = (0.0,tmax)      
+ psi0t = psi0'
+ rho0 = psi0*psi0t   
+ HMatrix= diagonalization.hamiltonian(n,om,r,lambda,delta,eta,psi)
+ floquet=troterization.troter(n,Nf,r,om,lambda,delta,xi*r,2*pi/tau,eta,psi,flagt)
+ vecordered = stat.orderinfvec(n,om,r,lambda,delta,Nf,2*pi/tau,xi*r,eta,psi,flagt)
+ evals=eigvals(floquet)
+ evs=eigvecs(floquet)
+ listvec=[evs[i,vecordered[kf]] for i in 1:length(evals)]
+ listvect = transpose(conj(listvec))
+ sig = diagonalization.sigmaz(n)
+ bc=FockBasis(n)
+ ba=SpinBasis(1//2)
+ ov2 = 0.0 
+ bnegf = 0.0 
+ qrobf = 0.0        
+ qnegf = 0.0
+ qfi = 0.0
+ qfi2 = 0.0
+ qfi3 = 0.0   
+ if flagt==2  
+     sig = diagonalization.sigmax(n)
+ end
+ tint=0.1
+    f(u,p,t) = -im*(HMatrix + ((r*xi/2)*((1/2)*(1-cos(pi*t/tmax)))^1)*sig*cos(2*pi*t/tau))*u + im*u*(HMatrix + ((r*xi/2)*((1/2)*(1-cos(pi*t/tmax)))^1)*sig*cos(2*pi*t/tau)) + (Jp*u*(Jp') - ((Jp')*Jp*u + u*(Jp')*Jp)/2) + (Jq*u*(Jq') - ((Jq')*Jq*u + u*(Jq')*Jq)/2)
+ prob = ODEProblem(f,rho0,times)
+ sol = solve(prob,abstol = acc,Tsit5(),alg_hints = [:stiff], dt=0.1, saveat = tlist, save_everystep = false)
+ println("-> PDE solved ")      
+ open("output/fidelities_ramp.dat","w") do io
+ open("output/qfi_ramp.dat","w") do io2
+ open("output/negativity_ramp.dat","w") do io3
+ open("output/magic_ramp.dat","w") do io4        
+ #dt=1.0
+ dt = tau
+ for i in eachindex(sol.t)
+   println(sol.t[i])              
+   global rhot = sol.u[i]
+   rhot = (rhot + rhot')/2
+   fac = tr(rhot)
+   rhot = rhot/fac
+   if abs(sol.t[i]-tshot)<10^(-8)
+       global rhots = rhot
+   end      
+   ov1 = psi0t*rhot*psi0
+   ov2 = listvect*rhot*listvec
+   rhotqo =  wigner_eig.buildingrho(rhot,n)
+   neg  =  wigner_eig.wigner_negativities_rhot(n,rhot,L)
+   bnegf =  2*real(neg[2]) 
+   rhotpt = ptrace(rhotqo,2)
+   rho_q = ptrace(rhotqo,1)
+   qnegf = magic.discrete_wigner(rho_q)
+   qrobf = magic.robustness(rho_q)
+   qfi = Fisher.fishern2(rhotpt,n)
+   qfi2 = Fisher.fisherdisplacementp(rhotpt,n)
+   qfi3 = Fisher.fisherdisplacementx(rhotpt,n)
+   println(io,sol.t[i]," ",abs(ov1)," ",abs(ov2))
+   println(io2,sol.t[i]," ",real(qfi)," ",real(qfi2)," ",real(qfi3))
+   println(io3,sol.t[i]," ",bnegf)
+   println(io4,sol.t[i]," ",real(qnegf[2]), " ",real(qrobf))
  end
  end
  end
@@ -107,57 +222,61 @@ function rhot_floquetramp(psi0,tmax,n,om,r,lambda,delta,eta,psi,xi,tau,Nf,flagt,
  #psit = sol(tmax)
  #rhot = psit*transpose(conj(psit))
  #rhot = listvec*transpose(conj(listvec))
- return [rhot,abs2(ov2),real(neg)]
+ println("Final fidelity to target state : ", real(ov2))
+ println("Final QFI phase sensing (n)    : ", real(qfi))
+ println("Final QFI displacement (x)     : ", real(qfi2))
+ println("Final QFI displacement (p)     : ", real(qfi3))   
+ println("Final bosonic negativity       : ", bnegf)
+ println("Final qubit negativity         : ", real(qnegf[2]))
+ println("Final qubit magic              : ", real(qrobf))
+ return [rhots,abs2(ov2),real(bnegf)]
 end
 
-function rhot_adiabaticramp(psi0,tmax,n,om,r,lambda0,lambda1,delta,eta,psi,kf,acc,L)
+
+function rhot_adiabaticramp(psi0,tlist,n,om,r,lambda0,lambda1,delta,eta,psi,kf,acc,L,Jp,Jq)   
+ tmax = tlist[length(tlist)]
+ times = (tlist[1],tmax)   
  psi0t = transpose(conj(psi0))
+ rho0 = psi0*psi0t   
  HMatrix= diagonalization.hamiltonian(n,om,r,lambda1,delta,eta,psi)
  HMatrix0= diagonalization.hamiltonian(n,om,r,lambda0,delta,eta,psi)   
  evals=eigvals(HMatrix)
  evs=eigvecs(HMatrix)
  listvec=[evs[i,kf] for i in 1:length(evals)]
  listvect = transpose(conj(listvec))
- times=(0.0,tmax)
- tint=0.01
  sigmax =  diagonalization.sigmax(n)
  bc=FockBasis(n)
  ba=SpinBasis(1//2)
- #if lambda1>lambda0   
-   lam = lambda1 - lambda0
- #else
- #  lam = lambda0 - lambda1
- #end
- f(u,p,t) = -im*(HMatrix0 + (lam/2)*r*(1/2)*(1-cos(pi*t/tmax))*sigmax)*u
- prob = ODEProblem(f,psi0,times)
- sol = solve(prob,abstol = acc,Tsit5(),alg_hints = [:stiff],dt=tint)
- #dt=1.0
- ddt = 0.1
+ lam = lambda1 - lambda0
+    f(u,p,t) = -im*(HMatrix0 + (lam/2)*(r/2)*(1-cos(pi*t/tmax))*sigmax)*u + im*u*(HMatrix0 + (lam/2)*(r/2)*(1-cos(pi*t/tmax))*sigmax) + (Jp*u*(Jp') - ((Jp')*Jp*u + u*(Jp')*Jp)/2) + (Jq*u*(Jq') - ((Jq')*Jq*u + u*(Jq')*Jq)/2)
+ prob = ODEProblem(f,rho0,times)
+ sol = solve(prob,abstol = acc,Tsit5(),alg_hints = [:stiff],dt=0.1,saveat = tlist,
+             save_everystep = false)
+ ov2 = 0.0 
+ bnegf = 0.0 
+ robf = 0.0        
+ qnegf = 0.0        
+ println("-> PDE solved ")   
  open("output/fidelities_ramp.dat","w") do io
- open("output/qfi_ramp.dat","w") do io2
  open("output/negativity_ramp.dat","w") do io3
- open("output/magic_ramp.dat","w") do io4        
- for i in 0:round(Int, tmax/ddt) 
-   psit = sol(i*ddt)
-   #psit = exp(-i*dt*im*HMatrix)*psi0  
-   ov1 = psi0t*psit
-   ov2 = listvect*psit
-   #println("------------>",i*dt," ",abs2(ov1))
-   global rhot = psit*transpose(conj(psit))
+ open("output/magic_ramp.dat","w") do io4
+ for i in eachindex(sol.t)
+   println(sol.t[i])        
+   global rhot = sol.u[i]
+   ov1 = psi0t*rhot*psi0
+   ov2 = listvect*rhot*listvec  
    rhotqo =  wigner_eig.buildingrho(rhot,n)
-   neg  =  wigner_eig.wigner_rhot_neg(rhot,n,L)
+   neg  =  wigner_eig.wigner_negativities_rhot(n,rhot,L)
+   bnegf =  2*real(neg[2]) 
    rhotpt = ptrace(rhotqo,2)
-   rho_q = ptrace(rhotqo,1)  
+   rho_q = ptrace(rhotqo,1)
    wigner_q = magic.discrete_wigner(rho_q)
-   rb = magic.robustness(rho_q)  
-   qfi = Fisher.fishern2(rhotpt,n)
-   qfi2 = Fisher.fisherdisplacementp(rhotpt,n)
-   qfi3 = Fisher.fisherdisplacementx(rhotpt,n)
-   println(io,i*ddt," ",abs2(ov1)," ",abs2(ov2))
-   println(io2,i*ddt," ",real(qfi)," ",real(qfi2)," ",real(qfi3))
-   println(io3,i*ddt," ",real(neg))
-   println(io4,i*ddt," ",real(wigner_q[2])," ",real(rb))
- end
+   qnegf = real(wigner_q[2])  
+   rb = magic.robustness(rho_q)
+   robf = real(rb)  
+   println(io,sol.t[i]," ",real(ov1)," ",real(ov2))  
+   println(io3,sol.t[i]," ",bnegf)
+   println(io4,sol.t[i]," ",qnegf," ",robf)
  end
  end
  end
@@ -165,14 +284,14 @@ function rhot_adiabaticramp(psi0,tmax,n,om,r,lambda0,lambda1,delta,eta,psi,kf,ac
  println("--------------------------------------------------------------------------------------------------- ")
  println("-------------   Go to file output/fidelities_ramp.dat to see the fidelities            -------------")
  println("----------- Dynamics during the ramp                                                           -----")
- println("             The file contains F(t) from t=0 to ",tmax," in steps of ",ddt," time units             ")
+ println("             The file contains F(t) from t=0 to ",tmax," in steps of ",tlist[2]-tlist[1]," time units             ")
  println("   - Survival probavility                                                                           ")
  println("   - Fidelity between the state and the target state                                                ")   
  println("--------------------------------------------------------------------------------------------------- ")
  println("--------------------------------------------------------------------------------------------------- ")
  println("-------------   Go to file output/qfi_ramp.dat to see the QFI                          -------------")
  println("----------- Dynamics during the ramp                                                           -----")
- println("             The file contains QFI(rho(t),A) from t=0 to ",tmax," in steps of ",ddt," time units    ")
+ println("             The file contains QFI(rho(t),A) from t=0 to ",tmax," in steps of ",tlist[2]-tlist[1]," time units    ")
  println("   - Phase sensitivity QFI(rho(f),n)                                                                ")
  println("   - Displacement sensitivity QFI(rho(f),p)                                                         ")
  println("   - Displacement sensitivity QFI(rho(f),x)                                                         ")
@@ -180,11 +299,12 @@ function rhot_adiabaticramp(psi0,tmax,n,om,r,lambda0,lambda1,delta,eta,psi,kf,ac
  println("--------------------------------------------------------------------------------------------------- ")
  println("-------------   Go to file output/negativity_ramp.dat to see the negativity volume       -----------")
  println("----------- Dynamics during the ramp                                                           -----")
- println("             The file contains delta(t) from t=0 to ",tmax," in steps of ",ddt," time units         ")  
+ println("             The file contains delta(t) from t=0 to ",tmax," in steps of ",tlist[2]-tlist[1]," time units         ")  
  println("--------------------------------------------------------------------------------------------------- ")
- #psit = sol(tmax)
- #rhot = psit*transpose(conj(psit))
- #rhot = listvec*transpose(conj(listvec))
+ println("Final fidelity to target state : ", real(ov2))
+ println("Final bosonic negativity       : ", bnegf)
+ println("Final qubit negativity         : ", qnegf)
+ println("Final qubit magic              : ", robf)      
  return rhot
 end
 
