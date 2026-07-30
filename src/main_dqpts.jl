@@ -11,24 +11,25 @@ using .wigner_eig
 
 n=60              # Size of the Fock basis
 om=1.0            # Bosonic frequency
-r=20.0            # Qubit frequency
+r=50.0            # Qubit frequency
 lambda0=0.0       # Initial Carrier parameter
 delta=0.0         # Parameter (-1,0,1) for (AJC,QRM,JC)
 g0=0.0            # Initial coupling
 psi=0.0           # Phase of the Hamiltonian
-g1=1.55            # Final coupling
+g1=1.25           # Final coupling
 lambda1=0.0       # Final Carrier parameter
 nsubint=1000      # Subintervales for integrating the survival probability
 nsubint2=400      # Subintervals of real time for estimate the position of zeros
 nsubint3=30       # Subintervals of imaginary time for estimate the position of zeros
-tint =0.05        # time interval for the survival amplitude
+tint =0.1         # time interval for the survival amplitude
 tmax= 10.0         # maximal time for the survival amplitude
 timax=0.5         # maximal imaginary time
-tshot=10.0           # time for the Wigner function
+tshot=7.55        # time for the Wigner function
 alpha=1.0         # Parameter of the linear combination for the initial state 
 ph=0.0            # Phase of the initial state
 L=10.0             # Size of the phase space
-flag1=0           # (1) for the position of the zeros in the complex plane (0) for skip
+flag1=1           # (1) for the position of the zeros in the complex plane (0) for skip
+tp = 0.0          # for generalized survival amplitude
 
 # data for cuts along the angles
 ncuts=50                
@@ -56,14 +57,17 @@ wigt = DQPT.wigner_rhot(phi0,hamf,L,r,n,tshot)
 wigcuts = DQPT.wigner_rhot(phi0,hamf,L,r,n,tshot,"output/Wignercuts_quench.dat",thetal)
 
 # Obtaining survival amplitude from 0 - tmax
-ctsa = DQPT.amplitud(phi0,tint,tmax,timax,1.0,n,om,r,lambda1,delta,g1,psi,L,thetal)
+ctsa = DQPT.amplitud(phi0,tint,tmax,timax,tp,1.0,n,om,r,lambda1,delta,g1,psi,L,thetal)
+
+# Obtaining correlation of negativities from 0 - tmax
+negcor = DQPT.autocorrelationneg(phi0,tint,tmax,timax,1.0,n,om,r,lambda1,delta,g1,psi,L)
 
 
 ovl = DQPT.overlapdqpt(phi0,hamf,n)
 println("Overlap Done")
-rr = DQPT.Nzeros(phi0,tcirc,1.0,n,om,r,lambda1,delta,g1,psi,nsubint)
-rrr = DQPT.Nzeros(phi0,tcircr,1.0,n,om,r,lambda1,delta,g1,psi,nsubint)
-rrl = DQPT.Nzeros(phi0,tcircl,1.0,n,om,r,lambda1,delta,g1,psi,nsubint)
+rr = DQPT.Nzeros(phi0,tcirc,tp,1.0,n,om,r,lambda1,delta,g1,psi,nsubint)
+rrr = DQPT.Nzeros(phi0,tcircr,tp,1.0,n,om,r,lambda1,delta,g1,psi,nsubint)
+rrl = DQPT.Nzeros(phi0,tcircl,tp,1.0,n,om,r,lambda1,delta,g1,psi,nsubint)
 println("Number of zeros within the full circuit: ",rr)
 println("Number of zeros on the right of the real axis: ",rrr)
 println("Number of zeros on the left  of the real axis: ",rrl)
@@ -71,7 +75,7 @@ println("---------------------------------------------------------")
 
 if flag1==1
  println("-Calculating the position of the zeros in the complex plane-")
- pos = DQPT.PositionsZeros(phi0,tcirc,1.0,n,om,r,lambda1,delta,g1,psi,nsubint2,nsubint3,name)
+ pos = DQPT.PositionsZeros(phi0,tcirc,tp,1.0,n,om,r,lambda1,delta,g1,psi,nsubint2,nsubint3,name)
  println("Number of zeros found in the contour rectangle: ",pos)
  println("Their positions in the complex plane can be found in file position_zeros.dat")
 end

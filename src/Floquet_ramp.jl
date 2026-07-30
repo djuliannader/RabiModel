@@ -15,16 +15,16 @@ delta=0.0          # Parameter (-1,0,1) for (AJC,QRM,JC)
 g=(1/2^(1/2))      # Coupling
 phi=0.0            # Phase 
 xi=0.05            # Modulation amplitude
-tau = 4.29          # Modulation period
+tau = 4.4          # Modulation period
 Trcycles=80        # Number of cycles for ramp duration Tr
 Tscycles=80        # Number of cycles for the shot of the Wigner function  
-L=10.0              # Size of the phase space
+L=10.0             # Size of the phase space
 k=1                # Initial eigenstate of H0
 Nf = 1000          # Number of subintervals for Trotterization
 flagt = 1          # Flag for the time-dependent term (1) for sigma_z (2) for sigma_x
 kf = 1             # Target Floquet state
 acc = 1e-15        # Accuracy for the differential equation
-kb  = 0.001        # Bosonic loss
+kb  = 0.00         # Bosonic loss
 kq  = 0.0          # double photon loss
 
 
@@ -39,7 +39,7 @@ sigmax = (1/2)*diagonalization.sigmax(n)
 sigmay = (1/2)*diagonalization.sigmay(n)
 sigmam = (sigmax-im*sigmay)/2
 Jq = (kq)^(1/2)*sigmam # qubit relaxation
-if kb<10^(-6)
+if kb<10^(-6) && kq < 1e-6
   rhot = adiabatic_ramp.rhot_floquetramp(psi0,Trcycles,Tscycles,n,om,r,lambda,delta,g,phi,xi,tau,Nf,flagt,kf,acc,L)
 else
   rhot = adiabatic_ramp.rhot_floquetramp2(psi0,Trcycles,Tscycles,n,om,r,lambda,delta,g,phi,xi,tau,Nf,flagt,kf,acc,L,Jb,Jq)
@@ -51,6 +51,6 @@ diswigner = adiabatic_ramp.wignerrhot_discrete(rhot[1],n)
 
 #----------  Printing results---------------------------
 println("Overlap with the target state at the end of the ramp <F_k|psi(Tramp)>: ",rhot[2])
-println("Negativity at the end of the ramp   delta(Tramp): ",rhot[3])
+println("Negativity at the end of the ramp   delta(Tramp): ",2*rhot[3][2])
 
 end

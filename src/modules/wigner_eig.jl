@@ -68,6 +68,7 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   xpm=expect(xop*pop,rhopt)
   pxm=expect(pop*xop,rhopt)
   nexp=expect(adop*aop,rhopt)
+  cov=expect(xop*pop+pop*xop,rhopt)  
   println("a) Bosonic mode ")   
   println("Central moments of the ",k,"-th stationary state")
   println("  x 1 moment (normalized): ",x1m/r^(1/2))
@@ -78,7 +79,8 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   println("  p 3 moment : ",p3m-3*p2m*p1m+3*p1m^3-p1m^3)
   println("  x 4 moment : ",x4m-4*x3m*x1m+6*x2m*x1m^2-4*x1m^4+x1m^4)
   println("  p 4 moment : ",p4m-4*p3m*p1m+6*p2m*p1m^2-4*p1m^4+p1m^4)
-  println("Mean photon number n : ",nexp)
+  println(" Covariance <xp+px>  : ",cov)  
+  println("Mean photon number <n> : ",nexp)
   ncuts=10                
   thetal = [i*(pi)/ncuts for i in 0:(ncuts-1)]
   vars = wigner_rhot_variation(rhor,Nmax,r,thetal)
@@ -358,28 +360,32 @@ end
    evsham = eigvecs(ham)
    listovlp=[]
    listovlpn=[]
-   for jk in 1:kl
-     klstate=[evsham[i,jk] for i in 1:2*Nmax]
-     fockstate=[0.0 for i in 1:2*Nmax]
-     fockstate[jk]=1
-     ovlp= abs2(transpose(conj(klstate))*listvec)
-     ovlpn= abs2(transpose(conj(fockstate))*listvec)
-     append!(listovlp,ovlp)
-     append!(listovlpn,ovlpn)
-   end
+   rho = listvec*(listvec')
    phi = buildingstate(listvec,Nmax)
-   rho = dm(phi)
-   rhopt = ptrace(rho,2)
-   rho_q = ptrace(rho,1)  
+   rhoqo = dm(phi)
+   rhopt = ptrace(rhoqo,2)
+   rho_q = ptrace(rhoqo,1)  
    pur=tr(rhopt^2)
    QQ = wigner(rhopt, x, x)
    QQs=transpose(QQ)
    tick_params(labelsize=20)
    xticks([-1,0,1])
    yticks([-1,0,1])
+   for jk in 1:kl
+     klstate=[evsham[i,jk] for i in 1:2*Nmax]
+     fockstatel=[0.0 for i in 1:2*Nmax]
+     fockstatel[2*jk-1]=1
+     phifock = fockstate(bc,jk-1)
+     ovlp= abs2(transpose(conj(klstate))*listvec)
+     #ovlpn= abs2(transpose(conj(fockstatel))*listvec)
+     ovlpn = expect(rhopt,phifock)
+     append!(listovlp,ovlp)
+     append!(listovlpn,ovlpn)
+   end  
    pcolormesh(xm, xm, QQs, cmap=:bwr,vmin=-0.1,vmax=0.1)
    global rhopti=rhopt
-   den=hcubature(Qexabs,(-L,-L),(L,L),rtol=0.001)
+   #den=hcubature(Qexabs,(-L,-L),(L,L),rtol=0.001)
+   nneg=wigner_negativities_rhot(Nmax,rho,L)      
    #wentropy=hcubature(QWehrl,(-L,-L),(L,L))
    bc=FockBasis(Nmax)
    adop=create(bc)
@@ -395,6 +401,7 @@ end
    p3m=expect(pop^3,rhopt)
    p4m=expect(pop^4,rhopt)
    nexp=expect(adop*aop,rhopt)
+   cov=expect(xop*pop+pop*xop,rhopt)  
    ham0=diagonalization.hamiltonian(Nmax,om,r,lambda,delta,eta,psi)
    eigvecf0=[evs[j,vecordered[k]] for j in 1:2*(Nmax+1)]
    eigvecf0_t = transpose(eigvecf0)
@@ -412,9 +419,11 @@ end
    println("  p 3 moment : ",p3m-3*p2m*p1m+3*p1m^3-p1m^3)
    println("  x 4 moment : ",x4m-4*x3m*x1m+6*x2m*x1m^2-4*x1m^4+x1m^4)
    println("  p 4 moment : ",p4m-4*p3m*p1m+6*p2m*p1m^2-4*p1m^4+p1m^4)
+   println(" Covariance <xp+px>  : ",cov)    
    println("Mean photon number n : ",nexp)
-   println("Bosonic Negativity   delta(rho_b)    : ",real(den[1]-1))
+   println("Bosonic Negativity   delta(rho_b)    : ",real(2*nneg[2]))  
    println("Purity of the Wigner function        : ",real(pur))
+   println(" Root-mean-square Fourier radius of the Wigner function (chi)  : ",real(nneg[3]))  
    un = (x2m-x1m^2)^(1/2)*(p2m-p1m^2)^(1/2)
    println("Uncertainity : ",un)
    qfi = Fisher.fishern2(rhopt,Nmax)
@@ -457,7 +466,7 @@ end
    #    nk = ik
    #  end
    #end
-   return [exp_val,real(den[1]-1),pur,listovlp,listovlpn] 
+   return [exp_val,real(nneg[1]),pur,listovlp,listovlpn] 
  end
 
 function wigner_evolt_driven(Nmax,om,r,lambda,delta,eta,psi,nu,chi,Nf,L,phi0,pf,flagt)
@@ -535,20 +544,29 @@ end
 
 function wigner_negativities_rhot(Nmax,rhot,L)
   rhot_qo = buildingrho(rhot,Nmax)  
-  rhot_pt = ptrace(rhot_qo,2)  
+  rhot_pt = ptrace(rhot_qo,2)
+  xpint = 0.025  
   x = [-L:0.025:L;]
-    sumwn = 0.0
-    sumwvol = 0.0
+  sumwn = 0.0
+  sumwvol = 0.0
+  sumchi  = 0.0
+  sumdchi  = 0.0  
   for ix in x
     for ip in x
         winst = wigner(rhot_pt, ix, ip)
-        sumwvol = sumwvol + (0.025)^2*real(winst)
+        winstpx = wigner(rhot_pt, ix+xpint, ip)
+        winstpp = wigner(rhot_pt, ix, ip+xpint)
+        sumwvol = sumwvol + xpint^2*real(winst)
+        dwdx = (winstpx - winst)/xpint 
+        dwdp = (winstpp - winst)/xpint    
         if real(winst)<0
-                sumwn = sumwn + (0.025)^2*real(winst)    
-        end    
+            sumwn = sumwn + xpint^2*real(winst)
+            sumchi += xpint^2*(dwdx^2 + dwdp^2)
+        end
+        sumdchi += 4*pi^2*xpint^2*real(winst)^2
     end
   end 
-  return [sumwvol,abs(sumwn)]
+    return [sumwvol,abs(sumwn),real(sumchi/sumdchi)]
 end
 
 
@@ -682,6 +700,33 @@ function wigner_rhot(rho,L,r,Nmax)
   println("See output/wigner_rhot.png for the Wigner function of the state rho(x,p,t)")
   println("The data for figure output/wigner_rhot.png can be found in file output/wigner_rhot_data.dat")
   open("output/wigner_rhot_data.dat","w") do io
+  for i in x
+    for j in x
+      wig = wigner(rhopt, i, j)
+      println(io,i/r^(1/2)," ",j/r^(1/2)," ",round(wig,digits=8))
+    end
+  end
+  end
+  return "done"
+end
+
+function wigner_steady(rho,L,r,Nmax)
+  rhoqo = buildingrho(rho,Nmax)
+  rhopt = ptrace(rhoqo,2)
+  x = [-L:0.05:L;]
+  xm = x/r^(1/2)
+  QQ = wigner(rhopt, x, x)
+  QQs = transpose(QQ)
+  tick_params(labelsize=20)
+  #xy=xycircle((1/(2*r)^(1/2)),20)
+  xy=xycircle(0.1,20)
+  scatter([0],[0],s=2,color="black")
+  pcolormesh(xm, xm, QQs, cmap=:bwr,vmin=-0.1,vmax=0.1)
+  tight_layout()
+  savefig("output/wigner_steady.png")  
+  println("See output/wigner_steady.png for the Wigner function of the steady state")
+  println("The data for figure output/wigner_steady.png can be found in file output/wigner_steady_data.dat")
+  open("output/wigner_steady_data.dat","w") do io
   for i in x
     for j in x
       wig = wigner(rhopt, i, j)

@@ -6,10 +6,12 @@ include("diagonalization.jl")
 include("wigner_eig.jl")
 include("Fisher.jl")
 include("troterization.jl")
+include("stat.jl")
 using .diagonalization
 using .Fisher
 using .wigner_eig
 using .troterization
+using .stat
 export amplitud
 export initialstatequench
 export overlapdqpt
@@ -56,7 +58,7 @@ end
 
 
 
-function amplitud(psi0::Vector{Complex{Float64}},tint::Float64,tmax::Float64,timax::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi,L,thetal)
+function amplitud(psi0::Vector{Complex{Float64}},tint::Float64,tmax::Float64,timax::Float64,ti::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi,L,thetal)
 	 tinti=0.01
 	 nt=trunc(Int,tmax/tint)
 	 nt2=2*timax/tinti
@@ -66,12 +68,11 @@ function amplitud(psi0::Vector{Complex{Float64}},tint::Float64,tmax::Float64,tim
 	 eigvecs1=eigvecs(HMatrix)
 	 eigvals1=eigvals(HMatrix)
 	 #println("ev1:",eigvals1[1])
-	 # adjunt initial state
-         psi0a=Array{Complex{Float64}}(undef,1,length(psi0))
-	 for k in 1:length(psi0)
-	     psi0a[1,k]=conj(psi0[k])
-         end
-         rho0 = psi0*psi0a
+         # adjunt initial state
+         psiin  = exp(-im*HMatrix*ti/hbar)*psi0
+         psiina = psiin'
+         psi0a = psi0'
+         rho0  = psi0*psi0a
 	 open("output/survival_probability.dat","w") do io
 	 open("output/negativities_quench.dat","w") do io2
 	 open("output/qfi_quench.dat","w") do io3
@@ -113,7 +114,7 @@ function amplitud(psi0::Vector{Complex{Float64}},tint::Float64,tmax::Float64,tim
                      thetacmax = thetal[i]
                  end 
              end
- 	     sp=psi0a*psi0t
+ 	     sp=psiina*psi0t
  	     spf=sp[1]
  	     println(io,t," ",round(abs2(spf),digits=16))
 	     println(io2,t," ",(join(neg, " ")))
@@ -159,7 +160,7 @@ function amplitud(psi0::Vector{Complex{Float64}},tint::Float64,tmax::Float64,tim
 	   for j in 1:nt2+1
  	     evol=exp(-im*HMatrix*(t+tim*im)/hbar)
 	     psi0t=evol*psi0
- 	     sp=psi0a*psi0t
+ 	     sp=psiina*psi0t
  	     spf=sp[1]
  	     println(io,t," ",tim," ",round(real(spf),digits=16)," ", round(imag(spf),digits=16))
 	     tim=tim+tinti	     
@@ -261,7 +262,7 @@ function amplitud2(psi0::Vector{Complex{Float64}},ntmax::Integer,hbar::Float64,N
 
 
 
-function Nzeros(psi0::Vector{Complex{Float64}},tcirc::Vector{Complex{Float64}},hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi,nsubint)
+function Nzeros(psi0::Vector{Complex{Float64}},tcirc::Vector{Complex{Float64}},tin::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi,nsubint)
 	 # building Hamiltonian
          HMatrix= diagonalization.hamiltonian(Nmax,om,r,lambda,delta,eta,psi)
 	 evf=eigvecs(HMatrix)
@@ -289,8 +290,8 @@ function Nzeros(psi0::Vector{Complex{Float64}},tcirc::Vector{Complex{Float64}},h
 #	 segment 1 (a lo largo del eje imaginario)
          sum1 = 0.0 + 0.0*im
          for it in 1:nint
-            list1 = [coef2[k]*evals[k]*exp(-im*tinst*evals[k]) for k in 1:length(psi0)]
-	    list2 = [coef2[k]*exp(-im*tinst*evals[k]) for k in 1:length(psi0)]
+            list1 = [coef2[k]*evals[k]*exp(-im*(tinst-tin)*evals[k]) for k in 1:length(psi0)]
+	    list2 = [coef2[k]*exp(-im*(tinst-tin)*evals[k]) for k in 1:length(psi0)]
             fz = (1/sum(list2))*(-im)*sum(list1)
 	    sum1 = sum1 + im*fz*tint1 
             tinst = tinst + tint1*im
@@ -299,8 +300,8 @@ function Nzeros(psi0::Vector{Complex{Float64}},tcirc::Vector{Complex{Float64}},h
 #	 segment 2 (a lo largo del eje real)
          sum2 = 0.0 + 0.0*im
          for it in 1:nint
-            list1 = [coef2[k]*evals[k]*exp(-im*tinst*evals[k]) for k in 1:length(psi0)]
-	    list2 = [coef2[k]*exp(-im*tinst*evals[k]) for k in 1:length(psi0)]
+            list1 = [coef2[k]*evals[k]*exp(-im*(tinst-tin)*evals[k]) for k in 1:length(psi0)]
+	    list2 = [coef2[k]*exp(-im*(tinst-tin)*evals[k]) for k in 1:length(psi0)]
             fz = (1/sum(list2))*(-im)*sum(list1)
 	    sum2 = sum2 + fz*tint2 
             tinst = tinst + tint2
@@ -309,8 +310,8 @@ function Nzeros(psi0::Vector{Complex{Float64}},tcirc::Vector{Complex{Float64}},h
 #	 segment 3 (a lo largo del eje imaginario)
          sum3 = 0.0 + 0.0*im
          for it in 1:nint
-            list1 = [coef2[k]*evals[k]*exp(-im*tinst*evals[k]) for k in 1:length(psi0)]
-	    list2 = [coef2[k]*exp(-im*tinst*evals[k]) for k in 1:length(psi0)]
+            list1 = [coef2[k]*evals[k]*exp(-im*(tinst-tin)*evals[k]) for k in 1:length(psi0)]
+	    list2 = [coef2[k]*exp(-im*(tinst-tin)*evals[k]) for k in 1:length(psi0)]
             fz = (1/sum(list2))*(-im)*sum(list1)
 	    sum3 = sum3 - fz*tint3*im 
             tinst = tinst - tint3*im
@@ -319,8 +320,8 @@ function Nzeros(psi0::Vector{Complex{Float64}},tcirc::Vector{Complex{Float64}},h
 #	 segment 4 (a lo largo del eje real)
          sum4 = 0.0 + 0.0*im
          for it in 1:nint
-            list1 = [coef2[k]*evals[k]*exp(-im*tinst*evals[k]) for k in 1:length(psi0)]
-	    list2 = [coef2[k]*exp(-im*tinst*evals[k]) for k in 1:length(psi0)]
+            list1 = [coef2[k]*evals[k]*exp(-im*(tinst-tin)*evals[k]) for k in 1:length(psi0)]
+	    list2 = [coef2[k]*exp(-im*(tinst-tin)*evals[k]) for k in 1:length(psi0)]
             fz = (1/sum(list2))*(-im)*sum(list1)
 	    sum4 =  sum4 - fz*tint4 
             tinst = tinst - tint4
@@ -331,16 +332,13 @@ function Nzeros(psi0::Vector{Complex{Float64}},tcirc::Vector{Complex{Float64}},h
          return -1.0*sumt/(2*pi) 
 	 end
 
-function Nzeros2(psi0::Vector{Complex{Float64}},tcirc::Vector{Complex{Float64}},hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi,nsubint)
+function Nzeros2(psi0::Vector{Complex{Float64}},tcirc::Vector{Complex{Float64}},tin::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi,nsubint)
 	 # building Hamiltonian
          HMatrix= diagonalization.hamiltonian(Nmax,om,r,lambda,delta,eta,psi)
 	 evf=eigvecs(HMatrix)
 	 evals = eigvals(HMatrix)
          # adjunt initial state
-	 psi0a=Array{Complex{Float64}}(undef,1,length(psi0))
-	 for k in 1:length(psi0)
-	     psi0a[1,k]=conj(psi0[k])
-         end
+	 psi0a=psi0'
 	 coef2=[]
 	 for k in 1:length(psi0)
 	   listevf= [evf[i,k] for i in 1:length(psi0)]
@@ -359,8 +357,8 @@ function Nzeros2(psi0::Vector{Complex{Float64}},tcirc::Vector{Complex{Float64}},
 #	 segment 1 (a lo largo del eje imaginario)
          sum1 = 0.0 + 0.0*im
          for it in 1:nint
-            list1 = [coef2[k]*evals[k]*exp(-im*tinst*evals[k]) for k in 1:length(psi0)]
-	    list2 = [coef2[k]*exp(-im*tinst*evals[k]) for k in 1:length(psi0)]
+            list1 = [coef2[k]*evals[k]*exp(-im*(tinst-tin)*evals[k]) for k in 1:length(psi0)]
+	    list2 = [coef2[k]*exp(-im*(tinst-tin)*evals[k]) for k in 1:length(psi0)]
             fz = (1/sum(list2))*(-im)*sum(list1)
 	    sum1 = sum1 + im*fz*tint1 
             tinst = tinst + tint1*im
@@ -369,8 +367,8 @@ function Nzeros2(psi0::Vector{Complex{Float64}},tcirc::Vector{Complex{Float64}},
 #	 segment 2 (a lo largo del eje real)
          sum2 = 0.0 + 0.0*im
          for it in 1:nint
-            list1 = [coef2[k]*evals[k]*exp(-im*tinst*evals[k]) for k in 1:length(psi0)]
-	    list2 = [coef2[k]*exp(-im*tinst*evals[k]) for k in 1:length(psi0)]
+            list1 = [coef2[k]*evals[k]*exp(-im*(tinst-tin)*evals[k]) for k in 1:length(psi0)]
+	    list2 = [coef2[k]*exp(-im*(tinst-tin)*evals[k]) for k in 1:length(psi0)]
             fz = (1/sum(list2))*(-im)*sum(list1)
 	    sum2 = sum2 + fz*tint2 
             tinst = tinst + tint2
@@ -379,8 +377,8 @@ function Nzeros2(psi0::Vector{Complex{Float64}},tcirc::Vector{Complex{Float64}},
 #	 segment 3 (a lo largo del eje imaginario)
          sum3 = 0.0 + 0.0*im
          for it in 1:nint
-            list1 = [coef2[k]*evals[k]*exp(-im*tinst*evals[k]) for k in 1:length(psi0)]
-	    list2 = [coef2[k]*exp(-im*tinst*evals[k]) for k in 1:length(psi0)]
+            list1 = [coef2[k]*evals[k]*exp(-im*(tinst-tin)*evals[k]) for k in 1:length(psi0)]
+	    list2 = [coef2[k]*exp(-im*(tinst-tin)*evals[k]) for k in 1:length(psi0)]
             fz = (1/sum(list2))*(-im)*sum(list1)
 	    sum3 = sum3 - fz*tint3*im 
             tinst = tinst - tint3*im
@@ -389,8 +387,8 @@ function Nzeros2(psi0::Vector{Complex{Float64}},tcirc::Vector{Complex{Float64}},
 #	 segment 4 (a lo largo del eje real)
          sum4 = 0.0 + 0.0*im
          for it in 1:nint
-            list1 = [coef2[k]*evals[k]*exp(-im*tinst*evals[k]) for k in 1:length(psi0)]
-	    list2 = [coef2[k]*exp(-im*tinst*evals[k]) for k in 1:length(psi0)]
+            list1 = [coef2[k]*evals[k]*exp(-im*(tinst-tin)*evals[k]) for k in 1:length(psi0)]
+	    list2 = [coef2[k]*exp(-im*(tinst-tin)*evals[k]) for k in 1:length(psi0)]
             fz = (1/sum(list2))*(-im)*sum(list1)
 	    sum4 =  sum4 - fz*tint4 
             tinst = tinst - tint4
@@ -402,7 +400,7 @@ function Nzeros2(psi0::Vector{Complex{Float64}},tcirc::Vector{Complex{Float64}},
 	 end
 
 
-function PositionsZeros(psi0::Vector{Complex{Float64}},tcirc::Vector{Complex{Float64}},hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi,nsubint,nsubint2,name)
+function PositionsZeros(psi0::Vector{Complex{Float64}},tcirc::Vector{Complex{Float64}},ti::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi,nsubint,nsubint2,name)
          deltat1 = abs((imag(tcirc[2])-imag(tcirc[1]))/nsubint)
 	 deltat2 = abs((real(tcirc[3])-real(tcirc[2]))/nsubint)
 	 tcircint = [tcirc[1],tcirc[1]+deltat1*im,tcirc[1]+deltat1*im +deltat2, tcirc[1]+deltat2]
@@ -410,7 +408,7 @@ function PositionsZeros(psi0::Vector{Complex{Float64}},tcirc::Vector{Complex{Flo
 	 open(name,"w") do io
 	 for i in 1:(nsubint)
 	   for j in 1:(nsubint)
-	      zero = Nzeros2(psi0,tcircint,1.0,Nmax,om,r,lambda,delta,eta,psi,nsubint2)
+	      zero = Nzeros2(psi0,tcircint,ti,1.0,Nmax,om,r,lambda,delta,eta,psi,nsubint2)
 	      if round(Int64, zero)>0
 	       counter = counter + 1
 	       println(counter," ",(imag(tcircint[1])+imag(tcircint[2]))/2.0," ",(real(tcircint[1])+real(tcircint[3]))/2.0)
@@ -444,6 +442,47 @@ function wigner_rhot(psi0,ham,L,r,Nmax,t,name,thetalist)
  wig = wigner_eig.wigner_rho_cuts(rhot,L,r,Nmax,name,thetalist)
  return "done"
 end
+
+
+function autocorrelationneg(psi0::Vector{Complex{Float64}},tint::Float64,tmax::Float64,timax::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi,L)
+         #------------------------------------------------------
+         times = [i for i in 0:tint:tmax]
+	 # building Hamiltonian
+         HMatrix= diagonalization.hamiltonian(Nmax,om,r,lambda,delta,eta,psi)
+	 eigvecs1=eigvecs(HMatrix)
+	 eigvals1=eigvals(HMatrix)
+	 #println("ev1:",eigvals1[1])
+         # adjunt initial state
+         fb = FockBasis(Nmax)
+         psi0a=Array{Complex{Float64}}(undef,1,length(psi0))
+	 for k in 1:length(psi0)
+	     psi0a[1,k]=conj(psi0[k])
+         end
+         rho0 =  psi0*(psi0')
+         rho0_qo = wigner_eig.buildingrho(rho0,Nmax)
+         rho0_pt = ptrace(rho0_qo,2)
+         #------------------------------------------------------------
+         open("output/autocorrelationneg_quench.dat","w") do io
+ 	 for i in 1:length(times)
+             ti=times[i]
+             println(ti)
+             psiti=exp(-im*HMatrix*ti/hbar)*psi0
+             psitiad=psiti'
+             rhoti =  psiti*(psiti')
+             for j in 1:i
+                 tj = times[j]    
+                 psitj=exp(-im*HMatrix*tj/hbar)*psi0
+                 rhotj =  psitj*(psitj')
+                 sp = abs2(psitiad*psitj)
+	         cc = stat.negativitycorr(rhoti,rhotj,Nmax,L,r)
+                 println(io,ti," ",tj," ",(join(cc, " "))," ",sp)
+                 println(io,tj," ",ti," ",(join(cc, " "))," ",sp)
+ 	    end
+	 end
+         end    
+    return "Done"
+end
+
 
 
 

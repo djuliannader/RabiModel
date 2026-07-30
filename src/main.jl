@@ -221,7 +221,7 @@ if flag1==2  # Dynamics
   if flag2==1 # static Hamiltonian
     println("---- Dynamics of the time independent AQRM initiates ----")
     mensaje1=dynamics.survivalp(cs0,tmax,1.0,N,om,r,lambda,delta,eta,psi)
-    av=dynamics.fotoc(cs0,tmax,1.0,N,om,r,lambda,delta,eta,psi,L)
+    av=dynamics.fotoc(cs0,tmax,1.0,N,om,r,lambda,delta,eta,psi,L,kk)
     #wpsit = wigner_eig.wigner_evolt(N,om,r,lambda,delta,eta,psi,L,cs0,tmax)
     #println("Negativity of the state (at time=",tmax,"): ",wpsit[1])
     println("------------ Averages ---------------")

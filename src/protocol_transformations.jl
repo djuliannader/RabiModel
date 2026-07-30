@@ -41,7 +41,7 @@ pop = (im/2^(1/2))*(adop-aop)
 Hint1 = pop*sigx
 Hint2 = xop*sigy
 g=1.2
-Hint3 = adop*adop + (r/2)*sigz + (g/2)*r^(1/2)*(adop+aop)*sigx 
+
 
 
 
@@ -53,6 +53,26 @@ t2 = 0.5
 rhot2 = transformations.rhodetcat(Hint2,rhot1,t2,n,acc)
 
 
-rhotqo = wigner_eig.wigner_rhot(rhot2,L,r,n)
+t3 = 4.0
+g = 1.45
+Hqrm  = adop*aop + (r/2)*sigz + g*r^(1/2)*(adop+aop)*(sigx/2) 
+rhot3 = transformations.rhodetcat(Hqrm,rhot2,t3,n,acc)
+
+wig = wigner_eig.wigner_rhot(rhot3,L,r,n)
+
+
+#glist = collect(1.2:0.01:1.8)
+#for g in glist
+#  Hqrm  = adop*aop + (r/2)*sigz + g*r^(1/2)*(adop+aop)*(sigx/2) 
+#  evec = eigvecs(Hqrm)
+#  ev =   eigvals(Hqrm)
+#  psi = [evec[i,1] for i in 1:length(ev)]
+#  psiad = psi'
+#  rhoqrm = psi*psiad
+#  ov = tr(rhoqrm*rhot2)
+#  println("g:",g," ov:", ov)
+#end
+
+
 
 end

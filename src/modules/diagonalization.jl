@@ -160,14 +160,6 @@ function Lindbladian(Ham,jpar,jop)
     return L
 end
 
-function lindblandDynamics(L, rho0, t)
-    Nmax = size(rho0, 1)
-    rho0vec = vec(rho0)
-    rhotvec = exp(Matrix(L) * t) * rho0vec
-    rhot = reshape(rhotvec, Nmax, Nmax)
-    rhot = 0.5 * (rhot + rhot')
-    rhot = rhot / real(tr(rhot))
-    return rhot
-end
+
 
 end

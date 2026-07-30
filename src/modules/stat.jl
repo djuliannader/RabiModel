@@ -8,6 +8,7 @@ using .diagonalization
 using .troterization
 
 
+
 function analysisH(N,om,r,lambda,delta,nn,nu,chi,eta,psi,flagt)
    eigvs=diagonalization.diagonalize(N,om,r,lambda,delta,eta,psi)
    #println("flag",eigvs[1][1],eigvs[1][2])
@@ -273,6 +274,101 @@ function purity(Nmax,om,r,lambda,delta,eta,psi)
     end
     evv=eigvals(ham)
    return [purity,entropy,evv] 
- end
+end
+
+
+function buildingstate(lista,nn)
+bc=FockBasis(nn)
+ba=SpinBasis(1//2)
+psif= 0.0*fockstate(bc, 0) ⊗ spindown(ba)
+for i in 0:(nn-1)
+    psidown = fockstate(bc, i) ⊗ spindown(ba)
+    psiup   = fockstate(bc, i) ⊗ spinup(ba)
+    psif = psif + lista[2*i+2]*psiup + lista[2*i+2-1]*psidown 
+end
+return psif
+end
+
+function buildingrho(rhoi,Nmax)
+rho_ev = eigvals(rhoi)
+rho_evecs = eigvecs(rhoi)
+bc=FockBasis(Nmax)
+ba=SpinBasis(1//2)
+psi0= 0.0*fockstate(bc, 0) ⊗ spindown(ba)
+rho = dm(psi0)  
+for i in 1:length(rho_ev)
+   listrho = [rho_evecs[j,i] for j in 1:length(rho_ev)]
+   psiinst = buildingstate(listrho,Nmax)
+   rhoinst = dm(psiinst)
+   #println(rhoinst)
+   rho = rho + rho_ev[i]*rhoinst
+   #println(rho)
+end
+return rho
+end
+
+
+function negativitycorr(rho1,rho2,Nmax,L,r)
+    xpint=0.05
+    x = [-L:xpint:L;]
+    rho1_qo = buildingrho(rho1,Nmax)
+    rho1_pt = ptrace(rho1_qo,2)
+    rho2_qo = buildingrho(rho2,Nmax)
+    rho2_pt = ptrace(rho2_qo,2)
+    sumwc   = 0.0
+    sumwn1  = 0.0
+    sumwn2  = 0.0
+    sumwncor = 0.0
+    sumwncorl = 0.0
+    sumwncorl = 0.0
+    sumIp  = 0.0
+    sumIn  = 0.0
+    sumwnd   = 0.0
+    sumwndl  = 0.0
+    sumwp1  = 0.0
+    sumwp2  = 0.0
+    sumwpcor = 0.0
+    for ix in x
+        for ip in x
+           w1  = wigner(rho1_pt, ix, ip)
+           w2 = wigner(rho2_pt, ix, ip)
+           sumwc =  sumwc + xpint^2*real(w1)*real(w2)
+           if real(w1)<0
+               sumwn1 = sumwn1 + xpint^2*real(w1)^2
+           else
+               sumwp1 = sumwp1 + xpint^2*real(w1)^2
+           end
+           if real(w2)<0
+               sumwn2 = sumwn2 + xpint^2*real(w2)^2
+           else
+               sumwp2 = sumwp2 + xpint^2*real(w2)^2
+           end
+           if real(w1) < -10^(-3) && real(w2) < -10^(-3)
+               sumwncor = sumwncor + xpint^2*(real(w1)*real(w2))
+               sumwnd   = sumwnd  + xpint^2*abs2(real(w1)-real(w2))
+               if (ix^2/r+ip^2/r)<(1/r)
+                   sumwncorl = sumwncorl + xpint^2*(real(w1)*real(w2))
+                   sumwndl   = sumwndl   + xpint^2*abs2(real(w1)-real(w2))
+               end    
+           end
+           if real(w1) > 0 && real(w2) > 0.0
+               sumwpcor = sumwpcor + xpint^2*(real(w1)*real(w2))
+           end
+           if real(w1)*real(w2) < 0.0 
+               sumIn = sumIn + xpint^2*real(w1)*real(w2)
+           else
+               sumIp = sumIp + xpint^2*real(w1)*real(w2)
+           end    
+        end
+    end
+    if  (sumwn1)>1e-8 && (sumwn2)>1e-8
+        cn = sumwncor/(sumwn1*sumwn2)^(1/2)
+    else
+        cn = 10^(-10)
+    end    
+    cp = sumwpcor/(sumwp1*sumwp2)^(1/2)
+    ov  = 2*pi*sumwc
+    return [real(cn),real(cp),real(ov),sumwncor,sumwncorl,sumwnd,sumwndl,sumIp,sumIn]
+end   
 
 end

@@ -2,13 +2,15 @@ module dynamics
 push!(LOAD_PATH, pwd())
 using LinearAlgebra
 using QuantumOptics
+using DifferentialEquations
 include("diagonalization.jl")
 include("wigner_eig.jl")
 include("Fisher.jl")
+include("stat.jl")
 using .diagonalization
 using .wigner_eig
 using .Fisher
-
+using .stat
 
 function initialcat(xi::Float64,pii::Float64,ti::Float64,fi::Float64,hbar::Float64,Nmax::Int64)
          cat1=initialcoherent(xi,pii,ti,fi,hbar,Nmax)
@@ -83,7 +85,17 @@ function survivalp(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nm
 	 println("             The file contains SP from 0 to ",tmax," in steps of ",tint," time units               ")
 	 println("--------------------------------------------------------------------------------------------------- ")
 	 return "Done"
-	 end
+end
+
+function lindblandDynamics(L, rho0, t)
+    Nmax = size(rho0, 1)
+    rho0vec = vec(rho0)
+    rhotvec = exp(Matrix(L) * t) * rho0vec
+    rhot = reshape(rhotvec, Nmax, Nmax)
+    rhot = 0.5 * (rhot + rhot')
+    rhot = rhot / real(tr(rhot))
+    return rhot
+end
 
 function survivalpt(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},tmax::Float64,om)
  pi=acos(-1)
@@ -110,8 +122,8 @@ function survivalpt(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}},
  return "done"
 end
 
-function fotoc(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi,L)
- tint=0.05
+function fotoc(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi,L,k)
+ tint=0.1
  t=0
  qfilist=[]
  qfilist2=[]
@@ -120,6 +132,10 @@ function fotoc(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::
  neglist=[]
  nt=trunc(Int,tmax/tint)
  HMatrix= diagonalization.hamiltonian(Nmax,om,r,lambda,delta,eta,psi)
+ Hstates = eigvecs(HMatrix)
+ Hvals = eigvals(HMatrix)   
+ listveck=[Hstates[i,k] for i in 1:length(Hvals)]
+ rhok = listveck*(listveck')
  bc=FockBasis(Nmax)
  adop=create(bc)
  aop = destroy(bc)
@@ -134,10 +150,12 @@ function fotoc(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::
  open("output/negativities.dat","w") do io3
  for i in 1:nt+1
    psit=exp(-im*HMatrix*t)*psi0
+   rhot = psit*(psit')  
    neg = wigner_eig.wigner_negativities(Nmax,psit,L)
-   phi = wigner_eig.buildingstate(psit,Nmax)
+   phi = wigner_eig.buildingstate(psit,Nmax)  
    rho = dm(phi)
    rhopt = ptrace(rho,2)
+   corr = stat.negativitycorr(rhot,rhok,Nmax,L)  
    qfi=Fisher.fishern2(rhopt,Nmax)
    qfi2=Fisher.fisherdisplacementp(rhopt,Nmax)
    qfi3=Fisher.fisherdisplacementx(rhopt,Nmax)  
@@ -149,7 +167,7 @@ function fotoc(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::
    fotoc = ((x2m-x1m^2) + (p2m-p1m^2))/r
    println(io,t," ",round(real(fotoc),digits=16))
    println(io2,t," ",round(real(qfi),digits=8)," ",round(real(qfi2),digits=8)," ",round(real(qfi3),digits=8)," ",round(real(qfi4),digits=8))
-   println(io3,t," ",round(neg,digits=8))
+   println(io3,t," ",round(neg,digits=8)," ",round(corr[1],digits=8))
    append!(qfilist,round(real(qfi),digits=8))
    append!(qfilist2,round(real(qfi2),digits=8))
    append!(qfilist3,round(real(qfi3),digits=8))
@@ -309,7 +327,28 @@ function survivalpt2(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}}
  return "done"
 end
 
-
-
-
+function distance_Mpemba(rhost,rho1,rho2,HMatrix,Jp,Jq,tlist,acc,L,Nmax)
+    tmax = tlist[length(tlist)]
+    times = (0.0,tmax)
+    f(u,p,t) = -im*(HMatrix)*u + im*u*(HMatrix) + (Jp*u*(Jp') - ((Jp')*Jp*u + u*(Jp')*Jp)/2) + (Jq*u*(Jq') - ((Jq')*Jq*u + u*(Jq')*Jq)/2)
+    prob1 = ODEProblem(f,rho1,times)
+    sol1 = solve(prob1,abstol = acc,Tsit5(),alg_hints = [:stiff], dt=0.1, saveat = tlist, save_everystep = false)
+    prob2 = ODEProblem(f,rho2,times)
+    sol2 = solve(prob2,abstol = acc,Tsit5(),alg_hints = [:stiff], dt=0.1, saveat = tlist, save_everystep = false)
+    println("Done")
+    open("output/distance_Mpemba.dat","w") do io
+    for i in eachindex(sol1.t)
+        println("t: ",sol1.t[i])
+        global rhot1 = sol1.u[i]
+        global rhot2 = sol2.u[i]
+        d1 = sqrt(real(tr((rhot1 - rhost)' * (rhot1 - rhost))))
+        d2 = sqrt(real(tr((rhot2 - rhost)' * (rhot2 - rhost))))
+        neg1 = wigner_eig.wigner_negativities_rhot(Nmax,rhot1,L)
+        neg2 = wigner_eig.wigner_negativities_rhot(Nmax,rhot2,L)
+        println(io,sol1.t[i]," ",d1," ",d2," ",neg1[2]," ",neg2[2])
+    end
+    end
+    return [rhot1,rhot2]
+end    
+    
 end
