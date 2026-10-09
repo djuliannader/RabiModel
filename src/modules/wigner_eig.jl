@@ -35,7 +35,7 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   xm = x/r^(1/2)
   ham=diagonalization.hamiltonian(Nmax,om,r,lambda,delta,eta,psi)
   evs=eigvecs(ham)
-  listvec=[evs[i,k] for i in 1:2*Nmax]
+  listvec=[evs[i,k] for i in 1:2*Nmax]  
   phi = buildingstate(listvec,Nmax)
   rhor =  listvec*transpose(conj(listvec))    
   rho = dm(phi)
@@ -85,6 +85,7 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   thetal = [i*(pi)/ncuts for i in 0:(ncuts-1)]
   vars = wigner_rhot_variation(rhor,Nmax,r,thetal)
   imvars = argmax(vars)
+  nneg=wigner_negativities_rhot(Nmax,rhor,L)        
   #println("Flaaag: ",thetal[imvars]," ",vars[imvars])
   #println("Flaaag: ",thetal)
   #println("Flaaag: ",vars)      
@@ -142,12 +143,12 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   cw = wigner_rho(rhopt,L,r,Nmax,"output/wigner_eig_data.dat","output/wignercut_eig_data.dat")
   chusimi = husimi_rho(rhopt,L,r,Nmax,"output/husimi_eig_data.dat")  
   savefig("output/wigner_eigenstate.png")
-  println("Bosonic Negativity   delta(rho_b)    : ",real(den[1]-1))
+  println("Bosonic Negativity   delta(rho_b)    : ",real(2*nneg[2]))
   println("Bosonic Deepest Wigner negativity Wmin: ",minn)  
   println("Purity of the Wigner function        : ",real(pur))
-  println( "Bosonic Wehrl entropy               : ",real(chusimi[2]))  
+  println( "Bosonic Wehrl entropy               : ",real(chusimi[2]))
+  println(" Root-mean-square Fourier radius of the Wigner function (chi)  : ",real(nneg[3]))    
   println("See output/wigner_eigenstate.png for the Wigner function")
-     
   mr = magic.robustness(rho_q)
   println("b) Qubit mode*")   
   println("Magic robustness of the qubit mode R(rho_q) : ",mr)
@@ -247,7 +248,7 @@ function wigner_thermalstate(Nmax,om,r,lambda,delta,eta,psi,L,beta)
   #scatter(xy[1],xy[2],s=2,color="black")
   #scatter([1],[1],s=2,color="black")
   global rhopti=rhopt
-  den=hcubature(Qexabs,(-L,-L),(L,L),rtol=0.001)
+  #den=hcubature(Qexabs,(-L,-L),(L,L),rtol=0.001)
   minn = 0.0  
   open("output/marginals.dat","w") do io
   global summar3 = 0.0
@@ -276,7 +277,7 @@ function wigner_thermalstate(Nmax,om,r,lambda,delta,eta,psi,L,beta)
   println("Purity of the Wigner function        : ",real(pur))
   println( "Bosonic Wehrl entropy               : ",real(chusimi[2]))  
   println("See output/wigner_thermal.png for the Wigner function")
-     
+  println(" Root-mean-square Fourier radius of the Wigner function (chi)  : ",real(nneg[3]))  
   mr = magic.robustness(rho_q)
   println("b) Qubit mode*")   
   println("Magic robustness of the qubit mode R(rho_q) : ",mr)
@@ -546,11 +547,12 @@ function wigner_negativities_rhot(Nmax,rhot,L)
   rhot_qo = buildingrho(rhot,Nmax)  
   rhot_pt = ptrace(rhot_qo,2)
   xpint = 0.025  
-  x = [-L:0.025:L;]
+  x = [-L:xpint:L;]
   sumwn = 0.0
   sumwvol = 0.0
   sumchi  = 0.0
-  sumdchi  = 0.0  
+  sumdchi  = 0.0
+  Wmin = 0.0  
   for ix in x
     for ip in x
         winst = wigner(rhot_pt, ix, ip)
@@ -563,10 +565,13 @@ function wigner_negativities_rhot(Nmax,rhot,L)
             sumwn = sumwn + xpint^2*real(winst)
             sumchi += xpint^2*(dwdx^2 + dwdp^2)
         end
+        if real(winst)<Wmin
+            Wmin = real(winst)
+        end    
         sumdchi += 4*pi^2*xpint^2*real(winst)^2
     end
   end 
-    return [sumwvol,abs(sumwn),real(sumchi/sumdchi)]
+    return [sumwvol,abs(sumwn),real(sumchi/sumdchi),abs(Wmin)]
 end
 
 
@@ -580,43 +585,64 @@ function wigner_negativities2(Nmax,rhot,rhoin,L,r)
   rho0_qo = buildingrho(rhoin,Nmax)  
   global rho0_pt = ptrace(rho0_qo,2)  
   #den=hcubature(Qexabs,(-L,-L),(L,L),rtol=0.0001)
-  x = [-L:0.025:L;]
+  xpint = 0.025   
+  x = [-L:xpint:L;]
   minn = 0.0
   gminn = 0.0
   sumwn = 0.0
   sumwvol = 0.0      
   sumwnr = 0.0
-  sumip = 0.0
-  sumim = 0.0
-  sumipl = 0.0
-  sumiml = 0.0
-  sumipll = 0.0
-  sumimll = 0.0  
+  sumwpr = 0.0  
+  sumpp = 0.0
+  sumpm = 0.0
+  sumipp = 0.0
+  sumimm = 0.0
+  sumipm = 0.0
+  sumimp = 0.0  
+  sumchi  = 0.0
+  sumlchi  = 0.0  
+  sumdchi  = 0.0  
   ep=10^(-5)  
   for ix in x
     for ip in x
         winst = wigner(rhot_pt, ix, ip)
+        winstpx = wigner(rhot_pt, ix+xpint, ip)
+        winstpp = wigner(rhot_pt, ix, ip+xpint)
         w0    = wigner(rho0_pt, ix, ip)
-        sumwvol = sumwvol + (0.025)^2*real(winst)
-        if real(w0*winst)<(-ep)
-            sumim = sumim + (0.025)^2*real(w0*winst)
+        dwdx = (winstpx - winst)/xpint 
+        dwdp = (winstpp - winst)/xpint
+        sumwvol = sumwvol + xpint^2*real(winst)
+        sumdchi += 4*pi^2*xpint^2*real(winst)^2
+        if real(w0*winst)<0.0
+            sumpm = sumpm + xpint^2*real(w0*winst)
         else
-            sumip = sumip + (0.025)^2*real(w0*winst)
+            sumpp = sumpp + xpint^2*real(w0*winst)
         end 
         if real(winst) < gminn
             gminn = winst
         end
-        if real(winst)<(-ep)
-                sumwn = sumwn + (0.025)^2*real(winst)
+        if real(winst)<0.0
+            sumwn = sumwn + xpint^2*real(winst)
+            sumchi += xpint^2*(dwdx^2 + dwdp^2)
+            if real(w0)<(-ep)
+                sumimm += xpint^2*abs(real(w0))*abs(real(winst))
+            else
+                sumipm += xpint^2*abs(real(w0))*abs(real(winst))
+            end
+        end
+        if real(winst)>0.0
+            if real(w0)>0.0
+                sumipp += xpint^2*abs(real(w0))*abs(real(winst))
+            else
+                sumimp += xpint^2*abs(real(w0))*abs(real(winst))
+            end
         end
         if (ix^2/r+ip^2/r)<(1/r)
-            if real(w0*winst)<(-ep)
-              sumiml = sumiml + (0.025)^2*real(w0*winst)
-            else
-              sumipl = sumipl + (0.025)^2*real(w0*winst)
-            end 
-            if real(winst)<(-ep)
+            if real(winst)<0.0
                 sumwnr = sumwnr + (0.025)^2*real(winst)
+                sumlchi += xpint^2*(dwdx^2 + dwdp^2)
+            else
+                sumwpr = sumwpr + (0.025)^2*real(winst)
             end
              if winst < minn
                   minn = winst
@@ -624,16 +650,7 @@ function wigner_negativities2(Nmax,rhot,rhoin,L,r)
         end    
     end
   end
-  for ip in x
-     winst = wigner(rhot_pt, 0.0, ip)
-     w0    = wigner(rho0_pt, 0.0, ip)
-     if real(w0*winst)<(-ep)
-            sumimll = sumimll + (0.025)*real(w0*winst)
-        else
-            sumipll = sumipll + (0.025)*real(w0*winst)
-     end  
-  end
-  return [abs(sumwn),abs(sumwnr),gminn,minn,2*pi*sumip,abs(2*pi*sumim),2*pi*sumipl,abs(2*pi*sumiml),sumwvol,2*pi*sumipll,abs(2*pi*sumimll)]
+  return [abs(sumwn),abs(sumwnr),abs(sumwpr),gminn,minn,2*pi*sumpp,abs(2*pi*sumpm),sumwvol,real(sumchi/sumdchi),real(sumlchi/sumdchi),abs(2*pi*sumipp),abs(2*pi*sumimm),abs(2*pi*sumipm),abs(2*pi*sumimp)]
 end
 
 
@@ -771,11 +788,11 @@ function husimi_rho(rho,L,r,Nmax,name1)
         hus = qfunc(rho, i, j)
         println(io,i/r^(1/2)," ",j/r^(1/2)," ",round(hus,digits=8))
         hvol = hvol + (1/2)*0.1^2*hus
-        wentropy = wentropy + (1/2)*0.1^2*hus*log(hus)  
+        wentropy = wentropy - (1/2)*0.1^2*hus*log(hus)  
     end
   end     
   end
-  return [wentropy,wentropy] 
+  return [hvol,wentropy-log(pi)] 
 end
 
 function wigner_rhot_neg(rho,Nmax,L)

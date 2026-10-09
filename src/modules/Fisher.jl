@@ -8,9 +8,10 @@ using Optim
 
 
 function fisherdisplacementp(rho,Nmax)
+  rho = (rho+dagger(rho))/2  
   rhodiag = eigenstates(dense(rho))
   aop  = anhilation(Nmax)
-  adop = transpose(aop)
+  adop = aop'
   sqop = (1/(2^(1/2)))*(aop+adop)
   lam = rhodiag[1]
   qfi2t = 0 + 0*im
@@ -53,9 +54,10 @@ end
 
 
 function fisherdisplacement(rho,Nmax,phi)
+  rho = (rho+dagger(rho))/2  
   rhodiag = eigenstates(dense(rho))
   aop  = anhilation(Nmax)
-  adop = transpose(aop)
+  adop = aop'
   sqop = (1/(2^(1/2)))*(adop*exp(im*phi)+aop*exp(-im*phi))
   lam = rhodiag[1]
   qfi2t = 0 + 0*im
@@ -97,10 +99,11 @@ function fisherdisplacement(rho,Nmax,phi)
 end
 
 function fisherdisplacementx(rho,Nmax)
+  rho = (rho+dagger(rho))/2  
   rhodiag = eigenstates(dense(rho))
   aop  = anhilation(Nmax)
-  adop = transpose(aop)
-  sqop = (1/(im*2^(1/2)))*(aop-adop)
+  adop = aop'
+  sqop = (im/(2^(1/2)))*(adop-aop)
   lam = rhodiag[1]
   qfi2t = 0 + 0*im
   qfi1t = 0 + 0*im
@@ -111,7 +114,7 @@ function fisherdisplacementx(rho,Nmax)
        lstate = [rhodiag[2][l][i] for i in 1:length(lam)]
        lstatead = transpose(conj(lstate))
        sd = lstatead*sqop*kstate
-       if (lam[k]+lam[l])>epsilon
+       if abs(lam[k]+lam[l])>epsilon
          qfiinst2t = 8*((lam[l]*lam[k])/(lam[k]+lam[l]))*abs2(sd) 
          qfi2t = qfi2t + qfiinst2t
        end
@@ -121,7 +124,7 @@ function fisherdisplacementx(rho,Nmax)
        lstate = [rhodiag[2][l][i] for i in 1:length(lam)]
        lstatead = transpose(conj(lstate))
        sd = lstatead*sqop*kstate
-       if (lam[k]+lam[l])>epsilon
+       if abs(lam[k]+lam[l])>epsilon
          qfiinst2t = 8*((lam[l]*lam[k])/(lam[k]+lam[l]))*abs2(sd) 
          qfi2t = qfi2t + qfiinst2t
        end
@@ -182,6 +185,7 @@ function fishersqueezing(rho,Nmax)
 end
 
 function fishern2(rho,Nmax)
+  rho = (rho+dagger(rho))/2  
   rhodiag = eigenstates(dense(rho))
   nop = numberop(Nmax)
   lam = rhodiag[1]

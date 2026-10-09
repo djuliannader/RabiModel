@@ -361,7 +361,7 @@ function negativitycorr(rho1,rho2,Nmax,L,r)
            end    
         end
     end
-    if  (sumwn1)>1e-8 && (sumwn2)>1e-8
+    if  (sumwn1)>1e-10 && (sumwn2)>1e-10
         cn = sumwncor/(sumwn1*sumwn2)^(1/2)
     else
         cn = 10^(-10)

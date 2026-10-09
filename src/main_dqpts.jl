@@ -9,9 +9,9 @@ using .DQPT
 using .wigner_eig
 
 
-n=60              # Size of the Fock basis
+n=80              # Size of the Fock basis
 om=1.0            # Bosonic frequency
-r=50.0            # Qubit frequency
+r=100.0            # Qubit frequency
 lambda0=0.0       # Initial Carrier parameter
 delta=0.0         # Parameter (-1,0,1) for (AJC,QRM,JC)
 g0=0.0            # Initial coupling
@@ -20,14 +20,14 @@ g1=1.25           # Final coupling
 lambda1=0.0       # Final Carrier parameter
 nsubint=1000      # Subintervales for integrating the survival probability
 nsubint2=400      # Subintervals of real time for estimate the position of zeros
-nsubint3=30       # Subintervals of imaginary time for estimate the position of zeros
-tint =0.1         # time interval for the survival amplitude
-tmax= 10.0         # maximal time for the survival amplitude
+nsubint3=40       # Subintervals of imaginary time for estimate the position of zeros
+tint =1.0         # time interval for the survival amplitude
+tmax= 10.0        # maximal time for the survival amplitude
 timax=0.5         # maximal imaginary time
-tshot=7.55        # time for the Wigner function
+tshot=2.0        # time for the Wigner function
 alpha=1.0         # Parameter of the linear combination for the initial state 
 ph=0.0            # Phase of the initial state
-L=10.0             # Size of the phase space
+L=10.0            # Size of the phase space
 flag1=1           # (1) for the position of the zeros in the complex plane (0) for skip
 tp = 0.0          # for generalized survival amplitude
 
@@ -60,7 +60,7 @@ wigcuts = DQPT.wigner_rhot(phi0,hamf,L,r,n,tshot,"output/Wignercuts_quench.dat",
 ctsa = DQPT.amplitud(phi0,tint,tmax,timax,tp,1.0,n,om,r,lambda1,delta,g1,psi,L,thetal)
 
 # Obtaining correlation of negativities from 0 - tmax
-negcor = DQPT.autocorrelationneg(phi0,tint,tmax,timax,1.0,n,om,r,lambda1,delta,g1,psi,L)
+#negcor = DQPT.autocorrelationneg(phi0,tint,tmax,timax,1.0,n,om,r,lambda1,delta,g1,psi,L)
 
 
 ovl = DQPT.overlapdqpt(phi0,hamf,n)

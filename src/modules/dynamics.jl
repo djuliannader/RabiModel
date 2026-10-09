@@ -134,7 +134,7 @@ function fotoc(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::
  HMatrix= diagonalization.hamiltonian(Nmax,om,r,lambda,delta,eta,psi)
  Hstates = eigvecs(HMatrix)
  Hvals = eigvals(HMatrix)   
- listveck=[Hstates[i,k] for i in 1:length(Hvals)]
+ listveck=Hstates[:,k]
  rhok = listveck*(listveck')
  bc=FockBasis(Nmax)
  adop=create(bc)
@@ -155,7 +155,7 @@ function fotoc(psi0::Vector{Complex{Float64}},tmax::Float64,hbar::Float64,Nmax::
    phi = wigner_eig.buildingstate(psit,Nmax)  
    rho = dm(phi)
    rhopt = ptrace(rho,2)
-   corr = stat.negativitycorr(rhot,rhok,Nmax,L)  
+   corr = stat.negativitycorr(rhot,rhok,Nmax,L,r)  
    qfi=Fisher.fishern2(rhopt,Nmax)
    qfi2=Fisher.fisherdisplacementp(rhopt,Nmax)
    qfi3=Fisher.fisherdisplacementx(rhopt,Nmax)  
@@ -327,28 +327,36 @@ function survivalpt2(psi0::Vector{Complex{Float64}},fq::Matrix{Complex{Float64}}
  return "done"
 end
 
-function distance_Mpemba(rhost,rho1,rho2,HMatrix,Jp,Jq,tlist,acc,L,Nmax)
+function distance_Mpemba(rhost,rho1,HMatrix,Jp,Jq,tlist,acc,L,Nmax)
     tmax = tlist[length(tlist)]
     times = (0.0,tmax)
+    rhost_qo = wigner_eig.buildingrho(rhost,Nmax)
+    rhost_b = ptrace(rhost_qo,2)
     f(u,p,t) = -im*(HMatrix)*u + im*u*(HMatrix) + (Jp*u*(Jp') - ((Jp')*Jp*u + u*(Jp')*Jp)/2) + (Jq*u*(Jq') - ((Jq')*Jq*u + u*(Jq')*Jq)/2)
     prob1 = ODEProblem(f,rho1,times)
     sol1 = solve(prob1,abstol = acc,Tsit5(),alg_hints = [:stiff], dt=0.1, saveat = tlist, save_everystep = false)
-    prob2 = ODEProblem(f,rho2,times)
-    sol2 = solve(prob2,abstol = acc,Tsit5(),alg_hints = [:stiff], dt=0.1, saveat = tlist, save_everystep = false)
+    #prob2 = ODEProblem(f,rho2,times)
+    #sol2 = solve(prob2,abstol = acc,Tsit5(),alg_hints = [:stiff], dt=0.1, saveat = tlist, save_everystep = false)
     println("Done")
     open("output/distance_Mpemba.dat","w") do io
     for i in eachindex(sol1.t)
         println("t: ",sol1.t[i])
         global rhot1 = sol1.u[i]
-        global rhot2 = sol2.u[i]
+        #global rhot2 = sol2.u[i]
+        rhot1_qo = wigner_eig.buildingrho(rhot1,Nmax)
+        rhot1_b = ptrace(rhot1_qo,2)
         d1 = sqrt(real(tr((rhot1 - rhost)' * (rhot1 - rhost))))
-        d2 = sqrt(real(tr((rhot2 - rhost)' * (rhot2 - rhost))))
+        d1b = sqrt(real(tr((rhot1_b - rhost_b)' * (rhot1_b - rhost_b))))
         neg1 = wigner_eig.wigner_negativities_rhot(Nmax,rhot1,L)
-        neg2 = wigner_eig.wigner_negativities_rhot(Nmax,rhot2,L)
-        println(io,sol1.t[i]," ",d1," ",d2," ",neg1[2]," ",neg2[2])
+        #rhot2_qo = wigner_eig.buildingrho(rhot2,Nmax)
+        #rhot2_b = ptrace(rhot2_qo,2)
+        #d2 = sqrt(real(tr((rhot2 - rhost)' * (rhot2 - rhost))))
+        #d2b = sqrt(real(tr((rhot2_b - rhost_b)' * (rhot2_b - rhost_b))))
+        #neg2 = wigner_eig.wigner_negativities_rhot(Nmax,rhot2,L)
+        println(io,sol1.t[i]," ",d1," ",d1b," ",neg1[2])
     end
     end
-    return [rhot1,rhot2]
+    return rhot1
 end    
     
 end

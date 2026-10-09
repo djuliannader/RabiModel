@@ -17,22 +17,21 @@ om=1.0            # Bosonic frequency
 r=50.0            # Qubit frequency
 lambda0=0.0       # Initial Carrier parameter
 delta=0.0         # Parameter (-1,0,1) for (AJC,QRM,JC)
-g0=0              # Initial coxupling
+g0=1.1165              # Initial coxupling
 phs=0.0           # Phase of the Hamiltonian
-g1=5/4            # Final coupling
+g1=0.9            # Final coupling
 lambda1=0.0       # Final Carrier parameter
-tshot=7.55         # time for Wigner function
-flag1=0           # (1) for the complex time survival probability (0) for skip 
-beta=50.0         # temperature
-L=10.0             # Size of the phase space
-tint = 0.05       # time intervals
-acc = 10^(-15)    # accuracy for the diferential equation
-kp = 0.1         # photon loss
+tshot=5.0         # time for Wigner function
+flag1=0            # (1) for the complex time survival probability (0) for skip 
+beta=1000.0         # temperature
+L=7.5             # Size of the phase space
+acc = 10^(-22)    # accuracy for the diferential equation
+kp = 0.0         # photon loss
 kq = 0.0          # qubit relaxation    
 
 
-tmax = 10         # maximal time
-tint = 0.05       # time interval
+tmax = 5.0         # maximal time
+tint = 0.025       # time interval
 tlist = [i for i in 0:tint:tmax]
 
 
