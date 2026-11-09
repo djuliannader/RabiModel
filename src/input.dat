@@ -1,15 +1,15 @@
 Dimension of Fock Space (Integer)
-60
+80
 Omega, Oscillator frequency (Float)
 1.0
 R, Qubit frequency (Float)
-50.0
+100.0
 Parameter (1) for JC, (0) for QRM  or (-1) for Anti JC (Float)
 0.0
 lambda, assymetry bias (Float) 
 0.0    
 g, coupling strength (Float)
-1.5
+0.0
 psi, phase parameter (Float) 
 0.0
 Flag, 1 for spectrum 2 for dynamics 3 for stationary states (Integer)
@@ -37,7 +37,7 @@ k-eigenstate (Int)
 L size of the phase space (Float) [-L,L]  
 10.0
 d spacing for the phase space grid (Float)
-1.0
+0.05
 For time-dependent term proportional to: (1) Sigma_z or (2) Sigma_x (Int)
 2
 Number of eigenstates (l) for fidelities |<E_l|F_k>|^2  and |<n|F_k>|
