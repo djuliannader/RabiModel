@@ -31,11 +31,14 @@ end
 
 
 
-function rhot_floquetramp(psi0,Trcycles,Tscycles,n,om,r,lambda,delta,eta,psi,xi,tau,Nf,flagt,kf,acc,L)
+function rhot_floquetramp(psi0,Trcycles,Tscycles,Tt,n,om,r,lambda,delta,eta,psi,xi,tau,Nf,flagt,kf,acc,L,d)
  tmax =  tau*Trcycles
+ tmax2 =  tau*(Tt-Trcycles)   
  tshot = tau*Tscycles
  tlist = [tau*i for i in 0:Trcycles]
- times = (0.0,tmax)      
+ tlist2 = [tau*i for i in 1:(Tt-Trcycles)]   
+ times = (0.0,tmax)
+ times2 = (0.0,tmax2)         
  psi0t = transpose(conj(psi0))
  rho0 = psi0*(psi0')
  rho0_qo = stat.buildingrho(rho0,n)
@@ -79,7 +82,7 @@ function rhot_floquetramp(psi0,Trcycles,Tscycles,n,om,r,lambda,delta,eta,psi,xi,
  dt = tau
  for i in eachindex(sol.t)
    println(sol.t[i])              
-   psit = sol.u[i]
+   global psit = sol.u[i]
    psitt = psit'
    rhot = psit*psitt
    rhot_qo = stat.buildingrho(rhot,n)
@@ -90,6 +93,85 @@ function rhot_floquetramp(psi0,Trcycles,Tscycles,n,om,r,lambda,delta,eta,psi,xi,
    #println("------------>",i*dt," ",abs2(ov1))
    rhot = psit*transpose(conj(psit))
    if abs(sol.t[i]-tshot)<10^(-6)
+     global rhots = rhot
+   end    
+   rhotqo =  wigner_eig.buildingrho(rhot,n)
+   rhotpt = ptrace(rhotqo,2)
+   #ov1 = fidelity(rhotpt,rho0_pt)
+   #ov2 = fidelity(rhotpt,rhofl_pt)
+   ov1 = psi0t*rhot*psi0
+   ov2 = listvect*rhot*listvec  
+   neg  =  wigner_eig.wigner_negativities_rhot(n,rhot,L,d)  
+   rho_q = ptrace(rhotqo,1)  
+   wigner_q = magic.discrete_wigner(rho_q)
+   rb = magic.robustness(rho_q)  
+   qfi = Fisher.fishern2(rhotpt,n)
+   qfi2 = Fisher.fisherdisplacementp(rhotpt,n)
+   qfi3 = Fisher.fisherdisplacementx(rhotpt,n)
+   man = real(wigner_q[2])
+   rob = real(rb)
+   #-----------Reference Gaussian state
+   x1m = real(expect(xop, rhotpt))
+   x2m = real(expect(xop^2, rhotpt))
+   p1m = real(expect(pop, rhotpt))
+   p2m = real(expect(pop^2, rhotpt))
+   varx = x2m - x1m^2
+   varp = p2m - p1m^2
+   xp_sym = real(expect(xop*pop + pop*xop, rhotpt))
+   C = xp_sym/2 - x1m*p1m
+   detV = varx*varp - C^2
+   nu = sqrt(detV)
+   nt = nu -0.5
+   ps = 0.5 * atan(2*real(C), real(varx) - real(varp))
+   rxi = 0.25 * log(real(varx)/real(varp))
+   xxi = rxi*exp(im*ps)  
+   alpha = (1/(2)^(1/2))*(x1m+im*p1m)  
+   Sqop = exp((1/2)*xxi*adop^2 - (1/2)*conj(xxi)*aop^2)
+   Dop = exp(alpha*adop - conj(alpha)*aop)
+   #  println("----Flag----")
+   #  println("nu:",nu)
+   #  println("xi:",xi)
+   #  println("xav:",real(x1m)/r^(1/2))
+   #  println("pav:",real(p1m)/r^(1/2))
+   state0 = fockstate(bc,0)
+   rho0 = dm(state0)
+   rho_gr = rho0
+   rho_gr = (nt^0/(1+nt))*rho0
+   for nk in 1:n
+       staten = fockstate(bc,nk)
+       rhon = dm(staten)
+       rho_gr = rho_gr + (nt^(nk)/(1+nt)^(nk+1))*rhon
+   end
+   rho_gr = Sqop*rho_gr*(Sqop')
+   rho_gr = Dop*rho_gr*(Dop')
+   qfi_gr = Fisher.fishern2(rho_gr,n)
+   qfi2_gr = Fisher.fisherdisplacementp(rho_gr,n)
+   qfi3_gr = Fisher.fisherdisplacementx(rho_gr,n)
+   # println("qfi:",qfi_gr) 
+   #println("------------")    
+   #-----------  
+   println(io,sol.t[i]," ",real(ov1)," ",real(ov2)," ",real(cor[1]))
+   println(io2,sol.t[i]," ",real(qfi)," ",real(qfi2)," ",real(qfi3)," ",real(qfi_gr)," ",real(qfi2_gr)," ",real(qfi3_gr))
+   println(io3,sol.t[i]," ",(join(neg, " ")))
+   println(io4,sol.t[i]," ",man, " ",rob)
+ end
+ f2(u,p,t) = -im*(HMatrix + (r*xi/2)*sig*cos(2*pi*t/tau))*u
+ prob2 = ODEProblem(f2,psit,times2)
+ sol2 = solve(prob2,abstol = acc,Tsit5(),alg_hints = [:stiff], dt=0.1, saveat = tlist2, save_everystep = false)
+ println("-- End of the ramp --")    
+ for i in eachindex(sol2.t)
+   println(sol2.t[i]+tmax)              
+   global psit = sol2.u[i]
+   psitt = psit'
+   rhot = psit*psitt
+   rhot_qo = stat.buildingrho(rhot,n)
+   rhotpt =  ptrace(rhot_qo,2)    
+   nfac = psitt*psit  
+   psit = psit/nfac^(1/2)
+   cor = stat.negativitycorr(rhofl,rhot,n,L,r)    
+   #println("------------>",i*dt," ",abs2(ov1))
+   rhot = psit*transpose(conj(psit))
+   if abs(sol2.t[i]+tmax-tshot)<10^(-6)
      global rhots = rhot
    end    
    rhotqo =  wigner_eig.buildingrho(rhot,n)
@@ -121,9 +203,9 @@ function rhot_floquetramp(psi0,Trcycles,Tscycles,n,om,r,lambda,delta,eta,psi,xi,
    nt = nu -0.5
    ps = 0.5 * atan(2*real(C), real(varx) - real(varp))
    rxi = 0.25 * log(real(varx)/real(varp))
-   xi = rxi*exp(im*ps)  
+   xxi = rxi*exp(im*ps)  
    alpha = (1/(2)^(1/2))*(x1m+im*p1m)  
-   Sqop = exp((1/2)*xi*adop^2 - (1/2)*conj(xi)*aop^2)
+   Sqop = exp((1/2)*xxi*adop^2 - (1/2)*conj(xxi)*aop^2)
    Dop = exp(alpha*adop - conj(alpha)*aop)
    #  println("----Flag----")
    #  println("nu:",nu)
@@ -147,10 +229,10 @@ function rhot_floquetramp(psi0,Trcycles,Tscycles,n,om,r,lambda,delta,eta,psi,xi,
    # println("qfi:",qfi_gr) 
    #println("------------")    
    #-----------  
-   println(io,sol.t[i]," ",real(ov1)," ",real(ov2)," ",real(cor[1]))
-   println(io2,sol.t[i]," ",real(qfi)," ",real(qfi2)," ",real(qfi3)," ",real(qfi_gr)," ",real(qfi2_gr)," ",real(qfi3_gr))
-   println(io3,sol.t[i]," ",(join(neg, " ")))
-   println(io4,sol.t[i]," ",man, " ",rob)
+   println(io,sol2.t[i]+tmax," ",real(ov1)," ",real(ov2)," ",real(cor[1]))
+   println(io2,sol2.t[i]+tmax," ",real(qfi)," ",real(qfi2)," ",real(qfi3)," ",real(qfi_gr)," ",real(qfi2_gr)," ",real(qfi3_gr))
+   println(io3,sol2.t[i]+tmax," ",(join(neg, " ")))
+   println(io4,sol2.t[i]+tmax," ",man, " ",rob)
  end
  end
  end
@@ -187,11 +269,14 @@ function rhot_floquetramp(psi0,Trcycles,Tscycles,n,om,r,lambda,delta,eta,psi,xi,
 end
 
 
-function rhot_floquetramp2(psi0,Tcycles,Tsc,n,om,r,lambda,delta,eta,psi,xi,tau,Nf,flagt,kf,acc,L,Jp,Jq)
+function rhot_floquetramp2(psi0,Tcycles,Tsc,Tt,n,om,r,lambda,delta,eta,psi,xi,tau,Nf,flagt,kf,acc,L,d,Jp,Jq)
  tmax =  tau*Tcycles
- tshot = tau*Tsc  
+ tmax2 =  tau*(Tt-Tcycles)      
+ tshot = tau*Tsc   
  tlist = [tau*i for i in 0:Tcycles]
- times = (0.0,tmax)      
+ tlist2 = [tau*i for i in 1:(Tt-Tcycles)]      
+ times = (0.0,tmax)
+ times2 = (0.0,tmax2)            
  psi0t = transpose(conj(psi0))
  rho0 = psi0*(psi0')
  rho0_qo = stat.buildingrho(rho0,n)
@@ -237,10 +322,75 @@ function rhot_floquetramp2(psi0,Tcycles,Tsc,n,om,r,lambda,delta,eta,psi,xi,tau,N
  for i in eachindex(sol.t)
    println(sol.t[i])              
    global rhot = sol.u[i]
-   rhot = (rhot + rhot')/2
+   global rhot = (rhot + rhot')/2
    fac = tr(rhot)
-   rhot = rhot/fac
+   global rhot = rhot/fac
    if abs(sol.t[i]-tshot)<10^(-8)
+       global rhots = rhot
+   end       
+   rhotqo =  wigner_eig.buildingrho(rhot,n)
+   rhotpt = ptrace(rhotqo,2)  
+   #ov1 = fidelity(rhotpt,rho0_pt)
+   #ov2 = fidelity(rhotpt,rhofl_pt)
+   ov1 = psi0t*rhot*psi0
+   ov2 = listvect*rhot*listvec
+   cor = stat.negativitycorr(rhofl,rhot,n,L,r)    
+   global neg  =  wigner_eig.wigner_negativities_rhot(n,rhot,L,d)
+   rho_q = ptrace(rhotqo,1)
+   qnegf = magic.discrete_wigner(rho_q)
+   qrobf = magic.robustness(rho_q)
+   qfi = Fisher.fishern2(rhotpt,n)
+   qfi2 = Fisher.fisherdisplacementp(rhotpt,n)
+   qfi3 = Fisher.fisherdisplacementx(rhotpt,n)
+   #-----------Reference Gaussian state
+   x1m = real(expect(xop, rhotpt))
+   x2m = real(expect(xop^2, rhotpt))
+   p1m = real(expect(pop, rhotpt))
+   p2m = real(expect(pop^2, rhotpt))
+   varx = x2m - x1m^2
+   varp = p2m - p1m^2
+   xp_sym = real(expect(xop*pop + pop*xop, rhotpt))
+   C = xp_sym/2 - x1m*p1m
+   detV = varx*varp - C^2
+   nu = sqrt(detV)
+   nt = nu -0.5
+   ps = 0.5 * atan(2*real(C), real(varx) - real(varp))
+   rxi = 0.25 * log(real(varx)/real(varp))
+   xxi = rxi*exp(im*ps)  
+   alpha = (1/(2)^(1/2))*(x1m+im*p1m)  
+   Sqop = exp((1/2)*xxi*adop^2 - (1/2)*conj(xxi)*aop^2)
+   Dop = exp(alpha*adop - conj(alpha)*aop)
+   state0 = fockstate(bc,0)
+   rho0 = dm(state0)
+   rho_gr = rho0
+   rho_gr = (nt^0/(1+nt))*rho0
+   for nk in 1:n
+       staten = fockstate(bc,nk)
+       rhon = dm(staten)
+       rho_gr = rho_gr + (nt^(nk)/(1+nt)^(nk+1))*rhon
+   end
+   rho_gr = Sqop*rho_gr*(Sqop')
+   rho_gr = Dop*rho_gr*(Dop')
+   qfi_gr = Fisher.fishern2(rho_gr,n)
+   qfi2_gr = Fisher.fisherdisplacementp(rho_gr,n)
+   qfi3_gr = Fisher.fisherdisplacementx(rho_gr,n)
+   #-----------    
+   println(io,sol.t[i]," ",abs(ov1)," ",abs(ov2)," ",real(cor[1]))
+   println(io2,sol.t[i]," ",real(qfi)," ",real(qfi2)," ",real(qfi3)," ",real(qfi_gr)," ",real(qfi2_gr)," ",real(qfi3_gr))
+   println(io3,sol.t[i]," ",(join(neg, " ")))
+   println(io4,sol.t[i]," ",real(qnegf[2]), " ",real(qrobf))
+ end
+ println("-- End of the ramp --")    
+ f2(u,p,t) = -im*(HMatrix + (r*xi/2)*sig*cos(2*pi*t/tau))*u + im*u*(HMatrix + (r*xi/2)*sig*cos(2*pi*t/tau)) + (Jp*u*(Jp') - ((Jp')*Jp*u + u*(Jp')*Jp)/2) + (Jq*u*(Jq') - ((Jq')*Jq*u + u*(Jq')*Jq)/2)
+ prob2 = ODEProblem(f2,rhot,times2)
+ sol2 = solve(prob2,abstol = acc,Tsit5(),alg_hints = [:stiff], dt=0.1, saveat = tlist2, save_everystep = false)
+ for i in eachindex(sol2.t)
+   println(sol2.t[i]+tmax)              
+   global rhot = sol2.u[i]
+   global rhot = (rhot + rhot')/2
+   fac = tr(rhot)
+   global rhot = rhot/fac
+   if abs(sol2.t[i]+tmax-tshot)<10^(-8)
        global rhots = rhot
    end       
    rhotqo =  wigner_eig.buildingrho(rhot,n)
@@ -271,9 +421,9 @@ function rhot_floquetramp2(psi0,Tcycles,Tsc,n,om,r,lambda,delta,eta,psi,xi,tau,N
    nt = nu -0.5
    ps = 0.5 * atan(2*real(C), real(varx) - real(varp))
    rxi = 0.25 * log(real(varx)/real(varp))
-   xi = rxi*exp(im*ps)  
+   xxi = rxi*exp(im*ps)  
    alpha = (1/(2)^(1/2))*(x1m+im*p1m)  
-   Sqop = exp((1/2)*xi*adop^2 - (1/2)*conj(xi)*aop^2)
+   Sqop = exp((1/2)*xxi*adop^2 - (1/2)*conj(xxi)*aop^2)
    Dop = exp(alpha*adop - conj(alpha)*aop)
    state0 = fockstate(bc,0)
    rho0 = dm(state0)
@@ -290,11 +440,11 @@ function rhot_floquetramp2(psi0,Tcycles,Tsc,n,om,r,lambda,delta,eta,psi,xi,tau,N
    qfi2_gr = Fisher.fisherdisplacementp(rho_gr,n)
    qfi3_gr = Fisher.fisherdisplacementx(rho_gr,n)
    #-----------    
-   println(io,sol.t[i]," ",abs(ov1)," ",abs(ov2)," ",real(cor[1]))
-   println(io2,sol.t[i]," ",real(qfi)," ",real(qfi2)," ",real(qfi3)," ",real(qfi_gr)," ",real(qfi2_gr)," ",real(qfi3_gr))
-   println(io3,sol.t[i]," ",(join(neg, " ")))
-   println(io4,sol.t[i]," ",real(qnegf[2]), " ",real(qrobf))
- end
+   println(io,sol2.t[i]+tmax," ",abs(ov1)," ",abs(ov2)," ",real(cor[1]))
+   println(io2,sol2.t[i]+tmax," ",real(qfi)," ",real(qfi2)," ",real(qfi3)," ",real(qfi_gr)," ",real(qfi2_gr)," ",real(qfi3_gr))
+   println(io3,sol2.t[i]+tmax," ",(join(neg, " ")))
+   println(io4,sol2.t[i]+tmax," ",real(qnegf[2]), " ",real(qrobf))
+ end    
  end
  end
  end
@@ -333,7 +483,7 @@ function rhot_floquetramp2(psi0,Tcycles,Tsc,n,om,r,lambda,delta,eta,psi,xi,tau,N
 end
 
 
-function rhot_adiabaticramp(HMatrix0,rho0,rhotar,tlist,n,om,r,lambda0,lambda1,g0,g1,acc,L,Jp,Jq)   
+function rhot_adiabaticramp(HMatrix0,rho0,rhotar,tlist::Vector,tlist2::Vector,n,om,r,lambda0,lambda1,g0,g1,acc,L,d,Jp,Jq)   
  tmax = tlist[length(tlist)]
  times = (tlist[1],tmax)   
  sigmax =  diagonalization.sigmax(n)
@@ -366,13 +516,18 @@ function rhot_adiabaticramp(HMatrix0,rho0,rhotar,tlist,n,om,r,lambda0,lambda1,g0
  for i in eachindex(sol.t)
    println(sol.t[i])        
    global rhot = sol.u[i]
+   Hamt   =   (HMatrix0 + (sigmax*(lam*r/2) + gdif*r^(1/2)*(aop+adop)*sigmax/2)*(1/2)*(1-cos(pi*(sol.t[i])/tmax)))
+   eigenht  = eigen(Hermitian(Hamt))
+   evinst = eigenht.vectors[:, 1]
+   rhoeinst = evinst*evinst'
+   finst = tr(rhoeinst*rhot)  
    rhotqo =  wigner_eig.buildingrho(rhot,n)
    global rhotpt = ptrace(rhotqo,2)  
    ov1 = real(tr(sqrt(sqrt(Hermitian(rho0)) * rhot * sqrt(Hermitian(rho0))))^2)
    ov2 = real(tr(sqrt(sqrt(Hermitian(rhotar)) * rhot * sqrt(Hermitian(rhotar))))^2)
    cor = stat.negativitycorr(rhotar,rhot,n,L,r)      
    rhotqo =  wigner_eig.buildingrho(rhot,n)
-   global neg  =  wigner_eig.wigner_negativities_rhot(n,rhot,L)
+   global neg  =  wigner_eig.wigner_negativities_rhot(n,rhot,L,d)
    bnegf = 2*neg[2]
    wminf = neg[4]
    impf = tr(rhotpt^2)  
@@ -418,10 +573,84 @@ function rhot_adiabaticramp(HMatrix0,rho0,rhotar,tlist,n,om,r,lambda0,lambda1,g0
    qfi2_gr = Fisher.fisherdisplacementp(rho_gr,n)
    qfi3_gr = Fisher.fisherdisplacementx(rho_gr,n)  
    #-----------   
-   println(io,sol.t[i]," ",real(ov1)," ",real(ov2)," ",real(cor[1]))
+   println(io,sol.t[i]," ",real(ov1)," ",real(ov2)," ",real(cor[1])," ",real(finst))
    println(io2,sol.t[i]," ",real(qfi)," ",real(qfi2)," ",real(qfi3)," ",real(qfi_gr)," ",real(qfi2_gr)," ",real(qfi3_gr))  
    println(io3,sol.t[i]," ",(join(neg, " ")))
    println(io4,sol.t[i]," ",qnegf," ",robf)
+ end
+ println("-- End of the ramp --")
+ if length(tlist2)>1    
+     tmax2 = tlist[length(tlist2)]
+     times = (tlist2[1],tmax2)
+   f2(u,p,t) = -im*(HMatrix0 + (sigmax*(lam*r/2) + gdif*r^(1/2)*(aop+adop)*sigmax/2)*(1/2)*(1-cos(pi*tmax/tmax)))*u + im*u*(HMatrix0 + (sigmax*(lam*r/2) + gdif*r^(1/2)*(aop+adop)*sigmax/2)*(1/2)*(1-cos(pi*tmax/tmax))) + (Jp*u*(Jp') - ((Jp')*Jp*u + u*(Jp')*Jp)/2) + (Jq*u*(Jq') - ((Jq')*Jq*u + u*(Jq')*Jq)/2)
+     prob2 = ODEProblem(f2,rhot,times)
+     sol2 = solve(prob2,abstol = acc,Tsit5(),alg_hints = [:stiff],dt=0.1,saveat = tlist2,
+             save_everystep = false)
+     for i in eachindex(sol2.t)
+         println(sol2.t[i]+tmax)        
+         global rhot = sol2.u[i]
+         Hamt   =   (HMatrix0 + (sigmax*(lam*r/2) + gdif*r^(1/2)*(aop+adop)*sigmax/2)*(1/2)*(1-cos(pi*(sol2.t[i])/tmax)))
+         eigenht  = eigen(Hermitian(Hamt))
+         evinst = eigenht.vectors[:, 1]
+         rhoeinst = evinst*evinst'
+         finst = tr(rhoeinst*rhot)  
+         rhotqo =  wigner_eig.buildingrho(rhot,n)
+         global rhotpt = ptrace(rhotqo,2)  
+         ov1 = real(tr(sqrt(sqrt(Hermitian(rho0)) * rhot * sqrt(Hermitian(rho0))))^2)
+         ov2 = real(tr(sqrt(sqrt(Hermitian(rhotar)) * rhot * sqrt(Hermitian(rhotar))))^2)
+         cor = stat.negativitycorr(rhotar,rhot,n,L,r)      
+         rhotqo =  wigner_eig.buildingrho(rhot,n)
+         global neg  =  wigner_eig.wigner_negativities_rhot(n,rhot,L)
+         bnegf = 2*neg[2]
+         wminf = neg[4]
+         impf = tr(rhotpt^2)  
+         rho_q = ptrace(rhotqo,1)
+         wigner_q = magic.discrete_wigner(rho_q)
+         qnegf = real(wigner_q[2])  
+         rb = magic.robustness(rho_q)
+         robf = real(rb)
+         qfi = Fisher.fishern2(rhotpt,n)
+         qfi2 = Fisher.fisherdisplacementp(rhotpt,n)
+         qfi3 = Fisher.fisherdisplacementx(rhotpt,n)
+         #-----------Reference Gaussian state
+         x1m = real(expect(xop, rhotpt))
+         x2m = real(expect(xop^2, rhotpt))
+         p1m = real(expect(pop, rhotpt))
+         p2m = real(expect(pop^2, rhotpt))
+         varx = x2m - x1m^2
+         varp = p2m - p1m^2
+         varpf = varp    
+         xp_sym = real(expect(xop*pop + pop*xop, rhotpt))
+         C = xp_sym/2 - x1m*p1m
+         detV = varx*varp - C^2
+         nu = sqrt(detV)
+         nt = nu -0.5
+         ps = 0.5 * atan(2*real(C), real(varx) - real(varp))
+         rxi = 0.25 * log(real(varx)/real(varp))
+         xi = rxi*exp(im*ps)
+         alpha = (1/(2)^(1/2))*(x1m+im*p1m)  
+         Sqop = exp((1/2)*xi*adopqo^2 - (1/2)*conj(xi)*aopqo^2)
+         Dop = exp(alpha*adopqo - conj(alpha)*aopqo)
+         state0 = fockstate(bc,0)
+         rho00 = dm(state0)
+         rho_gr = rho00
+         rho_gr = (nt^0/(1+nt))*rho00
+         for nk in 1:n
+             staten = fockstate(bc,nk)
+             rhon = dm(staten)
+             rho_gr = rho_gr + (nt^(nk)/(1+nt)^(nk+1))*rhon
+         end
+         rho_gr = Sqop*rho_gr*(Sqop')
+         rho_gr = Dop*rho_gr*(Dop')
+         qfi_gr = Fisher.fishern2(rho_gr,n)
+         qfi2_gr = Fisher.fisherdisplacementp(rho_gr,n)
+         qfi3_gr = Fisher.fisherdisplacementx(rho_gr,n)  
+         #-----------   
+         println(io,sol2.t[i]+tmax," ",real(ov1)," ",real(ov2)," ",real(cor[1])," ",real(finst))
+         println(io2,sol2.t[i]+tmax," ",real(qfi)," ",real(qfi2)," ",real(qfi3)," ",real(qfi_gr)," ",real(qfi2_gr)," ",real(qfi3_gr))  
+         println(io3,sol2.t[i]+tmax," ",(join(neg, " ")))
+         println(io4,sol2.t[i]+tmax," ",qnegf," ",robf)
+     end
  end
  end
  end

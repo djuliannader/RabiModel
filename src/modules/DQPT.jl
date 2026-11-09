@@ -58,7 +58,7 @@ end
 
 
 
-function amplitud(psi0::Vector{Complex{Float64}},tint::Float64,tmax::Float64,timax::Float64,ti::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi,L,thetal)
+function amplitud(psi0::Vector{Complex{Float64}},tint::Float64,tmax::Float64,timax::Float64,ti::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi,L,thetal,nname::String)
 	 tinti=0.01
 	 nt=trunc(Int,tmax/tint)
 	 nt2=2*timax/tinti
@@ -74,7 +74,7 @@ function amplitud(psi0::Vector{Complex{Float64}},tint::Float64,tmax::Float64,tim
          psi0a = psi0'
          rho0  = psi0*psi0a
 	 open("output/survival_probability.dat","w") do io
-	 open("output/negativities_quench.dat","w") do io2
+	 open(nname,"w") do io2
 	 open("output/qfi_quench.dat","w") do io3
 	 #open("output/zeros_cutwigner.dat","w") do io4        
          open("output/observables_quench.dat","w") do io5
@@ -84,7 +84,7 @@ function amplitud(psi0::Vector{Complex{Float64}},tint::Float64,tmax::Float64,tim
  	     evol=exp(-im*HMatrix*t/hbar)
 	     psi0t=evol*psi0
              rho =  psi0t*transpose(conj(psi0t))    
-	     neg = wigner_eig.wigner_negativities2(Nmax,rho,rho0,L,r)
+	     neg = wigner_eig.wigner_negativities2(Nmax,rho,rho0,L,d,r)
              #zeros =  wigner_eig.wigner_rhot_ZerosCut2(rho,Nmax,r,thetal)
              fb = FockBasis(Nmax)
              nop = number(fb)

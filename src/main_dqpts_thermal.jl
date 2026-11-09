@@ -12,26 +12,29 @@ using .wigner_eig
 
 
 
-n=60              # Size of the Fock basis
+n=65              # Size of the Fock basis
 om=1.0            # Bosonic frequency
 r=50.0            # Qubit frequency
 lambda0=0.0       # Initial Carrier parameter
 delta=0.0         # Parameter (-1,0,1) for (AJC,QRM,JC)
-g0=1.1165              # Initial coxupling
+g0=0.0           # Initial coxupling
 phs=0.0           # Phase of the Hamiltonian
-g1=0.9            # Final coupling
+g1=1.25            # Final coupling
 lambda1=0.0       # Final Carrier parameter
 tshot=5.0         # time for Wigner function
-flag1=0            # (1) for the complex time survival probability (0) for skip 
-beta=1000.0         # temperature
-L=7.5             # Size of the phase space
+flag1=0           # (1) for the complex time survival probability (0) for skip 
+beta=5.0         # temperature
+L=10.0             # Size of the phase space
+d=0.025              # Size of the grid of the phase space
 acc = 10^(-22)    # accuracy for the diferential equation
-kp = 0.0         # photon loss
+kp = 0.001        # photon loss
 kq = 0.0          # qubit relaxation    
 
 
-tmax = 5.0         # maximal time
-tint = 0.025       # time interval
+nname = "output/negativities_quench1_kappa_R100.dat"
+
+tmax = 10.0         # maximal time
+tint = 0.1         # time interval
 tlist = [i for i in 0:tint:tmax]
 
 
@@ -81,7 +84,7 @@ photondist = DQPT_thermal.photonP(rhoistate,Jb,Jq,tshot,n,om,r,lambda1,delta,g1,
 
 #println("-> Wigner function obtained via Lindbladian ")    
 
-sp = DQPT_thermal.survivalprobabilityt(rhoistate,Jb,Jq,tlist,n,om,r,lambda1,delta,g1,phs,L,tint,acc)
+sp = DQPT_thermal.survivalprobabilityt(rhoistate,Jb,Jq,tlist,n,om,r,lambda1,delta,g1,phs,L,d,tint,acc,nname)
 println(sp)
 println("Real-time survival amplitude data in file Loschmidt_amplitud_thermal.dat")
 

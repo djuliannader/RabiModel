@@ -81,9 +81,12 @@ open("input.dat") do f
  L = parse(Float64, K38)
  K39=readline(f)
  K40=readline(f)
- flagt = parse(Int64, K40)
+ d = parse(Float64, K40)
  K41=readline(f)
  K42=readline(f)
+ flagt = parse(Int64, K42)
+ K43=readline(f)
+ K44=readline(f)
  lk = parse(Int64, K42)
 
 ##-------------
@@ -102,7 +105,7 @@ println("Size of the Fock space   (N)         : ",N)
 println("Oscillator frequency   (Omega)       : ",om)
 println("Qubit frequency          (R)         : ",r)
 println("QRM (0), JC (1) or AJC (-1)          : ",delta)
-println("Carrier  parameter     (lambda)      : ",lambda)
+println("Assymetry bias     (lambda)          : ",lambda)
 println("Coupling parameter       (g)         : ",eta)
 println("Phase parameter         (psi)        : ",psi)
 println("Modulation period       (Tau)        : ",tau)
@@ -191,18 +194,18 @@ if flag1==3
        evalst  = diagonalization.diagonalize(N,om,r,lambda,delta,eta,psi)
        println("Ground state energy of the AQRM                  : ",evalst[1][1])
        println("Expectation value <E_k|H_0|E_k>                  : ",evalst[1][kk]) 
-       wigeig  = wigner_eig.wigner_eigenstate(N,om,r,lambda,delta,eta,psi,kk,L)
+       wigeig  = wigner_eig.wigner_eigenstate(N,om,r,lambda,delta,eta,psi,kk,L,d)
    end
    if flag2==2
    println("------ Thermal state of the time-independent AQRM   --------------")
-       ww = wigner_eig.wigner_thermalstate(N,om,r,lambda,delta,eta,psi,L,beta)
+       ww = wigner_eig.wigner_thermalstate(N,om,r,lambda,delta,eta,psi,L,d,beta)
    end      
    if flag2==3
        println("------ Floquet state of the time-periodic AQRM with qubit modulation ------")
        println("---------------------------------------------------------------------------")
        rpar=stat.parameter_r(N,om,r,lambda,delta,nn,nu,chi,eta,psi,flagt)
        println("Parameter <r> of the Floquet operator            : ",rpar)
-       wfloquet   = wigner_eig.wigner_driven(N,om,r,lambda,delta,eta,psi,nu,chi,nn,kk,L,flagt,lk)
+       wfloquet   = wigner_eig.wigner_driven(N,om,r,lambda,delta,eta,psi,nu,chi,nn,kk,L,d,flagt,lk)
        for jk in 1:lk
            println("Overlap |<E_l|F_k>|^2 for k= ",kk," and l=",jk,"  : ",real(wfloquet[4][jk]))
        end
@@ -221,7 +224,7 @@ if flag1==2  # Dynamics
   if flag2==1 # static Hamiltonian
     println("---- Dynamics of the time independent AQRM initiates ----")
     mensaje1=dynamics.survivalp(cs0,tmax,1.0,N,om,r,lambda,delta,eta,psi)
-    av=dynamics.fotoc(cs0,tmax,1.0,N,om,r,lambda,delta,eta,psi,L,kk)
+    av=dynamics.fotoc(cs0,tmax,1.0,N,om,r,lambda,delta,eta,psi,L,d,kk)
     #wpsit = wigner_eig.wigner_evolt(N,om,r,lambda,delta,eta,psi,L,cs0,tmax)
     #println("Negativity of the state (at time=",tmax,"): ",wpsit[1])
     println("------------ Averages ---------------")

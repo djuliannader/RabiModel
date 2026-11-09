@@ -28,7 +28,7 @@ Psimarginals(v) = Psimarginals(v...)  # denominator accepts a vector
 #axis("scaled")
 
 
-function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
+function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L,d)
   bc=FockBasis(Nmax)
   ba=SpinBasis(1//2)
   x = [-L:0.1:L;]
@@ -49,6 +49,7 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   yticks([-1,0,1])
   #xticks([])
   #yticks([])
+  nneg=wigner_negativities_rhot(Nmax,rhor,L,d)          
   pcolormesh(xm, xm, QQs, cmap=:bwr,vmin=-0.1,vmax=0.1)
   #colorbar(fraction=0.25,shrink=0.75,ticks=[-0.1,-0.05,0,0.05,0.1])
   #axis("off")
@@ -85,7 +86,7 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   thetal = [i*(pi)/ncuts for i in 0:(ncuts-1)]
   vars = wigner_rhot_variation(rhor,Nmax,r,thetal)
   imvars = argmax(vars)
-  nneg=wigner_negativities_rhot(Nmax,rhor,L)        
+  nneg=wigner_negativities_rhot(Nmax,rhor,L,d)        
   #println("Flaaag: ",thetal[imvars]," ",vars[imvars])
   #println("Flaaag: ",thetal)
   #println("Flaaag: ",vars)      
@@ -135,12 +136,13 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
             minn = winst
         end
     end
-    println(io,ix," ",round(summar1,digits=8)," ",round(summar2,digits=8))
+    println(io,ix/r^(1/2)," ",round(summar1,digits=8)," ",round(summar2,digits=8))
   end
   end
   #println("********volume:", summar3)
   tight_layout()
   cw = wigner_rho(rhopt,L,r,Nmax,"output/wigner_eig_data.dat","output/wignercut_eig_data.dat")
+  println("See output/marginals.dat for the marginal distributions")  
   chusimi = husimi_rho(rhopt,L,r,Nmax,"output/husimi_eig_data.dat")  
   savefig("output/wigner_eigenstate.png")
   println("Bosonic Negativity   delta(rho_b)    : ",real(2*nneg[2]))
@@ -162,10 +164,10 @@ function wigner_eigenstate(Nmax,om,r,lambda,delta,eta,psi,k,L)
   return [real(den[1]-1),pur,minn]
 end
 
-function wigner_thermalstate(Nmax,om,r,lambda,delta,eta,psi,L,beta)
+function wigner_thermalstate(Nmax,om,r,lambda,delta,eta,psi,L,d,beta)
   bc=FockBasis(Nmax)
   ba=SpinBasis(1//2)
-  x = [-L:0.1:L;]
+  x = [-L:d:L;]
   xm = x/r^(1/2)
   rho=diagonalization.initialthermalstate(Nmax,om,r,lambda,delta,eta,psi,beta)
   ham=diagonalization.hamiltonian(Nmax,om,r,lambda,delta,eta,psi)
@@ -181,6 +183,7 @@ function wigner_thermalstate(Nmax,om,r,lambda,delta,eta,psi,L,beta)
   yticks([-1,0,1])
   #xticks([])
   #yticks([])
+  nneg=wigner_negativities_rhot(Nmax,rho,L,d)            
   pcolormesh(xm, xm, QQs, cmap=:bwr,vmin=-0.1,vmax=0.1)
   #colorbar(fraction=0.25,shrink=0.75,ticks=[-0.1,-0.05,0,0.05,0.1])
   #axis("off")
@@ -226,14 +229,14 @@ function wigner_thermalstate(Nmax,om,r,lambda,delta,eta,psi,L,beta)
   #println("real squeezing parameter: ",(-1/2)*log(2*(real(meig[1]))))
   println("Real squeezing parameter: ",real(asinh(nexp^(1/2))))
   un = (x2m-x1m^2)^(1/2)*(p2m-p1m^2)^(1/2)
-  println("Uncertainity : ",un)
+  println("Uncertainity : ",un)  
   qfi = Fisher.fishern2(rhopt,Nmax)
   cfipc = Fisher.cfisherphotoncounting(rhopt,Nmax,[0,pi/2])  
   qfi2 = Fisher.fisherdisplacementp(rhopt,Nmax)
-  cfi2 = Fisher.cfisherdisplacement(rhopt,Nmax,0)     
+  cfi2 = Fisher.cfisherdisplacement(rhopt,Nmax,0)
   qfi3 = Fisher.fisherdisplacementx(rhopt,Nmax)
   cfi3 = Fisher.cfisherdisplacement(rhopt,Nmax,pi/2)        
-  qfi4 = Fisher.fishersqueezing(rhopt,Nmax)
+  qfi4 = Fisher.fishersqueezing(rhopt,Nmax)  
   println("       Fisher Information (QFI and CFI)  ")
   println("QFI[rho,n]/(4n)            : ", real(qfi))
   println("CFI[rho,n]/(4n)            : ", real(cfipc[1])," photon counting + displacement (beta=",cfipc[2],")")  
@@ -272,7 +275,7 @@ function wigner_thermalstate(Nmax,om,r,lambda,delta,eta,psi,L,beta)
   cw = wigner_rho(rhopt,L,r,Nmax,"output/wigner_thermal_data.dat","output/wignercut_themal_data.dat")
   chusimi = husimi_rho(rhopt,L,r,Nmax,"output/husimi_thermal_data.dat")  
   savefig("output/wigner_thermal.png")
-  println("Bosonic Negativity   delta(rho_b)    : ",real(den[1]-1))
+  println("Bosonic Negativity   delta(rho_b)    : ",real(2*nneg[2]))
   println("Bosonic Deepest Wigner negativity Wmin: ",minn)  
   println("Purity of the Wigner function        : ",real(pur))
   println( "Bosonic Wehrl entropy               : ",real(chusimi[2]))  
@@ -288,10 +291,10 @@ function wigner_thermalstate(Nmax,om,r,lambda,delta,eta,psi,L,beta)
   println("   W10 : ",wigner_q[1][2,1])
   println("   W11 : ",wigner_q[1][2,2])
   println("Qubit Wigner Negativity delta(rho_q) : ",wigner_q[2])  
-  return [real(den[1]-1),pur,minn]
+  return [real(2*nneg[2]),pur,minn]
 end
 
-function wigner_evolt(Nmax,om,r,lambda,delta,eta,psi,L,phi0,t)
+function wigner_evolt(Nmax,om,r,lambda,delta,eta,psi,L,d,phi0,t)
   bc=FockBasis(Nmax)
   ba=SpinBasis(1//2)
   x = [-L:0.1:L;]
@@ -348,7 +351,7 @@ function wigner_evolt(Nmax,om,r,lambda,delta,eta,psi,L,phi0,t)
   return [real(den[1]-1)]
 end
 
- function wigner_driven(Nmax,om,r,lambda,delta,eta,psi,nu,chi,Nf,k,L,flagt,kl)
+ function wigner_driven(Nmax,om,r,lambda,delta,eta,psi,nu,chi,Nf,k,L,d,flagt,kl)
    bc=FockBasis(Nmax)
    ba=SpinBasis(1//2)
    x = [-L:0.1:L;]
@@ -386,7 +389,7 @@ end
    pcolormesh(xm, xm, QQs, cmap=:bwr,vmin=-0.1,vmax=0.1)
    global rhopti=rhopt
    #den=hcubature(Qexabs,(-L,-L),(L,L),rtol=0.001)
-   nneg=wigner_negativities_rhot(Nmax,rho,L)      
+   nneg=wigner_negativities_rhot(Nmax,rho,L,d)      
    #wentropy=hcubature(QWehrl,(-L,-L),(L,L))
    bc=FockBasis(Nmax)
    adop=create(bc)
@@ -470,7 +473,7 @@ end
    return [exp_val,real(nneg[1]),pur,listovlp,listovlpn] 
  end
 
-function wigner_evolt_driven(Nmax,om,r,lambda,delta,eta,psi,nu,chi,Nf,L,phi0,pf,flagt)
+function wigner_evolt_driven(Nmax,om,r,lambda,delta,eta,psi,nu,chi,Nf,L,d,phi0,pf,flagt)
   bc=FockBasis(Nmax)
   ba=SpinBasis(1//2)
   x = [-L:0.1:L;]
@@ -543,10 +546,10 @@ function wigner_negativities(Nmax,wf,L)
   return real(den[1]-1)
 end
 
-function wigner_negativities_rhot(Nmax,rhot,L)
+function wigner_negativities_rhot(Nmax,rhot,L,d)
   rhot_qo = buildingrho(rhot,Nmax)  
   rhot_pt = ptrace(rhot_qo,2)
-  xpint = 0.025  
+  xpint = d  
   x = [-L:xpint:L;]
   sumwn = 0.0
   sumwvol = 0.0
@@ -575,7 +578,7 @@ function wigner_negativities_rhot(Nmax,rhot,L)
 end
 
 
-function wigner_negativities2(Nmax,rhot,rhoin,L,r)
+function wigner_negativities2(Nmax,rhot,rhoin,L,d,r)
   #bc=FockBasis(Nmax)
   #ba=SpinBasis(1//2)
   #listvec=[wf[i] for i in 1:2*Nmax]
@@ -585,7 +588,7 @@ function wigner_negativities2(Nmax,rhot,rhoin,L,r)
   rho0_qo = buildingrho(rhoin,Nmax)  
   global rho0_pt = ptrace(rho0_qo,2)  
   #den=hcubature(Qexabs,(-L,-L),(L,L),rtol=0.0001)
-  xpint = 0.025   
+  xpint = d   
   x = [-L:xpint:L;]
   minn = 0.0
   gminn = 0.0

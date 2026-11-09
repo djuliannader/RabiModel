@@ -155,7 +155,7 @@ function fishersqueezing(rho,Nmax)
        lstate = [rhodiag[2][l][i] for i in 1:length(lam)]
        lstatead = transpose(conj(lstate))
        sd = lstatead*sqop*kstate
-       if (lam[k]+lam[l])>epsilon
+       if abs(lam[k]+lam[l])>epsilon
          qfiinst2t = 8*((lam[l]*lam[k])/(lam[k]+lam[l]))*abs2(sd) 
          qfi2t = qfi2t + qfiinst2t
        end
@@ -165,7 +165,7 @@ function fishersqueezing(rho,Nmax)
        lstate = [rhodiag[2][l][i] for i in 1:length(lam)]
        lstatead = transpose(conj(lstate))
        sd = lstatead*sqop*kstate
-       if (lam[k]+lam[l])>epsilon
+       if abs(lam[k]+lam[l])>epsilon
          qfiinst2t = 8*((lam[l]*lam[k])/(lam[k]+lam[l]))*abs2(sd) 
          qfi2t = qfi2t + qfiinst2t
        end

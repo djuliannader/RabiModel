@@ -1,15 +1,15 @@
 Dimension of Fock Space (Integer)
-80
+60
 Omega, Oscillator frequency (Float)
 1.0
 R, Qubit frequency (Float)
 50.0
 Parameter (1) for JC, (0) for QRM  or (-1) for Anti JC (Float)
 0.0
-lambda, carrier parameter (Float) 
-0.0     
-g, coupling parameter (Float)
-1.175 
+lambda, assymetry bias (Float) 
+0.0    
+g, coupling strength (Float)
+1.5
 psi, phase parameter (Float) 
 0.0
 Flag, 1 for spectrum 2 for dynamics 3 for stationary states (Integer)
@@ -27,18 +27,20 @@ Coordinates of the initial coherent state (List[Float]) [Theta0,Phi0,X0,P0] --->
 Maximum time for dynamics (Float) ---> Necessary only for dynamics
 10.0
 Xi, Modulation amplitude (Float) ---> Necessary only for Floquet operator
-0.05
+0.0
 Tau, Modulation Period (Float) ---> Necessary only for Floquet operator
-8.2
+2.93
 Intervals of the period (Int) ---> Necessary only for Floquet operator
 1000
 k-eigenstate (Int) 
 1
 L size of the phase space (Float) [-L,L]  
-12.5
+10.0
+d spacing for the phase space grid (Float)
+1.0
 For time-dependent term proportional to: (1) Sigma_z or (2) Sigma_x (Int)
 2
 Number of eigenstates (l) for fidelities |<E_l|F_k>|^2  and |<n|F_k>|
-0
+1
 
 

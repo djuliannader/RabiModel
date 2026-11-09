@@ -90,8 +90,8 @@ function discrete_wigner(rho)
     idop = dm(spindown(ba)) + dm(spinup(ba)) 
     A00 = (1/2)*(idop + sigmax(ba) + sigmay(ba) + sigmaz(ba)) 
     A01 = (1/2)*(idop + sigmax(ba) - sigmay(ba) - sigmaz(ba))
-    A10 = (1/2)*(idop - sigmax(ba) + sigmay(ba) - sigmaz(ba))
-    A11 = (1/2)*(idop - sigmax(ba) - sigmay(ba) + sigmaz(ba)) 
+    A10 = (1/2)*(idop - sigmax(ba) - sigmay(ba) + sigmaz(ba))
+    A11 = (1/2)*(idop - sigmax(ba) + sigmay(ba) - sigmaz(ba)) 
 
     W = [0.0   0.0;
         0.0   0.0]

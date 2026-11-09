@@ -10,7 +10,7 @@ using .wigner_eig
 export amplitud
 
 
-function survivalprobabilityt(rho0,Jp,Jq,tlist,n,om,r,lambda,delta,eta,psi,L,tint,acc)
+function survivalprobabilityt(rho0,Jp,Jq,tlist,n,om,r,lambda,delta,eta,psi,L,tint,acc,nname)
  tmax = tlist[length(tlist)]
  rho0qo = wigner_eig.buildingrho(rho0,n)
  rho0pt_b = ptrace(rho0qo,2)
@@ -28,12 +28,12 @@ function survivalprobabilityt(rho0,Jp,Jq,tlist,n,om,r,lambda,delta,eta,psi,L,tin
  surprob = []
  println("Density matrix obtained from t=0 to t=",tmax)  
  open("output/survival_probability_thermal.dat","w") do io
- open("output/negativities_quench_thermal.dat","w") do io2
+ open(nname,"w") do io2
  open("output/quantities_quench_thermal.dat","w") do io3        
  for tinst in tlist
    println(tinst)      
    rhot = sol(tinst)  
-   neg = wigner_eig.wigner_negativities2(n,rhot,rho0,L,r)
+   neg = wigner_eig.wigner_negativities2(n,rhot,rho0,L,d,r)
    sp = tr(rhot*rho0)
    #mat = rho0*rhot
    #ls = [mat[i,i] for i in 1:(2*(n+1))]
@@ -43,9 +43,9 @@ function survivalprobabilityt(rho0,Jp,Jq,tlist,n,om,r,lambda,delta,eta,psi,L,tin
    rhopt_q = ptrace(rhoqo,1)
    sp_b  = tr(rho0pt_b*rhopt_b)
    sp_q  = tr(rho0pt_q*rhopt_q)
-   fid   = (fidelity(rho0qo,rhoqo))^2
-   fid_b = (fidelity(rho0pt_b,rhopt_b))^2  
-   fid_q = (fidelity(rho0pt_q,rhopt_q))^2
+   fid = (tr(rho0^(1/2)*rhot*rho0^(1/2))^(1/2))^2
+   fid_b = fidelity(rho0pt_b, rhopt_b)^2
+   fid_q = fidelity(rho0pt_q, rhopt_q)^2
    pur0 = tr(rho0qo^2)
    purt = tr(rhoqo^2)
    pur0_b = tr(rho0pt_b^2)

@@ -14,17 +14,19 @@ lambda=0.0         # Carrier parameter
 delta=0.0          # Parameter (-1,0,1) for (AJC,QRM,JC)
 g=(1/2^(1/2))      # Coupling
 phi=0.0            # Phase 
-xi=0.05           # Modulation amplitude
+xi=0.05            # Modulation amplitude
 tau = 8.2          # Modulation period
-Trcycles=80         # Number of cycles for ramp duration Tr
-Tscycles=80         # Number of cycles for the shot of the Wigner function  
+Trcycles=80        # Number of cycles for ramp duration Tr
+Tscycles=90        # Number of cycles for the shot of the Wigner function  
+Ttotal = 150       # Number of cycles for the total protoco
 L=10.0             # Size of the phase space
+d=0.025              # Size of grid of the phase space
 k=1                # Initial eigenstate of H0
 Nf = 1000          # Number of subintervals for Trotterization
 flagt = 2          # Flag for the time-dependent term (1) for sigma_z (2) for sigma_x
 kf = 1             # Target Floquet state
 acc = 1e-18        # Accuracy for the differential equation
-kb  = 0.00        # Bosonic loss
+kb  = 0.001         # Bosonic loss
 kq  = 0.0          # double photon loss
 
 
@@ -40,9 +42,9 @@ sigmay = (1/2)*diagonalization.sigmay(n)
 sigmam = (sigmax-im*sigmay)/2
 Jq = (kq)^(1/2)*sigmam # qubit relaxation
 if kb<10^(-6) && kq < 1e-6
-  rhot = adiabatic_ramp.rhot_floquetramp(psi0,Trcycles,Tscycles,n,om,r,lambda,delta,g,phi,xi,tau,Nf,flagt,kf,acc,L)
+  rhot = adiabatic_ramp.rhot_floquetramp(psi0,Trcycles,Tscycles,Ttotal,n,om,r,lambda,delta,g,phi,xi,tau,Nf,flagt,kf,acc,L,d)
 else
-  rhot = adiabatic_ramp.rhot_floquetramp2(psi0,Trcycles,Tscycles,n,om,r,lambda,delta,g,phi,xi,tau,Nf,flagt,kf,acc,L,Jb,Jq)
+  rhot = adiabatic_ramp.rhot_floquetramp2(psi0,Trcycles,Tscycles,Ttotal,n,om,r,lambda,delta,g,phi,xi,tau,Nf,flagt,kf,acc,L,d,Jb,Jq)
 end
 println("Solving schrodinger equation -> Done")
 plotwigner = adiabatic_ramp.wignerrhot(rhot[1],L,r,n)
