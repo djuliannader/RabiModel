@@ -18,7 +18,7 @@ This repository provides codes and data for the papers
 - Resonance-induced quantum non-Gaussian states below criticality, by D. J. Nader, P. Stransky, J. Chavez, P. Cejnar and R. Filip.  https://doi.org/10.48550/arXiv.2611.22640
 
 
-- Dynamical quantum phase transitions from relative negativity of Wigner function, by D. J. Nader, P. Stransky, J. Novotny, P. Cejnar and R. Filip.
+- Dynamical quantum phase transitions from relative negativity of Wigner function, by D. J. Nader, J. Novotny, P. Stransky, P. Cejnar and R. Filip.
 
 - Towards controlling discrete and continuous Wigner negativity in qubit-oscillator systems, by D. J. Nader
 
