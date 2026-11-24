@@ -14,12 +14,13 @@ git clone https://github.com/djuliannader/RabiModel.git
 
 This repository provides codes and data for the papers
 
-- Controllable distribution of nonclassicality in qubit-oscillator systems, by D. J. Nader
 
-- Sensitivity enhanced by qubit modulation, by D. J. Nader, P. Stransky, J. Chavez, P. Cejnar and R. Filip.
+- Resonance-induced quantum non-Gaussian states below criticality, by D. J. Nader, P. Stransky, J. Chavez, P. Cejnar and R. Filip.  https://doi.org/10.48550/arXiv.2611.22640
 
-- Wigner negativity as a precursor of dynamical phase transitions, by D. J. Nader, P. Stransky, J. Novotny, P. Cejnar and R. Filip.
 
+- Dynamical quantum phase transitions from relative negativity of Wigner function, by D. J. Nader, P. Stransky, J. Novotny, P. Cejnar and R. Filip.
+
+- Towards controlling discrete and continuous Wigner negativity in qubit-oscillator systems, by D. J. Nader
 
 The repository is currently being developed; please await its completion.
 The Mathematica notebooks, necessary to recreate the Figures of the articles can be found in the directory Figures/
