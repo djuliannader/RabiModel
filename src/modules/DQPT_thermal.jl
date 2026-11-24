@@ -10,7 +10,7 @@ using .wigner_eig
 export amplitud
 
 
-function survivalprobabilityt(rho0,Jp,Jq,tlist,n,om,r,lambda,delta,eta,psi,L,tint,acc,nname)
+function survivalprobabilityt(rho0,Jp,Jq,tlist,n,om,r,lambda,delta,eta,psi,L,d,tint,acc,nname)
  tmax = tlist[length(tlist)]
  rho0qo = wigner_eig.buildingrho(rho0,n)
  rho0pt_b = ptrace(rho0qo,2)
@@ -24,7 +24,7 @@ function survivalprobabilityt(rho0,Jp,Jq,tlist,n,om,r,lambda,delta,eta,psi,L,tin
  prob = ODEProblem(f,rho0,times)
  sol = solve(prob,Tsit5(),alg_hints = [:stiff],dt=0.01,abstol =  acc)
  tinst=0.0
- nt = floor(Int, tmax/tint)
+ #nt = floor(Int, tmax/tint)
  surprob = []
  println("Density matrix obtained from t=0 to t=",tmax)  
  open("output/survival_probability_thermal.dat","w") do io

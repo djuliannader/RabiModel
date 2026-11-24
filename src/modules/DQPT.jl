@@ -58,7 +58,7 @@ end
 
 
 
-function amplitud(psi0::Vector{Complex{Float64}},tint::Float64,tmax::Float64,timax::Float64,ti::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi,L,thetal,nname::String)
+function amplitud(psi0::Vector{Complex{Float64}},tint::Float64,tmax::Float64,timax::Float64,ti::Float64,hbar::Float64,Nmax::Int64,om::Float64,r::Float64,lambda::Float64,delta::Float64,eta,psi,L,d,thetal,nname::String)
 	 tinti=0.01
 	 nt=trunc(Int,tmax/tint)
 	 nt2=2*timax/tinti

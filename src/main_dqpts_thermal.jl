@@ -12,30 +12,34 @@ using .wigner_eig
 
 
 
-n=65              # Size of the Fock basis
+n=60              # Size of the Fock basis
 om=1.0            # Bosonic frequency
 r=50.0            # Qubit frequency
 lambda0=0.0       # Initial Carrier parameter
 delta=0.0         # Parameter (-1,0,1) for (AJC,QRM,JC)
-g0=0.0           # Initial coxupling
+g0=0.0            # Initial coxupling
 phs=0.0           # Phase of the Hamiltonian
-g1=1.25            # Final coupling
+g1=1.25           # Final coupling
 lambda1=0.0       # Final Carrier parameter
-tshot=5.0         # time for Wigner function
+tshot=7.55         # time for Wigner function
 flag1=0           # (1) for the complex time survival probability (0) for skip 
-beta=5.0         # temperature
+beta=1000.0        # temperature
 L=10.0             # Size of the phase space
-d=0.025              # Size of the grid of the phase space
-acc = 10^(-22)    # accuracy for the diferential equation
-kp = 0.001        # photon loss
+d=0.025           # Size of the grid of the phase space
+acc = 10^(-25)    # accuracy for the diferential equation
+kp = 0.1          # photon loss
 kq = 0.0          # qubit relaxation    
 
 
-nname = "output/negativities_quench1_kappa_R100.dat"
+nname = "output/negativities_quench_thermal.dat"
 
 tmax = 10.0         # maximal time
-tint = 0.1         # time interval
-tlist = [i for i in 0:tint:tmax]
+tint = 0.05         # time interval
+#tlist1 = [i for i in 0:0.2:5.0]
+#tlist2 = [i for i in 5.05:tint:5.95]
+#tlist3 = [i for i in 6.0:0.2:tmax]
+tlist = [i for i in 0.0:tint:tmax]
+#tlist = vcat(tlist1,tlist2,tlist3)
 
 
 

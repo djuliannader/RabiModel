@@ -1,0 +1,17 @@
+- Protocol a
+r=20
+g0=0 -> gf=1.15
+lam0 = 0 -> lamf= 0
+- Protocol b
+r=20
+g0=0 -> gf=1.15
+lam0 = 0 -> lamf= 0.05
+- Protocol c
+r=20
+g0=0 -> gf=1.15
+lam0 = 0 -> lamf= 0.02
+- Protocol d
+r=20
+g0=1.15 -> gf=1.15
+lam0 = 0.05 -> lamf= 0.0
+
